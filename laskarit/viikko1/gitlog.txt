@@ -1,0 +1,105 @@
+commit 438b72e1c661a5d11c5a27bfc7f2e029189d1ecf
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 18:23:57 2019 +0200
+
+    tiedosto file1 poistettu, tiedosto file2 nimetty uudelleen tiedostoksi
+    file22
+
+ tiedostoja/file2             | 0
+ tiedostoja/{file1 => file22} | 0
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 9c1d530059e7db606f6298b66754edd3a709a114
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 18:04:19 2019 +0200
+
+    hakemisto tiedostoja lisätty, tiedostot file1, file2, file3 lisätty hakemistoon tiedostoja
+
+ tiedostoja/file1 | 0
+ tiedostoja/file2 | 0
+ tiedostoja/file3 | 0
+ 3 files changed, 0 insertions(+), 0 deletions(-)
+
+commit 611703c4aa5db683b7b30700cbe85f9d6c7953c1
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:51:34 2019 +0200
+
+    rivejä siirretty tiedostosta eka.txt tiedostoon kolmas.txt
+
+ eka.txt    | 4 ----
+ kolmas.txt | 3 +++
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+commit b7855acfbcfa1711dd26f8932693ccfdb10207f2
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:48:40 2019 +0200
+
+    tiedosto.txt uudelleennimetty: uusi nimi eka.txt
+
+ tiedosto.txt => eka.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 07da37c558074c1bfe2e80d05f1a27c518eadcb1
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:47:35 2019 +0200
+
+    toinen.txt poistettu
+
+ toinen.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+commit b703308f8a8cc1ed5a50c1ba4e84031eb4b29132
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:40:44 2019 +0200
+
+    lisättiin rivejä tiedostoon tiedosto.txt
+
+ tiedosto.txt | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+commit 56ea07b3742ed64fa76b98ea0c5a5d55a2c0359a
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:31:05 2019 +0200
+
+    hakemisto stuff luotu, tiedosto stuff/neljäs lisätty
+
+ "stuff/nelj\303\244s.txt" | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit a2626e18dde72fd99d5f9647efc4ed51ff6db827
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:24:22 2019 +0200
+
+    tiedostoja toinen.txt ja kolmas.txt muutettu
+
+ kolmas.txt | 1 +
+ toinen.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 59b44222f11e11e13cdb32c8349fd75def4c63fa
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:19:10 2019 +0200
+
+    kolmas.txt lisätty
+
+ kolmas.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+commit 8658b83b3f3743aaa28c2d90d6d532bae0d889a1
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 17:08:31 2019 +0200
+
+    tiedostoja lisätty ja muutettu
+
+ tiedosto.txt | 1 +
+ toinen.txt   | 0
+ 2 files changed, 1 insertion(+)
+
+commit e9323e4ddb17a9a3c33e1309e18e3093b2d8b219
+Author: Olli Määttä <ollimaatta@gmail.com>
+Date:   Fri Mar 15 16:03:12 2019 +0200
+
+    tiedosto.txt luotu
+
+ tiedosto.txt | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)

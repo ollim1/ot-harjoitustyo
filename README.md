@@ -6,3 +6,4 @@
 [komentorivi.txt](laskarit/viikko1/komentorivi.txt)
 
 Lisättyä tekstiä
+Lisää lisättyä tekstiä

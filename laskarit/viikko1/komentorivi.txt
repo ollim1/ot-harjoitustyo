@@ -1,3 +1,5 @@
+## hakemistorakenne harjoituksen jälkeen
+
 ollmaatt@melkki:~$ tree kurssit
 kurssit
 └── _ot2019

@@ -2,6 +2,6 @@
 Luolapeli, joka on toteutettu JavaFX:ällä.
 
 ## Dokumentaatio
-[Vaatimusmäärittely](docs/vaatimusmaarittely.md)
+[Vaatimusmäärittely](documentation/vaatimusmaarittely.md)
 
-[Tyoaikakirjanpito](docs/tyoaikakirjanpito.md)
+[Tyoaikakirjanpito](documentation/tyoaikakirjanpito.md)

@@ -4,7 +4,7 @@ Sovellus toteuttaa yksinkertaisen luolapelin. Luolapeli pitää myös kirjaa pel
 ## Käyttäjät
 Sovelluksella on yksi käyttäjärooli, _normaali pelaaja_. Sovellukseen voidaan lisätä tulevien laajennusten testaamista varten _debug-käyttäjä_
 ## Käyttöliittymäluonnos
-<img src="https://raw.githubusercontent/ollim1/ot-harjoitustyo/master/Dungeon/docs/kayttoliittymaluonnos.jpg" width="100%">
+![kuva](kayttoliittymaluonnos.jpg)
 
 ## Perusversion toiminnallisuus
 - Sovellus näyttää karttanäkymän, jossa pelaaja voi liikkua nuolinäppäimillä.

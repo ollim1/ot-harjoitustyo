@@ -3,8 +3,8 @@
  */
 package dungeon.ui;
 
-import dungeon.backend.GameLogic;
-import dungeon.backend.HighScores;
+import dungeon.backend.ViewManager;
+import dungeon.backend.Game;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -19,56 +19,20 @@ import javafx.stage.Stage;
 
 public class DungeonUi extends Application {
 
-    private static final int SCREEN_WIDTH = 640;
-    private static final int SCREEN_HEIGHT = 480;
+    private static final int RESOLUTION_X = 640;
+    private static final int RESOLUTION_Y = 480;
+    private static final int GAME_WIDTH = 40;
+    private static final int GAME_HEIGHT = 40;
 
     @Override
     public void start(Stage window) {
-        Scene titleScreen = createTitleScreen(null, null);
-        window.setScene(titleScreen);
+        ViewManager viewManager = new ViewManager(window, RESOLUTION_X, RESOLUTION_Y, GAME_WIDTH, GAME_HEIGHT);
+
+        TitleScreen titleScreen = new TitleScreen(viewManager);
+        Scene titleScreenView = titleScreen.createView(RESOLUTION_X, RESOLUTION_Y);
+        window.setScene(titleScreenView);
         window.setTitle("dungeon");
         window.show();
-    }
-
-    private Scene createTitleScreen(GameLogic gameLogic, HighScores highScores) {
-   
-        Label titleText = new Label("dungeon");
-        Label startText = new Label("start game");
-        Label highScoresText = new Label("high scores");
-        Label quitText = new Label("quit");
-        BorderPane titleTextContainer = new BorderPane(titleText);
-        BorderPane startButton = new BorderPane(startText);
-        BorderPane highScoresButton = new BorderPane(highScoresText);
-        BorderPane quitButton = new BorderPane(quitText);
-        ArrayList<BorderPane> choiceButtons = new ArrayList<>();
-        choiceButtons.add(startButton);
-        choiceButtons.add(highScoresButton);
-        choiceButtons.add(quitButton);
-
-        titleText.setFont(new Font("Arial", 100));
-        titleText.setContentDisplay(ContentDisplay.CENTER);
-        titleText.setTextFill(Color.BLACK);
-        for (BorderPane button : choiceButtons) {
-            button.setPadding(new Insets(16));
-            Label label = (Label) button.getCenter();
-            label.setFont(new Font("Arial", 67));
-            label.setContentDisplay(ContentDisplay.CENTER);
-            label.setTextFill(Color.BLACK);
-            button.setOnMouseEntered(e -> {
-                ((Label)button.getCenter()).setTextFill(Color.GRAY);
-            });
-            button.setOnMouseExited(e -> {
-                ((Label)button.getCenter()).setTextFill(Color.BLACK);
-            });
-        }
-
-        VBox choices = new VBox();
-        choices.getChildren().addAll(choiceButtons);
-
-        BorderPane layout = new BorderPane(choices, titleTextContainer, null, null, null);
-        
-        Scene titleScreen = new Scene(layout, 640, 480, Color.GHOSTWHITE);
-        return titleScreen;
     }
 
     public static void main(String[] args) {

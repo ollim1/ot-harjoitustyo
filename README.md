@@ -9,3 +9,4 @@ Luolapeli, joka on toteutettu JavaFX:ällä.
 
 [Tyoaikakirjanpito](/documentation/tyoaikakirjanpito.md)
 
+[Ohjeet](/documentation/ohjeet.md)

@@ -30,7 +30,12 @@ public class ViewManager {
     }
 
     public void runGame() {
-        game = new Game(mapWidth, mapHeight);
+        try {
+            game = new Game(mapWidth, mapHeight);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
         GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY);
         gameScreen.update();
         window.setScene(gameScreen.getScreen());

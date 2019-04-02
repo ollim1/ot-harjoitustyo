@@ -3,6 +3,8 @@
  */
 package dungeon.backend;
 
+import java.util.Random;
+
 public class MapGenerator {
 
     /*
@@ -10,20 +12,37 @@ public class MapGenerator {
      * for now it just returns a predetermined map
      */
     private char[][] map;
+    private Random random;
 
     /* the map, stored in a printable format
      * (Java lacks raw console i/o, which makes text-based games unpleasant to play)
      */
-    public MapGenerator(int width, int height) {
+    public MapGenerator(Random random, int width, int height) {
         this.map = new char[width + 2][height + 2];
+        this.random = random;
     }
 
     public void generateMap() {
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map.length; y++) {
-                map[y][x] = '#';
+        fillMap();
+        String[] placeholderMap = setPlaceHolderMap();
+        int offsetX = map[0].length / 2 - placeholderMap[0].length() / 2;
+        int offsetY = map.length / 2 - placeholderMap.length / 2;
+        insertPlaceHolderMap(placeholderMap, offsetX, offsetY);
+    }
+
+    private void insertPlaceHolderMap(String[] placeholderMap, int offsetX, int offsetY) {
+        int maximumX = Math.min(map[0].length, offsetX + placeholderMap[0].length());
+        int maximumY = Math.min(map.length, offsetY + placeholderMap.length);
+        for (int x = offsetX; x < maximumX; x++) {
+            for (int y = offsetY; y < maximumY; y++) {
+                int originalX = x - offsetX;
+                int originalY = y - offsetY;
+                map[y][x] = placeholderMap[originalY].charAt(originalX);
             }
         }
+    }
+
+    private String[] setPlaceHolderMap() {
         String[] placeholderMap = new String[]{
             "######     ",
             "   ###     ",
@@ -32,18 +51,13 @@ public class MapGenerator {
             "   ########",
             "   ########"
         };
-        int offsetX = map[0].length / 2 - placeholderMap[0].length() / 2;
-        int offsetY = map.length / 2 - placeholderMap.length / 2;
-        for (int x = 0; x < placeholderMap[0].length(); x++) {
-            for (int y = 0; y < placeholderMap.length; y++) {
-                int placeX = offsetX + x;
-                int placeY = offsetY + y;
-                if (placeX < map[0].length - 1
-                        && placeX > 0
-                        && placeY < map.length - 1
-                        && placeY > 0) {
-                    map[placeY][placeX] = placeholderMap[y].charAt(x);
-                }
+        return placeholderMap;
+    }
+
+    private void fillMap() {
+        for (int x = 0; x < map.length; x++) {
+            for (int y = 0; y < map.length; y++) {
+                map[y][x] = '#';
             }
         }
     }

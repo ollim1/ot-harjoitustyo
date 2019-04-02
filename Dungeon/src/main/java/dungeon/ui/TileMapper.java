@@ -39,27 +39,24 @@ public class TileMapper {
 
                 if (tilePositionX >= 0 && tilePositionX < map[0].length
                         && tilePositionY >= 0 && tilePositionY < map.length) {
-                    switch (map[tilePositionY][tilePositionX]) {
-                        case '@':
-                            tileValue = 0;
-                            break;
-                        case 'D':
-                            tileValue = 1;
-                            break;
-                        case ' ':
-                            tileValue = 4;
-                            break;
-                        default:
-                            tileValue = 2;
-                            break;
+                    if (map[tilePositionY][tilePositionX] == '@') {
+                        tileValue = 0;
+                    } else if (map[tilePositionY][tilePositionX] == 'D') {
+                        tileValue = 1;
+                    } else if (map[tilePositionY][tilePositionX] == ' ') {
+                        tileValue = 4;
                     }
                 }
-                renderer.drawImage(tileSet,
-                        tileValue * dimension, 0,
-                        dimension, dimension,
-                        x * dimension - dimension / 2, y * dimension - dimension / 2,
-                        dimension, dimension);
+                drawTile(tileValue, x, y);
             }
         }
+    }
+
+    private void drawTile(int tileValue, int x, int y) {
+        renderer.drawImage(tileSet,
+                tileValue * dimension, 0,
+                dimension, dimension,
+                x * dimension - dimension / 2, y * dimension - dimension / 2,
+                dimension, dimension);
     }
 }

@@ -6,6 +6,7 @@ package dungeon.ui;
 import dungeon.backend.ViewManager;
 import java.util.ArrayList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -33,16 +34,12 @@ public class TitleScreen {
         BorderPane highScoresButton = new BorderPane(highScoresText);
         BorderPane quitButton = new BorderPane(quitText);
         ArrayList<BorderPane> choiceButtons = new ArrayList<>();
-        choiceButtons.add(startButton);
-        choiceButtons.add(highScoresButton);
-        choiceButtons.add(quitButton);
+        addPanesToList(choiceButtons, startButton, highScoresButton, quitButton);
         startButton.setOnMouseClicked(event -> {
             appLogic.runGame();
         });
 
-        titleText.setFont(new Font("Arial", 100));
-        titleText.setContentDisplay(ContentDisplay.CENTER);
-        titleText.setTextFill(Color.BLACK);
+        setFormat(titleText);
         setChoiceButtonTextFormat(choiceButtons);
 
         VBox choices = new VBox();
@@ -52,6 +49,18 @@ public class TitleScreen {
 
         Scene titleScreen = new Scene(layout, resolutionX, resolutionY, Color.GHOSTWHITE);
         return titleScreen;
+    }
+
+    private void setFormat(Label titleText) {
+        titleText.setFont(new Font("Arial", 100));
+        titleText.setContentDisplay(ContentDisplay.CENTER);
+        titleText.setTextFill(Color.BLACK);
+    }
+
+    private void addPanesToList(ArrayList<BorderPane> list, BorderPane... panes) {
+        for (BorderPane pane : panes) {
+            list.add(pane);
+        }
     }
 
     private void setChoiceButtonTextFormat(ArrayList<BorderPane> choiceButtons) {

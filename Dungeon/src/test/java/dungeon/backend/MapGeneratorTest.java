@@ -3,71 +3,68 @@
  */
 package dungeon.backend;
 
+import java.util.Random;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class MapGeneratorTest {
-    
+
+    private MapGenerator mapGenerator;
+
     public MapGeneratorTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
+        mapGenerator = new MapGenerator(new Random(108), 50, 50);
     }
-    
+
     @After
     public void tearDown() {
     }
 
-    /**
-     * Test of generateMap method, of class MapGenerator.
-     */
     @Test
-    public void testGenerateMap() {
-        System.out.println("generateMap");
-        MapGenerator instance = null;
-        instance.generateMap();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void generateAndReturnMap() {
+        mapGenerator.generateMap();
+        assertNotNull(mapGenerator.getMap());
     }
 
-    /**
-     * Test of setMap method, of class MapGenerator.
-     */
     @Test
-    public void testSetMap() {
-        System.out.println("setMap");
-        char[][] map = null;
-        MapGenerator instance = null;
-        instance.setMap(map);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getMap method, of class MapGenerator.
-     */
-    @Test
-    public void testGetMap() {
-        System.out.println("getMap");
-        MapGenerator instance = null;
-        char[][] expResult = null;
-        char[][] result = instance.getMap();
-        assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void mapIsFormatted() {
+        mapGenerator.generateMap();
+        char[][] map = mapGenerator.getMap();
+        boolean invalidCharacter = false;
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[0].length; x++) {
+                if (map[y][x] != '#'
+                        && map[y][x] != ' '
+                        && map[y][x] != '.'
+                        && map[y][x] != 'D'
+                        && map[y][x] != '@') {
+                    invalidCharacter = true;
+                    break;
+                }
+            }
+        }
+        assertFalse(invalidCharacter);
     }
     
+    @Test
+    public void setMapSetsMap() {
+        char[][] map = new char[10][10];
+        mapGenerator.setMap(map);
+        assertSame(map, mapGenerator.getMap());
+    }
 }

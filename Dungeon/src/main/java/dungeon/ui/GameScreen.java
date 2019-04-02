@@ -46,22 +46,7 @@ public class GameScreen {
     private void setKeyboardActions() {
         screen.setOnKeyPressed(event -> {
             KeyCode keyCode = event.getCode();
-            PlayerAction action;
-            if (keyCode == KeyCode.H || keyCode == KeyCode.LEFT) {
-                action = PlayerAction.WEST;
-            } else if (keyCode == KeyCode.J || keyCode == KeyCode.DOWN) {
-                action = PlayerAction.SOUTH;
-            } else if (keyCode == KeyCode.K || keyCode == KeyCode.UP) {
-                action = PlayerAction.NORTH;
-            } else if (keyCode == KeyCode.L || keyCode == KeyCode.RIGHT) {
-                action = PlayerAction.EAST;
-            } else if (keyCode == KeyCode.PERIOD) {
-                action = PlayerAction.STAY;
-            } else {
-                return;
-            }
-
-            game.getPlayer().setAction(action);
+            game.getPlayer().setAction(keyCode);
             game.tick();
             update();
         });

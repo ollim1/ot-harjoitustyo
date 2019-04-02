@@ -57,7 +57,7 @@ public class TileMapper {
                 renderer.drawImage(tileSet,
                         tileValue * dimension, 0,
                         dimension, dimension,
-                        x * dimension - 16, y * dimension - 16,
+                        x * dimension - dimension / 2, y * dimension - dimension / 2,
                         dimension, dimension);
             }
         }

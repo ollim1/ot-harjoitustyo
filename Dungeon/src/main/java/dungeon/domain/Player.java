@@ -37,6 +37,8 @@ public class Player extends Character {
             case SOUTH:
                 super.move(Direction.SOUTH, map);
                 break;
+            default:
+                break;
         }
     }
 

@@ -11,5 +11,5 @@
 | 3.4.  | 3     | ohjelman vuorojärjestelmä muutettu käyttämään prioriteettijonoa, joitakin bugeja korjattu |
 | 6.4.  | 1     | UML-kaavioiden käsittelyohjelmien etsimistä |
 | 7.4.  | 7     | reitinhaku toteutettu, tekoälyä alettu toteuttamaan, yksikkötestejä |
-| 8.4.  | 5     | tekoälyn toteuttamista, yksikkötestejä, pakkauskaavio|
-| yht   | 36.5  | |
+| 8.4.  | 6     | tekoälyn toteuttamista, taistelutoiminnallisuus, yksikkötestejä, pakkauskaavio |
+| yht   | 37.5  | |

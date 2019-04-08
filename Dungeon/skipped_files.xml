@@ -10,4 +10,5 @@
     <suppress files="dungeon.ui.HighScoresScreen.java" checks="[a-zA-Z0-9]*"/>
     <suppress files="dungeon.ui.TileMapper.java" checks="[a-zA-Z0-9]*"/>
     <suppress files="dungeon.ui.TitleScreen.java" checks="[a-zA-Z0-9]*"/>
+    <suppress files="dungeon.ui.ViewManager.java" checks="[a-zA-Z0-9]*"/>
 </suppressions>

@@ -4,8 +4,8 @@
 package dungeon.ui;
 
 import dungeon.backend.Game;
+import dungeon.domain.Monster;
 import dungeon.domain.Player;
-import dungeon.domain.PlayerAction;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class GameScreen {
 
@@ -29,25 +30,31 @@ public class GameScreen {
         this.game = game;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
-        this.healthMeter = new Label("20/20");
+        this.healthMeter = new Label(" 20/ 20");
         healthMeter.setTextFill(Color.GREEN);
+        healthMeter.setFont(new Font("Monospace", 24));
         this.canvas = new Canvas(resolutionX, resolutionY);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
                 "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY);
         Group screenRoot = new Group();
-        screenRoot.getChildren().add(healthMeter);
         screenRoot.getChildren().add(canvas);
-        this.screen = new Scene(screenRoot);
 
-        setKeyboardActions();
+        screenRoot.getChildren().add(healthMeter);
+        this.screen = new Scene(screenRoot);
+        game.createPlayer();
+        game.createMonster();
+
+        setKeyboardActions(screenRoot);
     }
 
-    private void setKeyboardActions() {
+    private void setKeyboardActions(Group root) {
         screen.setOnKeyPressed(event -> {
             KeyCode keyCode = event.getCode();
-            game.getPlayer().setAction(keyCode);
-            game.tick();
+            Player player = game.getPlayer();
+            player.setAction(keyCode);
+            player.incrementTurn(player.act(game, game.populateMap(player)));
+            game.playRound();
             update();
         });
     }
@@ -57,8 +64,9 @@ public class GameScreen {
     }
 
     public void update() {
-        char[][] map = game.drawMap();
+        char[][] map = game.populateMap(game.getPlayer());
         Player player = game.getPlayer();
-        tileMapper.drawFrame(map, player.getPositionX(), player.getPositionY());
+        tileMapper.drawFrame(map, player.getPosition().getX(), player.getPosition().getY());
+        healthMeter.setText(String.format("%3d/%3d", player.getHealth(), player.getMaxHealth()));
     }
 }

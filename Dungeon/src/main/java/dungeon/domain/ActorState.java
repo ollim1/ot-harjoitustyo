@@ -3,9 +3,9 @@
  */
 package dungeon.domain;
 
-public enum CharacterState {
+public enum ActorState {
 
     FLEE,
     STAY,
-    MOVE
+    ATTACK
 }

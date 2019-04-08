@@ -18,7 +18,7 @@ public class GameTest {
     @Before
     public void setUp() {
         try {
-            Game game = new Game(40, 40);
+            game = new Game(40, 40);
         } catch (IllegalArgumentException e) {
             return;
         }
@@ -42,5 +42,22 @@ public class GameTest {
     @Test
     public void outOfBoundsReturnsTrueIfOutOfBounds() {
 
+    }
+
+    @Test
+    public void gameDrawsPlayer() {
+        game.createPlayer();
+        char[][] map = game.populateMap(game.getPlayer());
+        boolean playerIsVisible = false;
+        outer:
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[0].length; x++) {
+                if (map[y][x] == '@') {
+                    playerIsVisible = true;
+                    break outer;
+                }
+            }
+        }
+        assertTrue(playerIsVisible);
     }
 }

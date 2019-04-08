@@ -1,8 +1,9 @@
 /*
  * @author olli m
  */
-package dungeon.backend;
+package dungeon.ui;
 
+import dungeon.backend.Game;
 import dungeon.ui.GameScreen;
 import dungeon.ui.TitleScreen;
 import javafx.stage.Stage;
@@ -13,7 +14,6 @@ public class ViewManager {
     private int resolutionY;
     private int mapWidth;
     private int mapHeight;
-    private Game game;
     private TitleScreen titleScreen;
     private Stage window;
 
@@ -27,9 +27,11 @@ public class ViewManager {
 
     public void showTitleScreen() {
         this.titleScreen = new TitleScreen(this);
+        this.window.setScene(titleScreen.createView(resolutionX, resolutionY));
     }
 
     public void runGame() {
+        Game game;
         try {
             game = new Game(mapWidth, mapHeight);
         } catch (Exception e) {

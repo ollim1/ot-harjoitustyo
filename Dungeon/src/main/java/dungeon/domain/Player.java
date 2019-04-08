@@ -3,17 +3,28 @@
  */
 package dungeon.domain;
 
+import dungeon.backend.Game;
 import javafx.scene.input.KeyCode;
 
-public class Player extends Character {
+public class Player extends Actor {
 
     private static final int MAX_HEALTH = 20;
     private PlayerAction action;
 
     public Player(int x, int y) {
         super.setHealth(MAX_HEALTH);
-        super.setPositionX(x);
-        super.setPositionY(y);
+        super.setMaxHealth(MAX_HEALTH);
+        super.setPosition(new Node(x, y));
+        boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
+        hostileSymbols['D'] = true;
+        super.setHostileSymbols(hostileSymbols);
+        super.setInterval(100);
+        super.setNextTurn(0);
+    }
+
+    @Override
+    public char getSymbol() {
+        return '@';
     }
 
     public void setAction(PlayerAction action) {
@@ -39,16 +50,17 @@ public class Player extends Character {
     }
 
     @Override
-    public void act(char[][] map) {
+    public int act(Game game, char[][] map) {
         if (action == PlayerAction.EAST) {
-            super.move(Direction.EAST, map);
+            super.move(Direction.EAST, game, map);
         } else if (action == PlayerAction.NORTH) {
-            super.move(Direction.NORTH, map);
+            super.move(Direction.NORTH, game, map);
         } else if (action == PlayerAction.WEST) {
-            super.move(Direction.WEST, map);
+            super.move(Direction.WEST, game, map);
         } else if (action == PlayerAction.SOUTH) {
-            super.move(Direction.SOUTH, map);
+            super.move(Direction.SOUTH, game, map);
         }
+        return 100;
     }
 
 }

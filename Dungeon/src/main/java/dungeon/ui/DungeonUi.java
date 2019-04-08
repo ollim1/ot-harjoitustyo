@@ -3,18 +3,8 @@
  */
 package dungeon.ui;
 
-import dungeon.backend.ViewManager;
-import dungeon.backend.Game;
-import java.util.ArrayList;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class DungeonUi extends Application {
@@ -27,10 +17,7 @@ public class DungeonUi extends Application {
     @Override
     public void start(Stage window) {
         ViewManager viewManager = new ViewManager(window, RESOLUTION_X, RESOLUTION_Y, GAME_WIDTH, GAME_HEIGHT);
-
-        TitleScreen titleScreen = new TitleScreen(viewManager);
-        Scene titleScreenView = titleScreen.createView(RESOLUTION_X, RESOLUTION_Y);
-        window.setScene(titleScreenView);
+        viewManager.showTitleScreen();
         window.setTitle("dungeon");
         window.show();
     }

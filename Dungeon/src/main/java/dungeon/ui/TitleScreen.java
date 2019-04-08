@@ -3,10 +3,9 @@
  */
 package dungeon.ui;
 
-import dungeon.backend.ViewManager;
 import java.util.ArrayList;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
@@ -17,14 +16,13 @@ import javafx.scene.text.Font;
 
 public class TitleScreen {
 
-    private ViewManager appLogic;
+    private ViewManager viewManager;
 
-    public TitleScreen(ViewManager appLogic) {
-        this.appLogic = appLogic;
+    public TitleScreen(ViewManager viewManager) {
+        this.viewManager = viewManager;
     }
 
     public Scene createView(int resolutionX, int resolutionY) {
-
         Label titleText = new Label("dungeon");
         Label startText = new Label("start game");
         Label highScoresText = new Label("high scores");
@@ -36,7 +34,10 @@ public class TitleScreen {
         ArrayList<BorderPane> choiceButtons = new ArrayList<>();
         addPanesToList(choiceButtons, startButton, highScoresButton, quitButton);
         startButton.setOnMouseClicked(event -> {
-            appLogic.runGame();
+            viewManager.runGame();
+        });
+        quitButton.setOnMouseClicked(event -> {
+            Platform.exit();
         });
 
         setFormat(titleText);
@@ -64,7 +65,6 @@ public class TitleScreen {
     }
 
     private void setChoiceButtonTextFormat(ArrayList<BorderPane> choiceButtons) {
-
         for (BorderPane button : choiceButtons) {
             button.setPadding(new Insets(16));
             Label label = (Label) button.getCenter();

@@ -3,11 +3,12 @@
  */
 package dungeon.backend;
 
+import dungeon.domain.Actor;
 import dungeon.domain.Monster;
+import dungeon.domain.Node;
 import dungeon.domain.Player;
-import dungeon.domain.PlayerAction;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.Random;
 
 public class Game {
@@ -15,7 +16,9 @@ public class Game {
     private Random random;
     private char[][] map;
     private Player player;
-    private ArrayList<Monster> monsters;
+    private PriorityQueue<Actor> queue;
+    private ArrayList<Actor> actors;
+    private PathFinder pathFinder;
 
     public Game(int width, int height) throws IllegalArgumentException {
         if (width < 1 || height < 1) {
@@ -26,35 +29,53 @@ public class Game {
         mapGenerator.generateMap();
         map = mapGenerator.getMap();
 
+        this.queue = new PriorityQueue<>();
+        this.actors = new ArrayList<>();
+        this.pathFinder = new PathFinder();
+    }
+
+    public void createMonster() {
+        char[][] temporaryMap = populateMap(null);
+        int monsterX;
+        int monsterY;
+        while (true) {
+            monsterX = random.nextInt(temporaryMap[0].length);
+            monsterY = random.nextInt(temporaryMap.length);
+            if (map[monsterY][monsterX] == ' ') {
+                break;
+            }
+        }
+        Monster monster = new Monster(monsterX, monsterY);
+        this.actors.add(monster);
+        this.queue.add(monster);
+    }
+
+    public void createPlayer() {
         int playerX;
         int playerY;
         while (true) {
-            playerX = random.nextInt(width);
-            playerY = random.nextInt(height);
+            playerX = random.nextInt(map[0].length);
+            playerY = random.nextInt(map.length);
             if (map[playerY][playerX] == ' ') {
                 break;
             }
         }
         player = new Player(playerX, playerY);
-        this.monsters = new ArrayList<>();
+        this.actors.add(player);
     }
 
-    public char[][] drawMap() {
+    public char[][] populateMap(Actor actor) {
+        /* 
+         * returns the map with objects overlayed
+         * TODO: determine output based on actor status
+         */
         char[][] drawable = copyMap();
-        drawMonsters(drawable);
-        int playerX = player.getPositionX();
-        int playerY = player.getPositionY();
-        if (!outOfBounds(playerY, playerX)) {
-            drawable[player.getPositionY()][player.getPositionX()] = '@';
-        }
+        drawActors(drawable);
 
         return drawable;
     }
 
     private char[][] copyMap() {
-        /*
-        * returns the map with objects overlayed
-         */
         char[][] drawable = new char[map.length][map[0].length];
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[0].length; x++) {
@@ -64,18 +85,43 @@ public class Game {
         return drawable;
     }
 
-    private void drawMonsters(char[][] drawable) {
-        for (Monster monster : monsters) {
-            if (!outOfBounds(monster.getPositionY(), monster.getPositionX())) {
-                drawable[monster.getPositionY()][monster.getPositionX()] = 'D';
+    private void drawActors(char[][] drawable) {
+        for (Actor actor : actors) {
+            if (!outOfBounds(actor.getPosition().getX(), actor.getPosition().getY())) {
+                drawable[actor.getPosition().getY()][actor.getPosition().getX()] = actor.getSymbol();
             }
         }
     }
 
-    public void tick() {
-        player.act(map);
-        for (Monster monster : monsters) {
-            monster.act(map);
+    public Actor characterAt(Node point) {
+        for (Actor actor : actors) {
+            if (actor.getPosition().equals(point)) {
+                return actor;
+            }
+        }
+        return null;
+    }
+
+    public void playRound() {
+        // using a priority queue to keep track of action lengths
+        // may add variable actor speed and realistic diagonal movement speed
+        // insert or reinsert the player into the queue
+        queue.add(player);
+
+        while (true) {
+            Actor actor = queue.poll();
+            if (actor.getClass() == Player.class) { // is the actor a player?
+                // wait for input from UI
+                // when the input has been processed and the player has acted,
+                break;
+            }
+            // actor is not a player
+            if (actor.getClass() == Monster.class) {
+                // putting this here for now
+                ((Monster) actor).alert(this);
+            }
+            actor.incrementTurn(actor.act(this, populateMap(actor)));
+            queue.add(actor);
         }
     }
 
@@ -85,6 +131,18 @@ public class Game {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public char[][] getMap() {
+        return map;
+    }
+
+    public PathFinder getPathFinder() {
+        return pathFinder;
+    }
+
+    public ArrayList<Actor> getActors() {
+        return actors;
     }
 
 }

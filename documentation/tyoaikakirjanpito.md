@@ -8,3 +8,8 @@
 | 31.3. | 2     | pääruudun raakile |
 | 1.4.  | 7     | osa ohjelman toiminnallisuudesta toteutettu |
 | 2.4.  | 5     | toiminnallisuutta täydennetty, testejä kirjoitettu |
+| 3.4.  | 3     | ohjelman vuorojärjestelmä muutettu käyttämään prioriteettijonoa, joitakin bugeja korjattu |
+| 6.4.  | 1     | UML-kaavioiden käsittelyohjelmien etsimistä |
+| 7.4.  | 7     | reitinhaku toteutettu, tekoälyä alettu toteuttamaan, yksikkötestejä |
+| 8.4.  | 5     | tekoälyn toteuttamista, yksikkötestejä, pakkauskaavio|
+| yht   | 36.5  | |

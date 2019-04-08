@@ -49,6 +49,10 @@ public class Player extends Actor {
         return action;
     }
 
+    public void heal() {
+        setHealth(Math.min(getHealth() + getMaxHealth() * 0.01, getMaxHealth()));
+    }
+    
     @Override
     public int act(Game game, char[][] map) {
         if (action == PlayerAction.EAST) {

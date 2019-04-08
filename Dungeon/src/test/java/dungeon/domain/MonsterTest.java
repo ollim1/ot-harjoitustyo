@@ -110,7 +110,7 @@ public class MonsterTest {
     private static class MockAttack implements Attack {
 
         @Override
-        public int apply(Actor source, Actor target) {
+        public double apply(Actor source, Actor target) {
             return target.damage(1);
         }
 
@@ -185,7 +185,7 @@ public class MonsterTest {
         game.pathFinder = pathFinder;
         monster = new Monster(3, 3);
         Player player = new Player(2, 3);
-        int originalHealth = player.getHealth();
+        double originalHealth = player.getHealth();
         game.player = player;
         monster.setState(ActorState.ATTACK);
         monster.setPaths(testPath);
@@ -194,8 +194,8 @@ public class MonsterTest {
         game.addActor(monster);
         char[][] populatedMap = game.populateMap(monster);
         monster.act(game, populatedMap);
-        int expected = originalHealth - 1;
-        int actual = player.getHealth();
+        double expected = originalHealth - 1;
+        double actual = player.getHealth();
         if (expected != actual) {
             fail("Expected " + expected + ", but got " + actual);
         }

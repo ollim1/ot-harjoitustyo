@@ -8,8 +8,8 @@ import dungeon.backend.Game;
 public abstract class Actor implements Comparable<Actor> {
 
     private Node position;
-    private int health;
-    private int maxHealth;
+    private double health;
+    private double maxHealth;
     private int interval;
     private int nextTurn;
     private boolean[] isHostile;
@@ -27,9 +27,9 @@ public abstract class Actor implements Comparable<Actor> {
 
     public abstract char getSymbol();
 
-    public int damage(int amount) {
+    public double damage(double amount) {
         if (amount > health) {
-            int originalHealth = health;
+            double originalHealth = health;
             health = 0;
             return originalHealth;
         } else {
@@ -66,11 +66,11 @@ public abstract class Actor implements Comparable<Actor> {
         this.health = health;
     }
 
-    public void setMaxHealth(int maxHealth) {
+    public void setMaxHealth(double maxHealth) {
         this.maxHealth = maxHealth;
     }
 
-    public int getMaxHealth() {
+    public double getMaxHealth() {
         return maxHealth;
     }
 
@@ -82,8 +82,12 @@ public abstract class Actor implements Comparable<Actor> {
         this.position = position;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
     }
 
     public void setHostileSymbols(boolean[] hostileSymbols) {

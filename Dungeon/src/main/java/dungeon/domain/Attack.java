@@ -5,5 +5,5 @@ package dungeon.domain;
 
 public interface Attack {
 
-    public int apply(Actor source, Actor target);
+    public double apply(Actor source, Actor target);
 }

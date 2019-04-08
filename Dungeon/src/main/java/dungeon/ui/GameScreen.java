@@ -4,7 +4,6 @@
 package dungeon.ui;
 
 import dungeon.backend.Game;
-import dungeon.domain.Monster;
 import dungeon.domain.Player;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -23,6 +22,7 @@ public class GameScreen {
     private Label healthMeter;
     private Canvas canvas;
     private GraphicsContext graphicsContext;
+    private Group screenRoot;
     private int resolutionX;
     private int resolutionY;
 
@@ -37,7 +37,7 @@ public class GameScreen {
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
                 "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY);
-        Group screenRoot = new Group();
+        screenRoot = new Group();
         screenRoot.getChildren().add(canvas);
 
         screenRoot.getChildren().add(healthMeter);
@@ -45,16 +45,15 @@ public class GameScreen {
         game.createPlayer();
         game.createMonster();
 
-        setKeyboardActions(screenRoot);
+        setInputEvents();
     }
 
-    private void setKeyboardActions(Group root) {
+    private void setInputEvents() {
         screen.setOnKeyPressed(event -> {
-            KeyCode keyCode = event.getCode();
-            Player player = game.getPlayer();
-            player.setAction(keyCode);
-            player.incrementTurn(player.act(game, game.populateMap(player)));
-            game.playRound();
+            game.insertAction(event.getCode());
+            if (game.isGameOver()) {
+                gameOver();
+            }
             update();
         });
     }
@@ -67,6 +66,26 @@ public class GameScreen {
         char[][] map = game.populateMap(game.getPlayer());
         Player player = game.getPlayer();
         tileMapper.drawFrame(map, player.getPosition().getX(), player.getPosition().getY());
-        healthMeter.setText(String.format("%3d/%3d", player.getHealth(), player.getMaxHealth()));
+        if (player.getHealth() < player.getMaxHealth() * 0.3) {
+            healthMeter.setTextFill(Color.RED);
+        } else if (player.getHealth() < player.getMaxHealth() * 0.5) {
+            healthMeter.setTextFill(Color.YELLOW);
+        } else {
+            healthMeter.setTextFill(Color.GREEN);
+        }
+        healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
+    }
+
+    private void gameOver() {
+        screen.setOnKeyPressed(event -> {
+            return;
+        });
+        Label gameOverText = new Label("game over");
+        gameOverText.setTextFill(Color.RED);
+        gameOverText.setFont(new Font("Monospace", 40));
+        screenRoot.getChildren().add(gameOverText);
+        gameOverText.layout();
+        gameOverText.setLayoutX((resolutionX - 214) / 2);
+        gameOverText.setLayoutY((resolutionY - 40) / 2);
     }
 }

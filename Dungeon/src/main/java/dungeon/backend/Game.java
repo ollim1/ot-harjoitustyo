@@ -4,12 +4,15 @@
 package dungeon.backend;
 
 import dungeon.domain.Actor;
+import dungeon.domain.Bite;
 import dungeon.domain.Monster;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
+import dungeon.domain.Punch;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
+import javafx.scene.input.KeyCode;
 
 public class Game {
 
@@ -19,6 +22,7 @@ public class Game {
     private PriorityQueue<Actor> queue;
     private ArrayList<Actor> actors;
     private PathFinder pathFinder;
+    private boolean gameOver;
 
     public Game(int width, int height) throws IllegalArgumentException {
         if (width < 1 || height < 1) {
@@ -28,6 +32,7 @@ public class Game {
         MapGenerator mapGenerator = new MapGenerator(random, width, height);
         mapGenerator.generateMap();
         map = mapGenerator.getMap();
+        gameOver = false;
 
         this.queue = new PriorityQueue<>();
         this.actors = new ArrayList<>();
@@ -48,6 +53,7 @@ public class Game {
         Monster monster = new Monster(monsterX, monsterY);
         this.actors.add(monster);
         this.queue.add(monster);
+        monster.setAttack(new Bite());
     }
 
     public void createPlayer() {
@@ -62,6 +68,7 @@ public class Game {
         }
         player = new Player(playerX, playerY);
         this.actors.add(player);
+        player.setAttack(new Punch());
     }
 
     public char[][] populateMap(Actor actor) {
@@ -102,14 +109,32 @@ public class Game {
         return null;
     }
 
+    public void insertAction(KeyCode keyCode) {
+        player.setAction(keyCode);
+        player.incrementTurn(player.act(this, populateMap(player)));
+        player.heal();
+        playRound();
+    }
+
     public void playRound() {
         // using a priority queue to keep track of action lengths
         // may add variable actor speed and realistic diagonal movement speed
         // insert or reinsert the player into the queue
+        if (gameOver) {
+            return;
+        }
         queue.add(player);
 
-        while (true) {
+        while (!queue.isEmpty()) {
             Actor actor = queue.poll();
+            if (actor.getHealth() <= 0) {
+                if (actor.getClass() == Player.class) {
+                    endGame();
+                    return;
+                }
+                actors.remove(actor);
+                continue;
+            }
             if (actor.getClass() == Player.class) { // is the actor a player?
                 // wait for input from UI
                 // when the input has been processed and the player has acted,
@@ -123,6 +148,14 @@ public class Game {
             actor.incrementTurn(actor.act(this, populateMap(actor)));
             queue.add(actor);
         }
+    }
+
+    private void endGame() {
+        gameOver = true;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     private boolean outOfBounds(int x, int y) {

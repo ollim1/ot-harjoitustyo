@@ -110,6 +110,9 @@ public class Game {
     }
 
     public void insertAction(KeyCode keyCode) {
+        if (gameOver) {
+            return;
+        }
         player.setAction(keyCode);
         player.incrementTurn(player.act(this, populateMap(player)));
         player.heal();
@@ -128,26 +131,36 @@ public class Game {
         while (!queue.isEmpty()) {
             Actor actor = queue.poll();
             if (actor.getHealth() <= 0) {
-                if (actor.getClass() == Player.class) {
-                    endGame();
+                if (cleanUpActor(actor)) {
                     return;
                 }
-                actors.remove(actor);
                 continue;
             }
             if (actor.getClass() == Player.class) { // is the actor a player?
                 // wait for input from UI
-                // when the input has been processed and the player has acted,
                 break;
             }
-            // actor is not a player
-            if (actor.getClass() == Monster.class) {
-                // putting this here for now
-                ((Monster) actor).alert(this);
-            }
-            actor.incrementTurn(actor.act(this, populateMap(actor)));
-            queue.add(actor);
+            controlActor(actor);
         }
+    }
+
+    private boolean cleanUpActor(Actor actor) {
+        if (actor.getClass() == Player.class) {
+            endGame();
+            return true;
+        }
+        actors.remove(actor);
+        return false;
+    }
+
+    private void controlActor(Actor actor) {
+        // actor is not a player
+        if (actor.getClass() == Monster.class) {
+            // putting this here for now
+            ((Monster) actor).alert(this);
+        }
+        actor.incrementTurn(actor.act(this, populateMap(actor)));
+        queue.add(actor);
     }
 
     private void endGame() {

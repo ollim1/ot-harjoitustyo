@@ -54,10 +54,8 @@ public class Node implements Comparable<Node> {
 
     @Override
     public int compareTo(Node that) {
-        if (that.distance == Integer.MAX_VALUE) {
-            return -1;
-        } else if (this.distance == Integer.MAX_VALUE) {
-            return 1;
+        if (this.distance == -1 || that.distance == -1) {
+            return Integer.MAX_VALUE;
         }
         return this.distance - that.distance;
     }

@@ -52,9 +52,8 @@ public enum Direction {
             return NORTHWEST;
         } else if (this == EAST) {
             return WEST;
-        } else if (this == NORTHEAST) {
+        } else {
             return SOUTHWEST;
         }
-        return null;
     }
 }

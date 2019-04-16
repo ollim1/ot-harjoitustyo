@@ -15,7 +15,7 @@ public abstract class Actor implements Comparable<Actor> {
     private boolean[] isHostile;
     private Attack attack;
 
-    public abstract int act(Game game, char[][] map);
+    public abstract void act(Game game, char[][] map);
 
     public void setInterval(int interval) {
         this.interval = interval;
@@ -95,23 +95,25 @@ public abstract class Actor implements Comparable<Actor> {
     }
 
     public boolean move(Direction direction, Game game, char[][] map) {
-        Node next = position.translate(direction);
+        Node next = position.translateToNew(direction);
         if (isFree(map, next.getX(), next.getY())) {
-            position.move(direction);
+            position.translate(direction);
+            incrementTurn(direction.cost());
             return true;
         } else {
             if (isHostile[map[next.getY()][next.getX()]]) {
-                Actor target = game.characterAt(next);
-                if (attack != null) {
-                    if (target == null) {
-                        System.out.println(getSymbol() + " attacked nothing");
-                    } else {
-                        attack.apply(this, target);
-                    }
+                Actor target = game.actorAt(next);
+                if (attack != null && target != null) {
+                    attack.apply(this, target);
                 }
             }
         }
+        incrementTurn(direction.cost());
         return false;
+    }
+
+    public void idle() {
+        incrementTurn();
     }
 
     private boolean isFree(char[][] map, int x, int y) {

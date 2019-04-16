@@ -46,6 +46,9 @@ public class MapGeneratorTest {
         mapGenerator.generateMap();
         char[][] map = mapGenerator.getMap();
         boolean invalidCharacter = false;
+        char offender = '#';
+        int posX = -1;
+        int posY = -1;
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[0].length; x++) {
                 if (map[y][x] != '#'
@@ -54,13 +57,18 @@ public class MapGeneratorTest {
                         && map[y][x] != 'D'
                         && map[y][x] != '@') {
                     invalidCharacter = true;
+                    offender = map[y][x];
+                    posX = x;
+                    posY = y;
                     break;
                 }
             }
         }
-        assertFalse(invalidCharacter);
+        if (invalidCharacter) {
+            fail("fail: character " + offender + " at (" + posX + ", " + posY + ")");
+        }
     }
-    
+
     @Test
     public void setMapSetsMap() {
         char[][] map = new char[10][10];

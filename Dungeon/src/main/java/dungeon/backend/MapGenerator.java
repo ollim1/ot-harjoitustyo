@@ -4,6 +4,10 @@
 package dungeon.backend;
 
 import java.util.Random;
+import squidpony.squidgrid.mapping.FlowingCaveGenerator;
+import squidpony.squidgrid.mapping.IDungeonGenerator;
+import squidpony.squidgrid.mapping.styled.TilesetType;
+import squidpony.squidmath.RNG;
 
 public class MapGenerator {
 
@@ -12,6 +16,7 @@ public class MapGenerator {
      * for now it just returns a predetermined map
      */
     private char[][] map;
+    private IDungeonGenerator dungeonGenerator;
     private Random random;
 
     /* the map, stored in a printable format
@@ -20,14 +25,30 @@ public class MapGenerator {
     public MapGenerator(Random random, int width, int height) {
         this.map = new char[width + 2][height + 2];
         this.random = random;
+        this.dungeonGenerator = new FlowingCaveGenerator(width, height,
+                TilesetType.DEFAULT_DUNGEON, new RNG(random.nextInt()));
     }
 
-    public void generateMap() {
+    public void generateBetaMap() {
         fillMap();
         String[] placeholderMap = setPlaceHolderMap();
         int offsetX = map[0].length / 2 - placeholderMap[0].length() / 2;
         int offsetY = map.length / 2 - placeholderMap.length / 2;
         insertPlaceHolderMap(placeholderMap, offsetX, offsetY);
+    }
+
+    public void generateMap() {
+        char[][] tempMap = dungeonGenerator.generate();
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[0].length; x++) {
+                if (x < tempMap.length && y < tempMap[0].length
+                        && tempMap[x][y] == '.') {
+                    map[y][x] = ' ';
+                } else {
+                    map[y][x] = '#';
+                }
+            }
+        }
     }
 
     private void insertPlaceHolderMap(String[] placeholderMap, int offsetX, int offsetY) {

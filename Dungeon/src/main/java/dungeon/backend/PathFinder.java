@@ -48,7 +48,7 @@ public class PathFinder {
                 for (Direction neighbour : Direction.values()) {
                     int vx = ux + neighbour.getDifferenceX();
                     int vy = uy + neighbour.getDifferenceY();
-                    int newDistance = distance[uy][ux] + neighbour.getDistanceTraveled();
+                    int newDistance = distance[uy][ux] + neighbour.cost();
                     if (distance[vy][vx] == Integer.MAX_VALUE || distance[vy][vx] > newDistance) {
                         newPathFound(vy, vx, newDistance, neighbour, heap);
                     }
@@ -59,7 +59,7 @@ public class PathFinder {
 
     private void newPathFound(int vy, int vx, int newDistance, Direction neighbour, PriorityQueue<Node> heap) {
         distance[vy][vx] = newDistance;
-        paths[vy][vx] = neighbour.getOpposite();
+        paths[vy][vx] = neighbour.opposite();
         heap.add(new Node(vx, vy, newDistance));
     }
 

@@ -5,6 +5,8 @@ package dungeon.ui;
 
 import dungeon.backend.Game;
 import dungeon.domain.Player;
+import dungeon.domain.PlayerAction;
+import java.util.HashMap;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -25,19 +27,33 @@ public class GameScreen {
     private Group screenRoot;
     private int resolutionX;
     private int resolutionY;
+    private static final HashMap<KeyCode, PlayerAction> legalKeyCodes = new HashMap<KeyCode, PlayerAction>() {
+        {
+
+            put(KeyCode.Y, PlayerAction.NORTHWEST);
+            put(KeyCode.U, PlayerAction.NORTHEAST);
+            put(KeyCode.H, PlayerAction.WEST);
+            put(KeyCode.J, PlayerAction.SOUTH);
+            put(KeyCode.K, PlayerAction.NORTH);
+            put(KeyCode.L, PlayerAction.EAST);
+            put(KeyCode.B, PlayerAction.SOUTHWEST);
+            put(KeyCode.N, PlayerAction.SOUTHEAST);
+            put(KeyCode.PERIOD, PlayerAction.STAY);
+        }
+    };
 
     public GameScreen(Game game, int resolutionX, int resolutionY) {
         this.game = game;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
         this.healthMeter = new Label(" 20/ 20");
-        healthMeter.setTextFill(Color.GREEN);
-        healthMeter.setFont(new Font("Monospace", 24));
+        this.healthMeter.setTextFill(Color.GREEN);
+        this.healthMeter.setFont(new Font("Monospace", 24));
         this.canvas = new Canvas(resolutionX, resolutionY);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
                 "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY);
-        screenRoot = new Group();
+        this.screenRoot = new Group();
         screenRoot.getChildren().add(canvas);
 
         screenRoot.getChildren().add(healthMeter);
@@ -50,11 +66,13 @@ public class GameScreen {
 
     private void setInputEvents() {
         screen.setOnKeyPressed(event -> {
-            game.insertAction(event.getCode());
-            if (game.isGameOver()) {
-                gameOver();
+            if (legalKeyCodes.containsKey(event.getCode())) {
+                game.insertAction(legalKeyCodes.get(event.getCode()));
+                if (game.isGameOver()) {
+                    gameOver();
+                }
+                update();
             }
-            update();
         });
     }
 
@@ -63,9 +81,12 @@ public class GameScreen {
     }
 
     public void update() {
-        char[][] map = game.populateMap(game.getPlayer());
+        game.getPlotter().update();
+        char[][] map = game.getPlotter().getPlayerMap();
+        double[][] losMap = game.getPlotter().getVisibility();
+
         Player player = game.getPlayer();
-        tileMapper.drawFrame(map, player.getPosition().getX(), player.getPosition().getY());
+        tileMapper.drawFrame(map, losMap, player.getPosition().getX(), player.getPosition().getY());
         if (player.getHealth() < player.getMaxHealth() * 0.3) {
             healthMeter.setTextFill(Color.RED);
         } else if (player.getHealth() < player.getMaxHealth() * 0.5) {

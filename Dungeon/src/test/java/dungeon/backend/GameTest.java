@@ -16,18 +16,11 @@ public class GameTest {
     }
 
     @Before
-    public void setUp() {
-        try {
-            game = new Game(40, 40);
-        } catch (IllegalArgumentException e) {
-            return;
-        }
+    public void setUp() throws IllegalArgumentException {
+        game = new Game();
+        game.initializeMapObjects(40, 40);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void gameConstructorThrowsExceptionOnIllegalMapSize() {
-        Game game1 = new Game(-1, -1);
-    }
 //
 //    @Test
 //    public void gameConstructorCorrectMapSize() {
@@ -47,7 +40,7 @@ public class GameTest {
     @Test
     public void gameDrawsPlayer() {
         game.createPlayer();
-        char[][] map = game.populateMap(game.getPlayer());
+        char[][] map = game.getPlotter().populateMap(game.getPlayer());
         boolean playerIsVisible = false;
         outer:
         for (int y = 0; y < map.length; y++) {

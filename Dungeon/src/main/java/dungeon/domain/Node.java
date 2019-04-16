@@ -37,12 +37,12 @@ public class Node implements Comparable<Node> {
         this.distance = distance;
     }
 
-    public void move(Direction direction) {
+    public void translate(Direction direction) {
         this.x += direction.getDifferenceX();
         this.y += direction.getDifferenceY();
     }
 
-    public Node translate(Direction direction) {
+    public Node translateToNew(Direction direction) {
         return new Node(this.x + direction.getDifferenceX(), this.y + direction.getDifferenceY());
     }
 

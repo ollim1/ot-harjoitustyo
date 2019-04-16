@@ -5,12 +5,32 @@ package dungeon.domain;
 
 import dungeon.backend.Game;
 import dungeon.backend.PathFinder;
+import dungeon.backend.Plotter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
 public class MonsterTest {
+
+    private static class MockPlotter extends Plotter {
+
+        public MockPlotter(Game game, char[][] map) {
+            super(game, map);
+        }
+
+        @Override
+        public char[][] getPlayerMap() {
+            throw new UnsupportedOperationException("operation not supported");
+        }
+
+        @Override
+        public double[][] getVisibility() {
+            throw new UnsupportedOperationException("operation not supported");
+        }
+
+    }
 
     private static class MockGame extends Game {
 
@@ -18,18 +38,24 @@ public class MonsterTest {
         public char[][] map;
         public PathFinder pathFinder;
         public ArrayList<Actor> actors;
+        public Plotter plotter;
 
         public MockGame() throws IllegalArgumentException {
-            super(10, 10);
             this.actors = new ArrayList<>();
+            this.plotter = new MockPlotter(this, map);
         }
 
         public MockGame(Player player, char[][] map, PathFinder pathFinder, int width, int height) throws IllegalArgumentException {
-            super(width, height);
             this.player = player;
             this.map = map;
             this.pathFinder = pathFinder;
             this.actors = new ArrayList<>();
+            this.plotter = new MockPlotter(this, map);
+        }
+
+        @Override
+        public Plotter getPlotter() {
+            return plotter;
         }
 
         @Override
@@ -53,21 +79,7 @@ public class MonsterTest {
         }
 
         @Override
-        public char[][] populateMap(Actor actor) {
-            char[][] copy = new char[map.length][map[0].length];
-            for (int y = 0; y < map.length; y++) {
-                for (int x = 0; x < map[0].length; x++) {
-                    copy[y][x] = map[y][x];
-                }
-            }
-            for (Actor a : actors) {
-                copy[a.getPosition().getY()][a.getPosition().getX()] = a.getSymbol();
-            }
-            return copy;
-        }
-
-        @Override
-        public Actor characterAt(Node point) {
+        public Actor actorAt(Node point) {
             for (Actor actor : actors) {
                 if (actor.getPosition().equals(point)) {
                     return actor;
@@ -123,12 +135,8 @@ public class MonsterTest {
     }
 
     @Before
-    public void setUp() {
-        try {
-            game = new MockGame();
-        } catch (Exception e) {
-            System.err.println("illegal argument exception: " + e.getMessage());
-        }
+    public void setUp() throws IllegalArgumentException {
+        game = new MockGame();
         testMap = new char[][]{
             "######".toCharArray(),
             "#    #".toCharArray(),
@@ -181,7 +189,9 @@ public class MonsterTest {
         }
 
         MockPathFinder pathFinder = new MockPathFinder(testPath, new Node(-1, -1));
+        System.out.println("game " + game);
         game.map = testMap;
+        game.plotter.setMap(game.map);
         game.pathFinder = pathFinder;
         monster = new Monster(3, 3);
         Player player = new Player(2, 3);
@@ -192,7 +202,8 @@ public class MonsterTest {
         monster.setAttack(new MockAttack());
         game.addActor(player);
         game.addActor(monster);
-        char[][] populatedMap = game.populateMap(monster);
+        System.out.println("plotter: " + game.getPlotter());
+        char[][] populatedMap = game.getPlotter().populateMap(monster);
         monster.act(game, populatedMap);
         double expected = originalHealth - 1;
         double actual = player.getHealth();
@@ -240,10 +251,13 @@ public class MonsterTest {
         Direction[][] paths = pathFinder.getPaths();
         monster.setPaths(paths);
         monster.act(game, testMap);
-        Node expected = new Node(4, 3);
+        HashSet<Node> expected = new HashSet<>();
+        expected.add(new Node(4, 2));
+        expected.add(new Node(4, 3));
+        expected.add(new Node(4, 4));
         Node actual = monster.getPosition();
-        if (!expected.equals(actual)) {
-            fail("expected " + expected + ", but got " + actual);
+        if (!expected.contains(actual)) {
+            fail("expected (4,2), (4,3) or (4,4), but got " + actual);
         }
     }
 
@@ -255,10 +269,13 @@ public class MonsterTest {
         Player player = new Player(2, 3);
         game.player = player;
         monster.act(game, testMap);
-        Node expected = new Node(4, 3);
+        HashSet<Node> expected = new HashSet<>();
+        expected.add(new Node(4, 2));
+        expected.add(new Node(4, 3));
+        expected.add(new Node(4, 4));
         Node actual = monster.getPosition();
-        if (!expected.equals(actual)) {
-            fail("expected " + expected + ", but got " + actual);
+        if (!expected.contains(actual)) {
+            fail("expected (4,2), (4,3) or (4,4), but got " + actual);
         }
     }
 }

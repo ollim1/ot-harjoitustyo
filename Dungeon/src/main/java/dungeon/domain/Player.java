@@ -4,12 +4,24 @@
 package dungeon.domain;
 
 import dungeon.backend.Game;
-import javafx.scene.input.KeyCode;
+import java.util.HashMap;
 
 public class Player extends Actor {
 
     private static final int MAX_HEALTH = 20;
     private PlayerAction action;
+    private static final HashMap<PlayerAction, Direction> ACTION_TO_DIRECTION_TRANSLATION = new HashMap<PlayerAction, Direction>() {
+        {
+            put(PlayerAction.NORTH, Direction.NORTH);
+            put(PlayerAction.NORTHWEST, Direction.NORTHWEST);
+            put(PlayerAction.WEST, Direction.WEST);
+            put(PlayerAction.SOUTHWEST, Direction.SOUTHWEST);
+            put(PlayerAction.SOUTH, Direction.SOUTH);
+            put(PlayerAction.SOUTHEAST, Direction.SOUTHEAST);
+            put(PlayerAction.EAST, Direction.EAST);
+            put(PlayerAction.NORTHEAST, Direction.NORTHEAST);
+        }
+    };
 
     public Player(int x, int y) {
         super.setHealth(MAX_HEALTH);
@@ -31,20 +43,6 @@ public class Player extends Actor {
         this.action = action;
     }
 
-    public void setAction(KeyCode keyCode) {
-        if (keyCode == KeyCode.H || keyCode == KeyCode.LEFT) {
-            action = PlayerAction.WEST;
-        } else if (keyCode == KeyCode.J || keyCode == KeyCode.DOWN) {
-            action = PlayerAction.SOUTH;
-        } else if (keyCode == KeyCode.K || keyCode == KeyCode.UP) {
-            action = PlayerAction.NORTH;
-        } else if (keyCode == KeyCode.L || keyCode == KeyCode.RIGHT) {
-            action = PlayerAction.EAST;
-        } else if (keyCode == KeyCode.PERIOD) {
-            action = PlayerAction.STAY;
-        }
-    }
-
     public PlayerAction getAction() {
         return action;
     }
@@ -52,19 +50,15 @@ public class Player extends Actor {
     public void heal() {
         setHealth(Math.min(getHealth() + getMaxHealth() * 0.01, getMaxHealth()));
     }
-    
+
     @Override
-    public int act(Game game, char[][] map) {
-        if (action == PlayerAction.EAST) {
-            super.move(Direction.EAST, game, map);
-        } else if (action == PlayerAction.NORTH) {
-            super.move(Direction.NORTH, game, map);
-        } else if (action == PlayerAction.WEST) {
-            super.move(Direction.WEST, game, map);
-        } else if (action == PlayerAction.SOUTH) {
-            super.move(Direction.SOUTH, game, map);
+    public void act(Game game, char[][] map) {
+        if (action == PlayerAction.STAY) {
+            super.idle();
+        } else {
+            super.move(ACTION_TO_DIRECTION_TRANSLATION.get(action), game, map);
         }
-        return 100;
+        heal();
     }
 
 }

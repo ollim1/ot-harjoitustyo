@@ -35,6 +35,21 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.squidpony</groupId>
+            <artifactId>squidlib-util</artifactId>
+            <version>3.0.0-b9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squidpony</groupId>
+            <artifactId>squidlib</artifactId>
+            <version>3.0.0-b9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squidpony</groupId>
+            <artifactId>squidlib-extra</artifactId>
+            <version>3.0.0-b9</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -12,4 +12,8 @@
 | 6.4.  | 1     | UML-kaavioiden käsittelyohjelmien etsimistä |
 | 7.4.  | 7     | reitinhaku toteutettu, tekoälyä alettu toteuttamaan, yksikkötestejä |
 | 8.4.  | 6     | tekoälyn toteuttamista, taistelutoiminnallisuus, yksikkötestejä, pakkauskaavio |
-| yht   | 37.5  | |
+| 10.4. | 4     | Dijkstra-karttojen tutkimus reitinhakualgoritmeja varten, väli-ilmansuuntien lisääminen liikkuvuuteen |
+| 14.4. | 3     | Squidlib-kirjaston ominaisuuksien tutkiminen ja kirjaston Maven-riippuvuuksien sisällyttäminen projektiin |
+| 15.4. | 4     | Squidlib-kirjaston ominaisuuksia hyödyntävän toiminnallisuuden testaaminen erillisessä prototyyppiprojektissa, piirtokoodin ja karttageneraattorin päivittäminen, yksikkötestien päivittäminen vastaamaan uutta koodia |
+| 16.4. | 2     | sekvenssikaavio hirviön toiminnasta sen huomatessa pelaajan |
+| yht   | 50.5  | |

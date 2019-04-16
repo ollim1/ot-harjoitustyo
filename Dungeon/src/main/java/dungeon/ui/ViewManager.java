@@ -30,14 +30,10 @@ public class ViewManager {
         this.window.setScene(titleScreen.createView(resolutionX, resolutionY));
     }
 
-    public void runGame() {
+    public void runGame() throws IllegalArgumentException {
         Game game;
-        try {
-            game = new Game(mapWidth, mapHeight);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return;
-        }
+        game = new Game();
+        game.initializeMapObjects(mapWidth, mapHeight);
         GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY);
         gameScreen.update();
         window.setScene(gameScreen.getScreen());

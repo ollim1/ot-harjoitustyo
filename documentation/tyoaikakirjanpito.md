@@ -15,5 +15,5 @@
 | 10.4. | 4     | Dijkstra-karttojen tutkimus reitinhakualgoritmeja varten, väli-ilmansuuntien lisääminen liikkuvuuteen |
 | 14.4. | 3     | Squidlib-kirjaston ominaisuuksien tutkiminen ja kirjaston Maven-riippuvuuksien sisällyttäminen projektiin |
 | 15.4. | 4     | Squidlib-kirjaston ominaisuuksia hyödyntävän toiminnallisuuden testaaminen erillisessä prototyyppiprojektissa, piirtokoodin ja karttageneraattorin päivittäminen, yksikkötestien päivittäminen vastaamaan uutta koodia |
-| 16.4. | 2     | sekvenssikaavio hirviön toiminnasta sen huomatessa pelaajan |
-| yht   | 50.5  | |
+| 16.4. | 5     | sekvenssikaavio hirviön toiminnasta sen huomatessa pelaajan, yksikkötestejä, release |
+| yht   | 53.5  | |

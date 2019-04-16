@@ -13,6 +13,9 @@ Luolapeli, joka on toteutettu JavaFX:ällä.
 
 [Ohjeet](/documentation/ohjeet.md)
 
+### Releaset
+[Viikko 5](https://github.com/ollim1/ot-harjoitustyo/releases/tag/viikko5)
+
 ### Komentorivitoiminnot
 #### Testaus
 Testit suoritetaan komennolla
@@ -27,7 +30,7 @@ Testikattavuusraportti luodaan komennolla
 mvn jacoco:report
 ```
 
-Kattavuusraportti tallentuu tiedostoon __Dungeon/target/site/jacoco/index.html__
+Kattavuusraportti tallentuu tiedostoon _Dungeon/target/site/jacoco/index.html_
 
 #### Jarin generointi
 
@@ -43,4 +46,4 @@ Tiedostossa [checkstyle.xml](/Dungeon/checkstyle.xml) määritellyt tarkistukset
 ```
 mvn jxr:jxr checkstyle:checkstyle
 ```
-Tulokset tallentuvat tiedostoon __Dungeon/target/site/checkstyle.html__
+Tulokset tallentuvat tiedostoon _Dungeon/target/site/checkstyle.html_

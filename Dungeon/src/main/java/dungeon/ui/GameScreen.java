@@ -46,7 +46,7 @@ public class GameScreen {
         this.game = game;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
-        this.healthMeter = new Label(" 20/ 20");
+        this.healthMeter = new Label(" 40/ 40");
         this.healthMeter.setTextFill(Color.GREEN);
         this.healthMeter.setFont(new Font("Monospace", 24));
         this.canvas = new Canvas(resolutionX, resolutionY);
@@ -59,8 +59,7 @@ public class GameScreen {
         screenRoot.getChildren().add(healthMeter);
         this.screen = new Scene(screenRoot);
         game.createPlayer();
-        game.createMonster();
-
+        game.createMonsters();
         setInputEvents();
     }
 
@@ -97,11 +96,30 @@ public class GameScreen {
         healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
     }
 
+    public void updateDebug() {
+        game.getPlotter().update();
+        char[][] map = game.getPlotter().getPlayerMap();
+        double[][] losMap = game.getPlotter().getVisibility();
+
+        Player player = game.getPlayer();
+        game.getPathFinder().computePaths(game.getMap(), player.getPosition().getX(), player.getPosition().getY());
+        Color[][] colorMap = game.getPathFinder().dijkstraMap().getColorMap(600, 0.5);
+        tileMapper.drawDebugFrame(map, losMap, colorMap, player.getPosition().getX(), player.getPosition().getY());
+        if (player.getHealth() < player.getMaxHealth() * 0.3) {
+            healthMeter.setTextFill(Color.RED);
+        } else if (player.getHealth() < player.getMaxHealth() * 0.5) {
+            healthMeter.setTextFill(Color.YELLOW);
+        } else {
+            healthMeter.setTextFill(Color.GREEN);
+        }
+        healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
+    }
+
     private void gameOver() {
         screen.setOnKeyPressed(event -> {
             return;
         });
-        Label gameOverText = new Label("game over");
+        Label gameOverText = new Label("you are dead");
         gameOverText.setTextFill(Color.RED);
         gameOverText.setFont(new Font("Monospace", 40));
         screenRoot.getChildren().add(gameOverText);

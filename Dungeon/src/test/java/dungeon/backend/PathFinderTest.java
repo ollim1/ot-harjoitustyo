@@ -43,13 +43,13 @@ public class PathFinderTest {
     @Test
     public void pathFinderReturnsPathWhenOneExists() {
         pathFinder.computePaths(map, 1, 1);
-        Direction[][] paths = pathFinder.getPaths();
-        assertNotNull(paths);
+        int[][] distances = pathFinder.getDistances();
+        assertNotNull(distances);
         boolean pathHasBeenGenerated = false;
         outer:
-        for (int y = 0; y < paths.length; y++) {
-            for (int x = 0; x < paths[0].length; x++) {
-                if (paths[y][x] != null) {
+        for (int y = 0; y < distances.length; y++) {
+            for (int x = 0; x < distances[0].length; x++) {
+                if (distances[y][x] != Integer.MAX_VALUE && distances[y][x] != 0) {
                     pathHasBeenGenerated = true;
                     break outer;
                 }
@@ -68,14 +68,14 @@ public class PathFinderTest {
             "############".toCharArray(),
             "############".toCharArray()
         };
-        pathFinder.computePaths(map, 5, 5);
-        Direction[][] paths = pathFinder.getPaths();
-        assertNotNull(paths);
+        pathFinder.computePaths(map, 1, 1);
+        int[][] distances = pathFinder.getDistances();
+        assertNotNull(distances);
         boolean pathHasBeenGenerated = false;
         outer:
-        for (int y = 0; y < paths.length; y++) {
-            for (int x = 0; x < paths[0].length; x++) {
-                if (paths[y][x] != null) {
+        for (int y = 0; y < distances.length; y++) {
+            for (int x = 0; x < distances[0].length; x++) {
+                if (distances[y][x] != Integer.MAX_VALUE && distances[y][x] != 0) {
                     pathHasBeenGenerated = true;
                     break outer;
                 }

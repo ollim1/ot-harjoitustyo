@@ -11,16 +11,21 @@ import squidpony.squidmath.RNG;
 
 public class MapGenerator {
 
-    /*
-     * this class generates a map with as of yet undecided parameters
-     * for now it just returns a predetermined map
+    /**
+     * A map generator that uses SquidLib
      */
     private char[][] map;
     private IDungeonGenerator dungeonGenerator;
     private Random random;
 
-    /* the map, stored in a printable format
-     * (Java lacks raw console i/o, which makes text-based games unpleasant to play)
+    /**
+     * The constructor for this class takes a random number number generator as
+     * an argument for seeding. Using the random class in order to follow Java
+     * idioms.
+     *
+     * @param random
+     * @param width
+     * @param height
      */
     public MapGenerator(Random random, int width, int height) {
         this.map = new char[width + 2][height + 2];
@@ -29,6 +34,9 @@ public class MapGenerator {
                 TilesetType.DEFAULT_DUNGEON, new RNG(random.nextInt()));
     }
 
+    /**
+     * Generates the original test map and stores it in the map variable.
+     */
     public void generateBetaMap() {
         fillMap();
         String[] placeholderMap = setPlaceHolderMap();
@@ -37,6 +45,10 @@ public class MapGenerator {
         insertPlaceHolderMap(placeholderMap, offsetX, offsetY);
     }
 
+    /**
+     * Calls Squidlib to generate a map, stores the result into the map
+     * variable.
+     */
     public void generateMap() {
         char[][] tempMap = dungeonGenerator.generate();
         for (int y = 0; y < map.length; y++) {

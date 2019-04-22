@@ -13,8 +13,11 @@ import dungeon.domain.Punch;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
-import javafx.scene.input.KeyCode;
 
+/**
+ * This class handles game logic. The has to be initialized with a separate
+ * method call. This makes the class easier to test.
+ */
 public class Game {
 
     private Random random;
@@ -24,6 +27,11 @@ public class Game {
     private PriorityQueue<Actor> queue;
     private ArrayList<Actor> actors;
     private PathFinder pathFinder;
+    private int mapSize;
+    private int minimumMonsters;
+    private int monstersToCreate;
+    private double radius;
+    private double visibilityThreshold;
     private boolean gameOver;
 
     public Game() {
@@ -31,8 +39,18 @@ public class Game {
         this.queue = new PriorityQueue<>();
         this.actors = new ArrayList<>();
         this.pathFinder = new PathFinder();
+        this.radius = 10.0;
+        this.visibilityThreshold = 0.8;
     }
 
+    /**
+     * This method creates a MapGenerator object, calls generateMap() and stores
+     * the map into the map variable.
+     *
+     * @param width
+     * @param height
+     * @throws IllegalArgumentException
+     */
     public void initializeMapObjects(int width, int height) throws IllegalArgumentException {
         if (width < 1 || height < 1) {
             throw new IllegalArgumentException("invalid map size");
@@ -40,42 +58,72 @@ public class Game {
         random = new Random();
         MapGenerator mapGenerator = new MapGenerator(random, width, height);
         mapGenerator.generateMap();
-        map = mapGenerator.getMap();
-        plotter = new Plotter(this, map);
+        char[][] proceduralMap = mapGenerator.getMap();
+        initializeMapObjects(proceduralMap);
     }
 
-    public void createMonster() {
-        char[][] temporaryMap = plotter.populateMap(null);
-        int monsterX;
-        int monsterY;
-        while (true) {
-            monsterX = random.nextInt(temporaryMap[0].length);
-            monsterY = random.nextInt(temporaryMap.length);
-            if (map[monsterY][monsterX] == ' ') {
-                break;
-            }
+    public void initializeMapObjects(char[][] map) throws IllegalArgumentException {
+        if (map == null) {
+            throw new IllegalArgumentException("map is null");
         }
-        Monster monster = new Monster(monsterX, monsterY);
+        this.map = map;
+        mapSize = pathFinder.mapSize(this.map, radius);
+        plotter = new Plotter(this, this.map, radius);
+    }
+
+    /**
+     * This method creates a monster at a random location and places in in the
+     * queue.
+     */
+    public Actor createMonster() {
+        char[][] populatedMap = plotter.populateMap(null);
+        int x;
+        int y;
+        do {
+            x = random.nextInt(populatedMap[0].length);
+            y = random.nextInt(populatedMap.length);
+        } while (populatedMap[y][x] != ' '
+                || player.distanceTo(x, y) < radius);
+        return createMonster(x, y);
+    }
+
+    public Actor createMonster(int x, int y) {
+        Monster monster = new Monster(x, y);
+        monster.setVisionRadius(radius * visibilityThreshold);
         this.actors.add(monster);
         this.queue.add(monster);
         monster.setAttack(new Bite());
+        return monster;
     }
 
-    public void createPlayer() {
-        int playerX;
-        int playerY;
-        while (true) {
-            playerX = random.nextInt(map[0].length);
-            playerY = random.nextInt(map.length);
-            if (map[playerY][playerX] == ' ') {
-                break;
-            }
-        }
-        player = new Player(playerX, playerY);
+    /**
+     * This method creates the player character at a random location.
+     */
+    public Actor createPlayer() {
+        char[][] populatedMap = plotter.populateMap(null);
+        int x;
+        int y;
+        do {
+            x = random.nextInt(populatedMap[0].length);
+            y = random.nextInt(populatedMap.length);
+        } while (populatedMap[y][x] != ' ');
+        return createPlayer(x, y);
+    }
+
+    public Actor createPlayer(int x, int y) {
+        player = new Player(x, y);
         this.actors.add(player);
         player.setAttack(new Punch());
+        return player;
     }
 
+    /**
+     * This method returns a reference to whatever object is located at specific
+     * map coordinates.
+     *
+     * @param point
+     * @return the Actor with corresponding coordinates
+     */
     public Actor actorAt(Node point) {
         for (Actor actor : actors) {
             if (actor.getPosition().equals(point)) {
@@ -85,6 +133,13 @@ public class Game {
         return null;
     }
 
+    /**
+     * This method allows a UI class to control the Player object. The player's
+     * turn value is incremented by the movement cost upon calling the method
+     * act(). After this the player is placed into the queue.
+     *
+     * @param action
+     */
     public void insertAction(PlayerAction action) {
         if (gameOver) {
             return;
@@ -94,15 +149,21 @@ public class Game {
         playRound();
     }
 
+    /**
+     * The game loop. Using a minimum priority queue to determine turn order,
+     * which allows intuitive implementation of variable action lengths. When
+     * the Player and a different Actor have the same turn value, the Player
+     * will always have priority over the other Actor. The loop breaks when the
+     * player reemerges from the queue.
+     *
+     */
     public void playRound() {
-        // using a priority queue to keep track of action lengths
-        // may add variable actor speed and realistic diagonal movement speed
-        // insert or reinsert the player into the queue
         if (gameOver) {
             return;
         }
         queue.add(player);
 
+        respawnMonsters();
         while (!queue.isEmpty()) {
             Actor actor = queue.poll();
             if (actor.getHealth() <= 0) {
@@ -119,6 +180,26 @@ public class Game {
         }
     }
 
+    public void respawnMonsters() {
+        if (actors.size() < minimumMonsters + 1) {
+            createMonsters();
+        }
+    }
+
+    public void createMonsters(int n) {
+        n = Math.min(mapSize, actors.size() + n) - actors.size();
+        for (int i = 0; i < n; i++) {
+            createMonster();
+        }
+    }
+
+    public void createMonsters() {
+        int n = Math.min(mapSize, actors.size() + monstersToCreate) - actors.size();
+        for (int i = 0; i < n; i++) {
+            createMonster();
+        }
+    }
+
     private boolean cleanUpActor(Actor actor) {
         if (actor.getClass() == Player.class) {
             endGame();
@@ -128,11 +209,12 @@ public class Game {
         return false;
     }
 
-    private void controlActor(Actor actor) {
+    public void controlActor(Actor actor) {
         // actor is not a player
         if (actor.getClass() == Monster.class) {
-            // putting this here for now
-            ((Monster) actor).alert(this);
+            if (plotter.isVisible(actor.getPosition())) {
+                ((Monster) actor).reactOnSight(this);
+            }
         }
         actor.act(this, plotter.populateMap(actor));
         queue.add(actor);
@@ -164,6 +246,14 @@ public class Game {
 
     public Plotter getPlotter() {
         return plotter;
+    }
+
+    public void setMinimumMonsters(int minimumMonsters) {
+        this.minimumMonsters = minimumMonsters;
+    }
+
+    public void setMonstersToCreate(int monstersToCreate) {
+        this.monstersToCreate = monstersToCreate;
     }
 
 }

@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 
 public class DungeonUi extends Application {
 
-    private static final int RESOLUTION_X = 640;
-    private static final int RESOLUTION_Y = 480;
+    private static final int RESOLUTION_X = 800;
+    private static final int RESOLUTION_Y = 600;
     private static final int GAME_WIDTH = 40;
     private static final int GAME_HEIGHT = 40;
 

@@ -17,7 +17,7 @@ public class MonsterTest {
     private static class MockPlotter extends Plotter {
 
         public MockPlotter(Game game, char[][] map) {
-            super(game, map);
+            super(game, map, Double.NaN);
         }
 
         @Override
@@ -96,16 +96,23 @@ public class MonsterTest {
     private static class MockPathFinder extends PathFinder {
 
         public Direction[][] paths;
-        public Node oldPlayerPosition;
+        public int[][] distance;
+        public Node oldCenter;
 
-        public MockPathFinder(Direction[][] paths, Node oldPlayerPosition) {
-            this.paths = paths;
-            this.oldPlayerPosition = oldPlayerPosition;
+        public MockPathFinder(int[][] distanceMap, Node oldCenter) {
+            this.distance = distanceMap;
+            this.oldCenter = oldCenter;
         }
 
         @Override
-        public Direction[][] getPaths() {
-            return paths;
+        public DijkstraMap dijkstraMap() {
+            int[][] copy = new int[distance.length][distance[0].length];
+            for (int y = 0; y < copy.length; y++) {
+                for (int x = 0; x < copy[0].length; x++) {
+                    copy[y][x] = distance[y][x];
+                }
+            }
+            return new DijkstraMap(copy);
         }
 
         @Override
@@ -113,8 +120,8 @@ public class MonsterTest {
         }
 
         @Override
-        public Node getOldPlayerPosition() {
-            return oldPlayerPosition;
+        public Node getOldCenter() {
+            return oldCenter;
         }
 
     }
@@ -127,7 +134,7 @@ public class MonsterTest {
         }
 
     }
-    private MockGame game;
+    private Game game;
     private Monster monster;
     private char[][] testMap;
 
@@ -136,7 +143,7 @@ public class MonsterTest {
 
     @Before
     public void setUp() throws IllegalArgumentException {
-        game = new MockGame();
+        game = new Game();
         testMap = new char[][]{
             "######".toCharArray(),
             "#    #".toCharArray(),
@@ -154,71 +161,16 @@ public class MonsterTest {
     }
 
     @Test
-    public void monsterMoves() {
-        Direction[][] testPath = new Direction[6][6];
-        for (int y = 0; y < testPath.length; y++) {
-            for (int x = 0; x < testPath[0].length; x++) {
-                testPath[y][x] = Direction.WEST;
-            }
-        }
-
-        MockPathFinder pathFinder = new MockPathFinder(testPath, new Node(-1, -1));
-        game.map = testMap;
-        game.pathFinder = pathFinder;
-        monster = new Monster(3, 3);
-        Player player = new Player(1, 1);
-        game.player = player;
-        monster.setState(ActorState.ATTACK);
-        monster.setPaths(testPath);
-        monster.setAttack(new MockAttack());
-        monster.act(game, testMap);
-        Node expected = new Node(2, 3);
-        Node actual = monster.getPosition();
-        if (!expected.equals(actual)) {
-            fail("Expected " + expected + ", but got " + actual);
-        }
-    }
-
-    @Test
     public void monsterAttacks() {
-        Direction[][] testPath = new Direction[6][6];
-        for (int y = 0; y < testPath.length; y++) {
-            for (int x = 0; x < testPath[0].length; x++) {
-                testPath[y][x] = Direction.WEST;
-            }
-        }
-
-        MockPathFinder pathFinder = new MockPathFinder(testPath, new Node(-1, -1));
-        System.out.println("game " + game);
-        game.map = testMap;
-        game.plotter.setMap(game.map);
-        game.pathFinder = pathFinder;
-        monster = new Monster(3, 3);
-        Player player = new Player(2, 3);
-        double originalHealth = player.getHealth();
-        game.player = player;
-        monster.setState(ActorState.ATTACK);
-        monster.setPaths(testPath);
-        monster.setAttack(new MockAttack());
-        game.addActor(player);
-        game.addActor(monster);
-        System.out.println("plotter: " + game.getPlotter());
-        char[][] populatedMap = game.getPlotter().populateMap(monster);
-        monster.act(game, populatedMap);
-        double expected = originalHealth - 1;
-        double actual = player.getHealth();
-        if (expected != actual) {
-            fail("Expected " + expected + ", but got " + actual);
-        }
+        game.initializeMapObjects(testMap);
+        game.createPlayer(3, 3);
+        monster = (Monster) game.createMonster(4, 3);
+        game.getPlotter().update();
+        game.controlActor(monster);
     }
 
     @Test
     public void monsterStaysStillIfNoPathExists() {
-        PathFinder pathFinder = new PathFinder();
-        game.map = testMap;
-        game.pathFinder = pathFinder;
-        monster = new Monster(4, 3);
-        monster.setState(ActorState.ATTACK);
         testMap = new char[][]{
             "######".toCharArray(),
             "#  # #".toCharArray(),
@@ -227,10 +179,11 @@ public class MonsterTest {
             "#  # #".toCharArray(),
             "######".toCharArray()
         };
-        pathFinder.computePaths(testMap, 2, 3);
-        Direction[][] paths = pathFinder.getPaths();
-        monster.setPaths(paths);
-        monster.act(game, testMap);
+        game.initializeMapObjects(testMap);
+        game.createPlayer(2, 3);
+        monster = (Monster) game.createMonster(4, 3);
+        game.getPlotter().update();
+        game.controlActor(monster);
         Node expected = new Node(4, 3);
         Node actual = monster.getPosition();
         if (!expected.equals(actual)) {
@@ -240,42 +193,22 @@ public class MonsterTest {
 
     @Test
     public void monsterFlees() {
-        PathFinder pathFinder = new PathFinder();
-        game.map = testMap;
-        game.pathFinder = pathFinder;
-        monster = new Monster(3, 3);
-        Player player = new Player(2, 3);
-        game.player = player;
-        monster.setState(ActorState.FLEE);
-        pathFinder.computePaths(testMap, 2, 3);
-        Direction[][] paths = pathFinder.getPaths();
-        monster.setPaths(paths);
-        monster.act(game, testMap);
+        game.initializeMapObjects(testMap);
+        game.createPlayer(2, 3);
+        monster = (Monster) game.createMonster(3, 3);
+        monster.setFleeThreshold(2.0);
+        game.getPlotter().update();
+        game.controlActor(monster);
         HashSet<Node> expected = new HashSet<>();
         expected.add(new Node(4, 2));
         expected.add(new Node(4, 3));
         expected.add(new Node(4, 4));
+        expected.add(new Node(3, 2));
+        expected.add(new Node(3, 4));
         Node actual = monster.getPosition();
         if (!expected.contains(actual)) {
             fail("expected (4,2), (4,3) or (4,4), but got " + actual);
         }
     }
 
-    @Test
-    public void monsterFleesIfLowHP() {
-        game.map = testMap;
-        monster = new Monster(3, 3);
-        monster.setHealth((int) (monster.getMaxHealth() * 0.3));
-        Player player = new Player(2, 3);
-        game.player = player;
-        monster.act(game, testMap);
-        HashSet<Node> expected = new HashSet<>();
-        expected.add(new Node(4, 2));
-        expected.add(new Node(4, 3));
-        expected.add(new Node(4, 4));
-        Node actual = monster.getPosition();
-        if (!expected.contains(actual)) {
-            fail("expected (4,2), (4,3) or (4,4), but got " + actual);
-        }
-    }
 }

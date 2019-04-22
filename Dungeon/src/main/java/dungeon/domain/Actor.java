@@ -5,28 +5,37 @@ package dungeon.domain;
 
 import dungeon.backend.Game;
 
+/**
+ * An abstract superclass for game actors. Can be sorted by turn order.
+ */
 public abstract class Actor implements Comparable<Actor> {
 
     private Node position;
     private double health;
     private double maxHealth;
-    private int interval;
+    private double intervalModifier;
     private int nextTurn;
+    private DijkstraMap dijkstraMap;
     private boolean[] isHostile;
     private Attack attack;
 
+    /**
+     * This method commits character actions as determined by AI or player input
+     * and game or character state.
+     *
+     * @param game
+     * @param map
+     */
     public abstract void act(Game game, char[][] map);
-
-    public void setInterval(int interval) {
-        this.interval = interval;
-    }
-
-    public int getInterval() {
-        return interval;
-    }
 
     public abstract char getSymbol();
 
+    /**
+     * Subtracts the specified amount of health from the actor's health points.
+     *
+     * @param amount
+     * @return
+     */
     public double damage(double amount) {
         if (amount > health) {
             double originalHealth = health;
@@ -36,6 +45,22 @@ public abstract class Actor implements Comparable<Actor> {
             health -= amount;
             return amount;
         }
+    }
+
+    public void setDijkstraMap(DijkstraMap dijkstraMap) {
+        this.dijkstraMap = dijkstraMap;
+    }
+
+    public DijkstraMap getDijkstraMap() {
+        return dijkstraMap;
+    }
+
+    public void setIntervalModifier(double intervalModifier) {
+        this.intervalModifier = intervalModifier;
+    }
+
+    public double getIntervalModifier() {
+        return intervalModifier;
     }
 
     public void setAttack(Attack attack) {
@@ -50,12 +75,14 @@ public abstract class Actor implements Comparable<Actor> {
         this.nextTurn = nextTurn;
     }
 
-    public void incrementTurn() {
-        this.nextTurn += this.interval;
-    }
-
+    /**
+     * Increments the actor's turn value by the specified interval. The interval
+     * can be scaled based on actor status.
+     *
+     * @param interval
+     */
     public void incrementTurn(int interval) {
-        this.nextTurn += interval;
+        this.nextTurn += interval * intervalModifier;
     }
 
     public int getNextTurn() {
@@ -94,26 +121,39 @@ public abstract class Actor implements Comparable<Actor> {
         this.isHostile = hostileSymbols;
     }
 
+    /**
+     * This method handles actor movement. If an actor hits an obstacle whose
+     * symbol represents a hostile actor, it will try to attack.
+     *
+     * @param direction
+     * @param game
+     * @param map a map created by PopulatedMap
+     * @return
+     */
     public boolean move(Direction direction, Game game, char[][] map) {
         Node next = position.translateToNew(direction);
+        incrementTurn(direction.cost());
         if (isFree(map, next.getX(), next.getY())) {
             position.translate(direction);
-            incrementTurn(direction.cost());
             return true;
         } else {
             if (isHostile[map[next.getY()][next.getX()]]) {
                 Actor target = game.actorAt(next);
                 if (attack != null && target != null) {
                     attack.apply(this, target);
+                    return true;
                 }
             }
+            return false;
         }
-        incrementTurn(direction.cost());
-        return false;
     }
 
     public void idle() {
-        incrementTurn();
+        incrementTurn(100);
+    }
+
+    public void heal() {
+        setHealth(Math.min(getHealth() + getMaxHealth() * 0.01, getMaxHealth()));
     }
 
     private boolean isFree(char[][] map, int x, int y) {
@@ -126,6 +166,12 @@ public abstract class Actor implements Comparable<Actor> {
 
     public double distanceTo(Actor that) {
         return this.position.differenceTo(that.position);
+    }
+
+    public double distanceTo(int x, int y) {
+        int dx = x - position.getX();
+        int dy = y - position.getY();
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     @Override

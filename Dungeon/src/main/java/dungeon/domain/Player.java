@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Player extends Actor {
 
-    private static final int MAX_HEALTH = 20;
+    private static final int MAX_HEALTH = 40;
     private PlayerAction action;
     private static final HashMap<PlayerAction, Direction> ACTION_TO_DIRECTION_TRANSLATION = new HashMap<PlayerAction, Direction>() {
         {
@@ -27,10 +27,10 @@ public class Player extends Actor {
         super.setHealth(MAX_HEALTH);
         super.setMaxHealth(MAX_HEALTH);
         super.setPosition(new Node(x, y));
+        super.setIntervalModifier(1.0);
         boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
         hostileSymbols['D'] = true;
         super.setHostileSymbols(hostileSymbols);
-        super.setInterval(100);
         super.setNextTurn(0);
     }
 
@@ -45,10 +45,6 @@ public class Player extends Actor {
 
     public PlayerAction getAction() {
         return action;
-    }
-
-    public void heal() {
-        setHealth(Math.min(getHealth() + getMaxHealth() * 0.01, getMaxHealth()));
     }
 
     @Override

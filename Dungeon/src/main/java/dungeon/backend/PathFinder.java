@@ -3,42 +3,71 @@
  */
 package dungeon.backend;
 
+import dungeon.domain.DijkstraMap;
 import dungeon.domain.Direction;
 import dungeon.domain.Node;
 import java.util.PriorityQueue;
 
 public class PathFinder {
 
-    // Using Dijkstra's algorithm to get every path at once
-    // the resulting set of paths is stored as a two-dimensional array of Direction objects
-    // that represents a directed acyclic graph towards the destination
-    // should be possible to add diagonal movement by just modifying the Direction enumerator
+    /**
+     * Using Dijkstra's algorithm to get every path at once. The resulting set
+     * of paths is stored as a two-dimensional array of Direction objects that
+     * represents a directed acyclic graph flowing towards the destination. The
+     * class also stores the destination of the last graph.
+     */
     private boolean[][] visited;
     private char[][] map;
     private int[][] distance;
-    private Direction[][] paths;
-    private Node oldPlayerPosition;
+    private Node oldCenter;
+    private int totalCells;
+
+    /**
+     * Populates the Direction array representing the shortest paths from any
+     * point in the map to the destination.
+     *
+     * @param map the raw dungeon map (not from populateMap())
+     * @param x
+     * @param y
+     */
+    public PathFinder() {
+        this.oldCenter = new Node(-1, -1);
+    }
 
     public void computePaths(char[][] map, int x, int y) {
         visited = new boolean[map.length][map[0].length];
         distance = new int[map.length][map[0].length];
-        paths = new Direction[map.length][map[0].length];
         this.map = map;
-        oldPlayerPosition = new Node(x, y, 0);
-        dijkstra(x, y);
+        oldCenter = new Node(x, y, 0);
+
+        formatDistances(x, y);
+        PriorityQueue<Node> heap = setUpHeap(x, y);
+        dijkstra(x, y, heap);
     }
 
-    public Direction[][] getPaths() {
-        return paths;
+    public DijkstraMap dijkstraMap() {
+        if (distance == null) {
+            return null;
+        }
+        int[][] copy = new int[distance.length][distance[0].length];
+        for (int y = 0; y < copy.length; y++) {
+            for (int x = 0; x < copy[0].length; x++) {
+                copy[y][x] = distance[y][x];
+            }
+        }
+        return new DijkstraMap(distance);
     }
 
-    public Node getOldPlayerPosition() {
-        return oldPlayerPosition;
+    public int[][] getDistances() {
+        return distance;
     }
 
-    private void dijkstra(int startX, int startY) {
-        formatDistances(startY, startX);
-        PriorityQueue<Node> heap = setUpHeap(startX, startY);
+    
+    public Node getOldCenter() {
+        return oldCenter;
+    }
+
+    private void dijkstra(int startX, int startY, PriorityQueue<Node> heap) {
         while (!heap.isEmpty()) {
             Node next = heap.poll();
             int ux = next.getX();
@@ -48,18 +77,48 @@ public class PathFinder {
                 for (Direction neighbour : Direction.values()) {
                     int vx = ux + neighbour.getDifferenceX();
                     int vy = uy + neighbour.getDifferenceY();
-                    int newDistance = distance[uy][ux] + neighbour.cost();
-                    if (distance[vy][vx] == Integer.MAX_VALUE || distance[vy][vx] > newDistance) {
-                        newPathFound(vy, vx, newDistance, neighbour, heap);
+                    if (map[vy][vx] == ' ') {
+                        int newDistance = distance[uy][ux] + neighbour.cost();
+                        if (distance[vy][vx] == Integer.MAX_VALUE || distance[vy][vx] > newDistance) {
+                            newPathFound(vy, vx, newDistance, heap);
+                        }
                     }
                 }
             }
         }
     }
 
-    private void newPathFound(int vy, int vx, int newDistance, Direction neighbour, PriorityQueue<Node> heap) {
+    public int mapSize(char[][] map, double radius) {
+        visited = new boolean[map.length][map[0].length];
+        this.map = map;
+        totalCells = 0;
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[0].length; x++) {
+                if (!visited[y][x]) {
+                    depthFirstSearch(new Node(x, y));
+                }
+            }
+        }
+        return totalCells - (int) (Math.PI * radius * radius + 1);
+    }
+
+    private void depthFirstSearch(Node u) {
+        int y = u.getY();
+        int x = u.getX();
+        if (y <= 1 || x <= 1
+                || y >= map.length - 1 || x >= map.length - 1
+                || visited[y][x] || map[y][x] != ' ') {
+            return;
+        }
+        visited[y][x] = true;
+        totalCells++;
+        for (Direction direction : Direction.values()) {
+            depthFirstSearch(u.translateToNew(direction));
+        }
+    }
+
+    private void newPathFound(int vy, int vx, int newDistance, PriorityQueue<Node> heap) {
         distance[vy][vx] = newDistance;
-        paths[vy][vx] = neighbour.opposite();
         heap.add(new Node(vx, vy, newDistance));
     }
 
@@ -69,7 +128,7 @@ public class PathFinder {
         return heap;
     }
 
-    private void formatDistances(int startY, int startX) {
+    private void formatDistances(int startX, int startY) {
         for (int y = 0; y < distance.length; y++) {
             for (int x = 0; x < distance[0].length; x++) {
                 distance[y][x] = Integer.MAX_VALUE;

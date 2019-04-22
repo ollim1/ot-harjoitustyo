@@ -129,7 +129,7 @@ public class MonsterTest {
     private static class MockAttack implements Attack {
 
         @Override
-        public double apply(Actor source, Actor target) {
+        public double apply(Game game, Actor source, Actor target) {
             return target.damage(1);
         }
 
@@ -165,6 +165,7 @@ public class MonsterTest {
         game.initializeMapObjects(testMap);
         game.createPlayer(3, 3);
         monster = (Monster) game.createMonster(4, 3);
+        monster.setAttack(new MockAttack());
         game.getPlotter().update();
         game.controlActor(monster);
     }

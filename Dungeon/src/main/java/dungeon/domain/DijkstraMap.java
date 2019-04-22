@@ -72,17 +72,24 @@ public class DijkstraMap {
     public List<Direction> candidates(Node point) {
         List<Direction> directions = new ArrayList<>();
         HashMap<Direction, Node> nodes = new HashMap<>();
+        int ux = point.getX();
+        int uy = point.getY();
+        point.setDistance(values[uy][ux]);
         for (Direction candidate : Direction.values()) {
-            Node node = point.translateToNew(candidate);
-            node.setDistance(values[node.getY()][node.getX()]);
-            if (values[node.getY()][node.getX()] != Integer.MAX_VALUE) {
+            Node candidateNode = point.translateToNew(candidate);
+            candidateNode.setDistance(values[candidateNode.getY()][candidateNode.getX()]);
+            int vx = candidateNode.getX();
+            int vy = candidateNode.getY();
+            if (values[vy][vx] != Integer.MAX_VALUE
+                    && values[vy][vx] <= values[uy][ux]) {
                 directions.add(candidate);
-                nodes.put(candidate, node);
+                nodes.put(candidate, candidateNode);
             }
         }
         Collections.sort(directions, (Direction a, Direction b) -> {
             return nodes.get(a).compareTo(nodes.get(b));
         });
+        System.out.println(this.toString());
         return directions;
     }
 
@@ -170,7 +177,11 @@ public class DijkstraMap {
         for (int y = 0; y < values.length; y++) {
             for (int x = 0; x < values[0].length; x++) {
                 if (values[y][x] != Integer.MAX_VALUE) {
-                    sb.append(values[y][x] * 9 / max);
+                    if (values[y][x] == 0) {
+                        sb.append(".");
+                    } else {
+                        sb.append((values[y][x] / 100) % 10);
+                    }
                 } else {
                     sb.append("#");
                 }

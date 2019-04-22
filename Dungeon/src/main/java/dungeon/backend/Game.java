@@ -10,9 +10,11 @@ import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
 import dungeon.domain.Punch;
+import static java.lang.Math.random;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
+import squidpony.squidmath.RNG;
 
 /**
  * This class handles game logic. The has to be initialized with a separate
@@ -20,7 +22,7 @@ import java.util.Random;
  */
 public class Game {
 
-    private Random random;
+    private RNG rng;
     private char[][] map;
     private Plotter plotter;
     private Player player;
@@ -30,6 +32,7 @@ public class Game {
     private int mapSize;
     private int minimumMonsters;
     private int monstersToCreate;
+    private int dieSize;
     private double radius;
     private double visibilityThreshold;
     private boolean gameOver;
@@ -40,6 +43,7 @@ public class Game {
         this.actors = new ArrayList<>();
         this.pathFinder = new PathFinder();
         this.radius = 10.0;
+        this.dieSize = 20;
         this.visibilityThreshold = 0.8;
     }
 
@@ -55,8 +59,8 @@ public class Game {
         if (width < 1 || height < 1) {
             throw new IllegalArgumentException("invalid map size");
         }
-        random = new Random();
-        MapGenerator mapGenerator = new MapGenerator(random, width, height);
+        rng = new RNG((new Random()).nextInt());
+        MapGenerator mapGenerator = new MapGenerator(rng, width, height);
         mapGenerator.generateMap();
         char[][] proceduralMap = mapGenerator.getMap();
         initializeMapObjects(proceduralMap);
@@ -80,8 +84,8 @@ public class Game {
         int x;
         int y;
         do {
-            x = random.nextInt(populatedMap[0].length);
-            y = random.nextInt(populatedMap.length);
+            x = rng.nextInt(populatedMap[0].length);
+            y = rng.nextInt(populatedMap.length);
         } while (populatedMap[y][x] != ' '
                 || player.distanceTo(x, y) < radius);
         return createMonster(x, y);
@@ -104,8 +108,8 @@ public class Game {
         int x;
         int y;
         do {
-            x = random.nextInt(populatedMap[0].length);
-            y = random.nextInt(populatedMap.length);
+            x = rng.nextInt(populatedMap[0].length);
+            y = rng.nextInt(populatedMap.length);
         } while (populatedMap[y][x] != ' ');
         return createPlayer(x, y);
     }
@@ -210,7 +214,6 @@ public class Game {
     }
 
     public void controlActor(Actor actor) {
-        // actor is not a player
         if (actor.getClass() == Monster.class) {
             if (plotter.isVisible(actor.getPosition())) {
                 ((Monster) actor).reactOnSight(this);
@@ -254,6 +257,14 @@ public class Game {
 
     public void setMonstersToCreate(int monstersToCreate) {
         this.monstersToCreate = monstersToCreate;
+    }
+
+    public RNG getRng() {
+        return rng;
+    }
+
+    public int getDieSize() {
+        return dieSize;
     }
 
 }

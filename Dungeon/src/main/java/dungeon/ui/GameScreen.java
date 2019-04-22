@@ -70,7 +70,7 @@ public class GameScreen {
                 if (game.isGameOver()) {
                     gameOver();
                 }
-                update();
+                updateDebug();
             }
         });
     }

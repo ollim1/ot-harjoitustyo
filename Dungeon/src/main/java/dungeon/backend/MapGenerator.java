@@ -16,22 +16,25 @@ public class MapGenerator {
      */
     private char[][] map;
     private IDungeonGenerator dungeonGenerator;
-    private Random random;
+    private RNG rng;
 
     /**
      * The constructor for this class takes a random number number generator as
-     * an argument for seeding. Using the random class in order to follow Java
-     * idioms.
+     * an argument for seeding.
      *
      * @param random
      * @param width
      * @param height
      */
     public MapGenerator(Random random, int width, int height) {
+        this(new RNG(random.nextInt()), width, height);
+    }
+
+    public MapGenerator(RNG rng, int width, int height) {
         this.map = new char[width + 2][height + 2];
-        this.random = random;
+        this.rng = rng;
         this.dungeonGenerator = new FlowingCaveGenerator(width, height,
-                TilesetType.DEFAULT_DUNGEON, new RNG(random.nextInt()));
+                TilesetType.DEFAULT_DUNGEON, rng);
     }
 
     /**

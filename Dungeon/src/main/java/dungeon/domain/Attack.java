@@ -3,7 +3,9 @@
  */
 package dungeon.domain;
 
+import dungeon.backend.Game;
+
 public interface Attack {
 
-    public double apply(Actor source, Actor target);
+    public double apply(Game game, Actor source, Actor target);
 }

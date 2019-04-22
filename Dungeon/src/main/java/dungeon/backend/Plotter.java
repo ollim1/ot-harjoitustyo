@@ -105,7 +105,7 @@ public class Plotter {
      * @param point
      * @return
      */
-    public boolean isVisible(Node point) {
+    public boolean isVisibleLenient(Node point) {
         if (visibility[point.getX()][point.getY()] > 0.0) {
             for (Direction direction : Direction.values()) {
                 Node temp = point.translateToNew(direction);
@@ -116,6 +116,10 @@ public class Plotter {
             return true;
         }
         return false;
+    }
+
+    public boolean isVisible(Node point) {
+        return visibility[point.getX()][point.getY()] > 0.0;
     }
 
     /**

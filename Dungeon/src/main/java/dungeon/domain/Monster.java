@@ -76,10 +76,9 @@ public class Monster extends Actor {
             pathFinder.computePaths(map, player.getPosition().getX(), player.getPosition().getY());
         }
         DijkstraMap attackMap = pathFinder.dijkstraMap();
-        if (state == ActorState.FLEE) {
-            setDijkstraMap(attackMap.copy().invert());
+        if (state != ActorState.FLEE) {
+            setDijkstraMap(attackMap);
         }
-        setDijkstraMap(attackMap);
         state = ActorState.ATTACK;
         this.alerted = true;
         alertNearby(game, attackMap);
@@ -110,17 +109,21 @@ public class Monster extends Actor {
         if (getDijkstraMap() == null) {
             setDijkstraMap(new DijkstraMap(map[0].length, map.length));
         }
-        if (getHealth() < MAX_HEALTH * fleeThreshold && state != ActorState.FLEE) {
+        if (getHealth() < MAX_HEALTH * fleeThreshold) {
+            if (state != ActorState.FLEE) {
+                state = ActorState.FLEE;
+                setDijkstraMap(getDijkstraMap().copy().invert());
+            }
             alerted = false;
-            state = ActorState.FLEE;
-            setDijkstraMap(getDijkstraMap().copy().invert());
         } else if (state == ActorState.FLEE) {
             state = ActorState.STAY;
         }
         if (state == ActorState.STAY) {
             idle();
         } else {
-            followDijkstraMap(game, map);
+            if (!followDijkstraMap(game, map)) {
+                idle();
+            }
         }
         heal();
     }

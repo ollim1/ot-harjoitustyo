@@ -132,15 +132,16 @@ public abstract class Actor implements Comparable<Actor> {
      */
     public boolean move(Direction direction, Game game, char[][] map) {
         Node next = position.translateToNew(direction);
-        incrementTurn(direction.cost());
         if (isFree(map, next.getX(), next.getY())) {
             position.translate(direction);
+            incrementTurn(direction.cost());
             return true;
         } else {
             if (isHostile[map[next.getY()][next.getX()]]) {
                 Actor target = game.actorAt(next);
                 if (attack != null && target != null) {
-                    attack.apply(this, target);
+                    attack.apply(game, this, target);
+                    incrementTurn(direction.cost());
                     return true;
                 }
             }

@@ -3,6 +3,7 @@
  */
 package dungeon.domain;
 
+import dungeon.backend.Game;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -39,7 +40,7 @@ public class AttackTest {
     public void biteWorks() {
         Attack attack = new Bite();
         double originalHealth = source.getHealth();
-        attack.apply(source, target);
+        attack.apply(null, source, target);
         assertTrue(target.getHealth() < originalHealth);
     }
 
@@ -47,7 +48,7 @@ public class AttackTest {
     public void punchWorks() {
         Attack attack = new Punch();
         double originalHealth = source.getHealth();
-        attack.apply(source, target);
+        attack.apply(null, source, target);
         assertTrue(target.getHealth() < originalHealth);
     }
 }

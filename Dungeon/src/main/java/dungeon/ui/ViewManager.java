@@ -4,8 +4,8 @@
 package dungeon.ui;
 
 import dungeon.backend.Game;
-import dungeon.ui.GameScreen;
-import dungeon.ui.TitleScreen;
+import dungeon.backend.Settings;
+import dungeon.domain.Difficulty;
 import javafx.stage.Stage;
 
 public class ViewManager {
@@ -31,13 +31,35 @@ public class ViewManager {
     }
 
     public void runGame() throws IllegalArgumentException {
-        Game game;
-        game = new Game();
+        Game game = new Game();
         game.setMonstersToCreate(5);
         game.initializeMapObjects(mapWidth, mapHeight);
         GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, false);
         gameScreen.update();
         window.setScene(gameScreen.getScreen());
+    }
+
+    public void runGame(Settings settings) throws IllegalArgumentException {
+        Game game = new Game(settings.getDifficulty());
+        game.setMonstersToCreate(5);
+        game.initializeMapObjects(settings.getMapSize(), settings.getMapSize());
+        GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, false);
+        gameScreen.update();
+        window.setScene(gameScreen.getScreen());
+    }
+
+    public void showSettingsScreen() {
+        Settings settings = new Settings();
+        SettingsScreen settingsScreen = new SettingsScreen(this, settings);
+        this.window.setScene(settingsScreen.createView());
+    }
+
+    public int getResolutionX() {
+        return resolutionX;
+    }
+
+    public int getResolutionY() {
+        return resolutionY;
     }
 
 }

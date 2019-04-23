@@ -62,7 +62,6 @@ public class PathFinder {
         return distance;
     }
 
-    
     public Node getOldCenter() {
         return oldCenter;
     }
@@ -94,27 +93,12 @@ public class PathFinder {
         totalCells = 0;
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[0].length; x++) {
-                if (!visited[y][x]) {
-                    depthFirstSearch(new Node(x, y));
+                if (map[y][x] == ' ') {
+                    totalCells++;
                 }
             }
         }
         return totalCells - (int) (Math.PI * radius * radius + 1);
-    }
-
-    private void depthFirstSearch(Node u) {
-        int y = u.getY();
-        int x = u.getX();
-        if (y <= 1 || x <= 1
-                || y >= map.length - 1 || x >= map.length - 1
-                || visited[y][x] || map[y][x] != ' ') {
-            return;
-        }
-        visited[y][x] = true;
-        totalCells++;
-        for (Direction direction : Direction.values()) {
-            depthFirstSearch(u.translateToNew(direction));
-        }
     }
 
     private void newPathFound(int vy, int vx, int newDistance, PriorityQueue<Node> heap) {

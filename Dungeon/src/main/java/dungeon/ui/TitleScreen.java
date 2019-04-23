@@ -34,7 +34,7 @@ public class TitleScreen {
         ArrayList<BorderPane> choiceButtons = new ArrayList<>();
         addPanesToList(choiceButtons, startButton, highScoresButton, quitButton);
         startButton.setOnMouseClicked(event -> {
-            viewManager.runGame();
+            viewManager.showSettingsScreen();
         });
         quitButton.setOnMouseClicked(event -> {
             Platform.exit();

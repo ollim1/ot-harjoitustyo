@@ -141,7 +141,7 @@ public abstract class Actor implements Comparable<Actor> {
                 Actor target = game.actorAt(next);
                 if (attack != null && target != null) {
                     attack.apply(game, this, target);
-                    incrementTurn(direction.cost());
+                    incrementTurn(attack.cost());
                     return true;
                 }
             }

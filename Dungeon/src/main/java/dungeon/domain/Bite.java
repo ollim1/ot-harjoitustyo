@@ -23,4 +23,9 @@ public class Bite implements Attack {
         return target.damage(damage);
     }
 
+    @Override
+    public int cost() {
+        return 100;
+    }
+
 }

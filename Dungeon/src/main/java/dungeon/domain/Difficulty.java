@@ -15,30 +15,38 @@ public enum Difficulty {
             put(MonsterType.ORC, 0.75);
             put(MonsterType.GNOLL, 1.0);
         }
-    }),
+    }, 10, 0.8, "normal"),
     NORMAL(new HashMap<MonsterType, Double>() {
         {
             put(MonsterType.DRAGON, 0.1);
             put(MonsterType.ORC, 0.5);
             put(MonsterType.GNOLL, 1.0);
         }
-    }),
+    }, 8.0, 0.9, "normal"),
     HARD(new HashMap<MonsterType, Double>() {
         {
             put(MonsterType.DRAGON, 0.2);
             put(MonsterType.ORC, 0.27);
             put(MonsterType.GNOLL, 1.0);
         }
-    });
+    }, 7.0, 1.0, "hard");
     public final HashMap<MonsterType, Double> frequencies;
+    public final double visionRadius;
+    public final double visibilityThreshold;
+    public final String name;
 
-    private Difficulty(HashMap<MonsterType, Double> frequencies) {
+    private Difficulty(HashMap<MonsterType, Double> frequencies, double visionRadius, double visibilityThreshold, String name) {
         this.frequencies = frequencies;
+        this.visionRadius = visionRadius;
+        this.visibilityThreshold = visibilityThreshold;
+        this.name = name;
     }
 
+    
+
     /**
-     * Rolls a monster type. Assuming the frequencies in a difficulty level add
-     * up to one.
+     * Rolls a monster type. Returns the monster type with the lowest number
+     * that clears a random number.
      *
      * @param rng RNG from Squidlib
      * @return
@@ -55,4 +63,10 @@ public enum Difficulty {
         }
         return ret;
     }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
 }

@@ -133,6 +133,10 @@ public class MonsterTest {
             return target.damage(1);
         }
 
+        @Override
+        public int cost() {
+            return 100;
+        }
     }
     private Game game;
     private Monster monster;

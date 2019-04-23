@@ -34,7 +34,7 @@ public class Game {
     private int monstersToCreate;
     private double monsterDensity;
     private int dieSize;
-    private double radius;
+    private double visionRadius;
     private double visibilityThreshold;
     private boolean gameOver;
     private Difficulty difficulty;
@@ -45,7 +45,7 @@ public class Game {
         this.actors = new ArrayList<>();
         this.pathFinder = new PathFinder();
         this.monsterDensity = 0.01;
-        this.radius = 10.0;
+        this.visionRadius = 10.0;
         this.dieSize = 20;
         this.visibilityThreshold = 0.8;
         this.difficulty = Difficulty.NORMAL;
@@ -80,8 +80,8 @@ public class Game {
             throw new IllegalArgumentException("map is null");
         }
         this.map = map;
-        mapSize = pathFinder.mapSize(this.map, radius);
-        plotter = new Plotter(this, this.map, radius);
+        mapSize = pathFinder.mapSize(this.map, visionRadius);
+        plotter = new Plotter(this, this.map, visionRadius);
     }
 
     /**
@@ -96,7 +96,7 @@ public class Game {
             x = rng.nextInt(populatedMap[0].length);
             y = rng.nextInt(populatedMap.length);
         } while (populatedMap[y][x] != ' '
-                || player.distanceTo(x, y) < radius);
+                || player.distanceTo(x, y) < visionRadius);
         return createMonster(x, y);
     }
 
@@ -107,7 +107,7 @@ public class Game {
 
     public Actor createMonster(int x, int y, MonsterType monsterType) {
         Monster monster = new Monster(x, y, monsterType);
-        monster.setVisionRatio(radius * visibilityThreshold);
+        monster.setVisionRatio(visionRadius * visibilityThreshold);
         this.actors.add(monster);
         this.queue.add(monster);
         return monster;
@@ -276,8 +276,8 @@ public class Game {
         return dieSize;
     }
 
-    public double getRadius() {
-        return radius;
+    public double getVisionRadius() {
+        return visionRadius;
     }
 
 }

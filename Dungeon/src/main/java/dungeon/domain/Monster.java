@@ -84,7 +84,7 @@ public class Monster extends Actor {
     }
 
     public void reactOnSight(Game game) {
-        if (this.distanceTo(game.getPlayer()) < visionRatio * game.getRadius()) {
+        if (this.distanceTo(game.getPlayer()) < visionRatio * game.getVisionRadius()) {
             alert(game);
         }
     }

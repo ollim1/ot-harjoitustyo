@@ -164,7 +164,7 @@ public class MonsterTest {
     public void monsterAttacks() {
         game.initializeMapObjects(testMap);
         game.createPlayer(3, 3);
-        monster = (Monster) game.createMonster(4, 3);
+        monster = (Monster) game.createMonster(4, 3, MonsterType.ORC);
         monster.setAttack(new MockAttack());
         game.getPlotter().update();
         game.controlActor(monster);
@@ -182,7 +182,7 @@ public class MonsterTest {
         };
         game.initializeMapObjects(testMap);
         game.createPlayer(2, 3);
-        monster = (Monster) game.createMonster(4, 3);
+        monster = (Monster) game.createMonster(4, 3, MonsterType.ORC);
         game.getPlotter().update();
         game.controlActor(monster);
         Node expected = new Node(4, 3);
@@ -196,7 +196,7 @@ public class MonsterTest {
     public void monsterFlees() {
         game.initializeMapObjects(testMap);
         game.createPlayer(2, 3);
-        monster = (Monster) game.createMonster(3, 3);
+        monster = (Monster) game.createMonster(3, 3, MonsterType.ORC);
         monster.setFleeThreshold(2.0);
         game.getPlotter().update();
         game.controlActor(monster);

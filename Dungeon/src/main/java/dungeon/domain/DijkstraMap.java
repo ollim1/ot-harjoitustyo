@@ -82,20 +82,24 @@ public class DijkstraMap {
         int uy = point.getY();
         point.setDistance(values[uy][ux]);
         for (Direction candidate : Direction.values()) {
-            Node candidateNode = point.translateToNew(candidate);
-            candidateNode.setDistance(values[candidateNode.getY()][candidateNode.getX()]);
-            int vx = candidateNode.getX();
-            int vy = candidateNode.getY();
-            if (values[vy][vx] != Integer.MAX_VALUE
-                    && values[vy][vx] <= values[uy][ux]) {
-                directions.add(candidate);
-                nodes.put(candidate, candidateNode);
-            }
+            processCandidate(point, candidate, uy, ux, directions, nodes);
         }
         Collections.sort(directions, (Direction a, Direction b) -> {
             return nodes.get(a).compareTo(nodes.get(b));
         });
         return directions;
+    }
+
+    public void processCandidate(Node point, Direction candidate, int uy, int ux, List<Direction> directions, HashMap<Direction, Node> nodes) {
+        Node candidateNode = point.translateToNew(candidate);
+        candidateNode.setDistance(values[candidateNode.getY()][candidateNode.getX()]);
+        int vx = candidateNode.getX();
+        int vy = candidateNode.getY();
+        if (values[vy][vx] != Integer.MAX_VALUE
+                && values[vy][vx] <= values[uy][ux]) {
+            directions.add(candidate);
+            nodes.put(candidate, candidateNode);
+        }
     }
 
     private int max() {
@@ -175,24 +179,35 @@ public class DijkstraMap {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        int max = max();
-        if (max == 0) {
+        if (checkUnformatted()) {
             return "unformatted array";
         }
         for (int y = 0; y < values.length; y++) {
             for (int x = 0; x < values[0].length; x++) {
-                if (values[y][x] != Integer.MAX_VALUE) {
-                    if (values[y][x] == 0) {
-                        sb.append(".");
-                    } else {
-                        sb.append((values[y][x] / 100) % 10);
-                    }
-                } else {
-                    sb.append("#");
-                }
+                appendCharacter(y, x, sb);
             }
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    private void appendCharacter(int y, int x, StringBuilder sb) {
+        if (values[y][x] != Integer.MAX_VALUE) {
+            if (values[y][x] == 0) {
+                sb.append(".");
+            } else {
+                sb.append((values[y][x] / 100) % 10);
+            }
+        } else {
+            sb.append("#");
+        }
+    }
+
+    private boolean checkUnformatted() {
+        int max = max();
+        if (max == 0) {
+            return true;
+        }
+        return false;
     }
 }

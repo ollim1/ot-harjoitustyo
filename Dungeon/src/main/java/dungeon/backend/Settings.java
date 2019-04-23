@@ -14,10 +14,12 @@ public class Settings {
 
     private Difficulty difficulty;
     private int mapSize;
+    private boolean debug;
 
     public Settings() {
         difficulty = Difficulty.NORMAL;
         mapSize = 100;
+        debug = false;
     }
 
     public void setDifficulty(Difficulty difficulty) {
@@ -34,6 +36,14 @@ public class Settings {
 
     public int getMapSize() {
         return mapSize;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
 }

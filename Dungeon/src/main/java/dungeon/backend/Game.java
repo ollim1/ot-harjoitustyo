@@ -4,10 +4,10 @@
 package dungeon.backend;
 
 import dungeon.domain.Actor;
-import dungeon.domain.Bite;
 import dungeon.domain.Difficulty;
 import dungeon.domain.Monster;
 import dungeon.domain.ActorType;
+import dungeon.domain.Message;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
@@ -37,6 +37,7 @@ public class Game {
     private double visionRadius;
     private double visibilityThreshold;
     private boolean gameOver;
+    private boolean debug;
     private Difficulty difficulty;
 
     public Game() {
@@ -44,19 +45,21 @@ public class Game {
         this.queue = new PriorityQueue<>();
         this.actors = new ArrayList<>();
         this.pathFinder = new PathFinder();
-        this.monsterDensity = 0.01;
-        this.visionRadius = 10.0;
-        this.dieSize = 20;
-        this.visibilityThreshold = 0.8;
         this.difficulty = Difficulty.NORMAL;
+        this.monsterDensity = difficulty.monsterDensity;
+        this.visionRadius = difficulty.visionRadius;
+        this.visibilityThreshold = difficulty.visibilityThreshold;
+        this.dieSize = 20;
+        this.debug = false;
     }
 
-    public Game(Difficulty difficulty) {
+    public Game(Settings settings) {
         this();
-        this.difficulty = difficulty;
+        this.difficulty = settings.getDifficulty();
         this.visionRadius = difficulty.visionRadius;
         this.visibilityThreshold = difficulty.visibilityThreshold;
         this.monsterDensity = difficulty.monsterDensity;
+        this.debug = settings.isDebug();
     }
 
     /**
@@ -241,6 +244,7 @@ public class Game {
 
     private void endGame() {
         gameOver = true;
+        MessageBus.getInstance().push(new Message("You died"));
     }
 
     public boolean isGameOver() {

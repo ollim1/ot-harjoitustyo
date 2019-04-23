@@ -145,7 +145,6 @@ public class GameScreen {
         Label gameOverText = new Label("you are dead");
         gameOverText.setTextFill(Color.RED);
         gameOverText.setFont(new Font("Monospace", 40));
-        gameOverText.setStyle(":-fx-stroke: black; -fx-stroke-width: 3px;");
         screenRoot.getChildren().add(gameOverText);
         gameOverText.layout();
         gameOverText.setLayoutX((resolutionX - 214) / 2);
@@ -155,7 +154,7 @@ public class GameScreen {
     private void flushMessages() {
         Message message;
         while ((message = MessageBus.getInstance().poll()) != null) {
-            logBox.appendText(message + "\n ");
+            logBox.appendText("\n" + message);
         }
     }
 }

@@ -40,10 +40,10 @@ public class ViewManager {
     }
 
     public void runGame(Settings settings) throws IllegalArgumentException {
-        Game game = new Game(settings.getDifficulty());
+        Game game = new Game(settings);
         game.setMonstersToCreate(5);
         game.initializeMapObjects(settings.getMapSize(), settings.getMapSize());
-        GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, false);
+        GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, settings.isDebug());
         gameScreen.update();
         window.setScene(gameScreen.getScreen());
     }

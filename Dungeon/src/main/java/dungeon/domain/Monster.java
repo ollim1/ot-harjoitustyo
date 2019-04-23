@@ -18,7 +18,6 @@ public class Monster extends Actor {
     private double fleeThreshold;
     private double safeThreshold;
     private double alertRadius;
-    private MonsterType monsterType;
     private char symbol;
 
     private ActorState state;
@@ -43,7 +42,7 @@ public class Monster extends Actor {
         this.alerted = false;
     }
 
-    public Monster(int x, int y, MonsterType monsterType) {
+    public Monster(int x, int y, ActorType monsterType) {
         this(x, y);
         if (monsterType != null) {
             super.setHealth(monsterType.maxHealth);
@@ -54,7 +53,7 @@ public class Monster extends Actor {
             this.alertRadius = monsterType.alertRadius;
             this.symbol = monsterType.symbol;
             setAttack(monsterType.attack);
-            this.monsterType = monsterType;
+            setActorType(monsterType);
         }
     }
 
@@ -149,20 +148,21 @@ public class Monster extends Actor {
         if (state == ActorState.STAY) {
             idle();
         } else {
-            if (!followDijkstraMap(game, map)) {
-                idle();
-            }
+            followDijkstraMap(game, map);
         }
         heal();
     }
 
-    private boolean followDijkstraMap(Game game, char[][] map) {
+    private void followDijkstraMap(Game game, char[][] map) {
+        boolean success = false;
         for (Direction direction : getDijkstraMap().candidates(getPosition())) {
             if (move(direction, game, map)) {
-                return true;
+                success = true;
             }
         }
-        return false;
+        if (!success) {
+            idle();
+        }
     }
 
 }

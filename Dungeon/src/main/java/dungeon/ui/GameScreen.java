@@ -4,6 +4,8 @@
 package dungeon.ui;
 
 import dungeon.backend.Game;
+import dungeon.backend.MessageBus;
+import dungeon.domain.Message;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
 import java.util.HashMap;
@@ -12,17 +14,20 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class GameScreen {
 
+    private static final int LOGBOX_HEIGHT = 100;
     private TileMapper tileMapper;
     private Game game;
     private Scene screen;
     private Label healthMeter;
     private Canvas canvas;
+    private TextArea logBox;
     private GraphicsContext graphicsContext;
     private Group screenRoot;
     private int resolutionX;
@@ -53,9 +58,18 @@ public class GameScreen {
         this.canvas = new Canvas(resolutionX, resolutionY);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
-                "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY);
+                "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY - LOGBOX_HEIGHT);
         this.screenRoot = new Group();
+        this.logBox = new TextArea();
+        this.logBox.setMinSize(resolutionX, LOGBOX_HEIGHT);
+        this.logBox.setMaxSize(resolutionX, LOGBOX_HEIGHT);
+        this.logBox.layout();
+        this.logBox.setLayoutY(resolutionY - LOGBOX_HEIGHT);
+        this.logBox.setEditable(false);
+        this.logBox.setFocusTraversable(false);
+        this.logBox.setMouseTransparent(true);
         screenRoot.getChildren().add(canvas);
+        screenRoot.getChildren().add(logBox);
 
         screenRoot.getChildren().add(healthMeter);
         this.screen = new Scene(screenRoot);
@@ -100,6 +114,7 @@ public class GameScreen {
             healthMeter.setTextFill(Color.GREEN);
         }
         healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
+        flushMessages();
     }
 
     public void updateDebug() {
@@ -119,6 +134,7 @@ public class GameScreen {
             healthMeter.setTextFill(Color.GREEN);
         }
         healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
+        flushMessages();
     }
 
     private void gameOver() {
@@ -134,5 +150,12 @@ public class GameScreen {
         gameOverText.layout();
         gameOverText.setLayoutX((resolutionX - 214) / 2);
         gameOverText.setLayoutY((resolutionY - 40) / 2);
+    }
+
+    private void flushMessages() {
+        Message message;
+        while ((message = MessageBus.getInstance().poll()) != null) {
+            logBox.appendText(message + "\n ");
+        }
     }
 }

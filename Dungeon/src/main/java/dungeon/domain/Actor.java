@@ -16,6 +16,7 @@ public abstract class Actor implements Comparable<Actor> {
     private double intervalModifier;
     private int nextTurn;
     private DijkstraMap dijkstraMap;
+    private ActorType actorType;
     private boolean[] isHostile;
     private Attack attack;
 
@@ -45,6 +46,14 @@ public abstract class Actor implements Comparable<Actor> {
             health -= amount;
             return amount;
         }
+    }
+
+    public ActorType getActorType() {
+        return actorType;
+    }
+
+    public void setActorType(ActorType actorType) {
+        this.actorType = actorType;
     }
 
     public void setDijkstraMap(DijkstraMap dijkstraMap) {

@@ -7,7 +7,7 @@ import dungeon.domain.Actor;
 import dungeon.domain.Bite;
 import dungeon.domain.Difficulty;
 import dungeon.domain.Monster;
-import dungeon.domain.MonsterType;
+import dungeon.domain.ActorType;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
@@ -104,11 +104,11 @@ public class Game {
     }
 
     public Actor createMonster(int x, int y) {
-        MonsterType monsterType = difficulty.rollType(rng);
+        ActorType monsterType = difficulty.rollType(rng);
         return createMonster(x, y, monsterType);
     }
 
-    public Actor createMonster(int x, int y, MonsterType monsterType) {
+    public Actor createMonster(int x, int y, ActorType monsterType) {
         Monster monster = new Monster(x, y, monsterType);
         monster.setVisionRatio(visionRadius * visibilityThreshold);
         this.actors.add(monster);

@@ -29,7 +29,7 @@ public class Player extends Actor {
         super.setPosition(new Node(x, y));
         super.setIntervalModifier(1.0);
         boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
-        for (MonsterType monsterType : MonsterType.values()) {
+        for (ActorType monsterType : ActorType.values()) {
             hostileSymbols[monsterType.symbol] = true;
         }
         super.setHostileSymbols(hostileSymbols);

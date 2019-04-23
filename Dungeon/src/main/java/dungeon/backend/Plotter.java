@@ -98,26 +98,11 @@ public class Plotter {
     }
 
     /**
-     * This method determines whether or not a point is both within the visible
-     * region and far enough away from the edge of that region. This
-     * implementation should give the player a margin of error against enemies.
+     * This method determines whether or not a point is within the visible region.
      *
      * @param point
      * @return
      */
-    public boolean isVisibleLenient(Node point) {
-        if (visibility[point.getX()][point.getY()] > 0.0) {
-            for (Direction direction : Direction.values()) {
-                Node temp = point.translateToNew(direction);
-                if (!(visibility[temp.getX()][temp.getY()] > 0.0)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
     public boolean isVisible(Node point) {
         return visibility[point.getX()][point.getY()] > 0.0;
     }

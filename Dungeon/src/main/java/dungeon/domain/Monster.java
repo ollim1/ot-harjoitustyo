@@ -14,9 +14,12 @@ import dungeon.backend.PathFinder;
 public class Monster extends Actor {
 
     private static final int MAX_HEALTH = 20;
-    private double visionRadius;
+    private double visionRatio;
     private double fleeThreshold;
-    private static final double ALERT_RANGE = 10;
+    private double safeThreshold;
+    private double alertRadius;
+    private MonsterType monsterType;
+    private char symbol;
 
     private ActorState state;
     private boolean alerted;
@@ -30,23 +33,46 @@ public class Monster extends Actor {
         boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
         hostileSymbols['@'] = true;
         super.setHostileSymbols(hostileSymbols);
-        this.visionRadius = 5;
+        this.visionRatio = 0.8;
         this.fleeThreshold = 0.25;
+        this.safeThreshold = 0.75;
+        this.alertRadius = 10.0;
         this.state = ActorState.STAY;
+        this.symbol = 'D';
+        setAttack(new Bite());
         this.alerted = false;
+    }
+
+    public Monster(int x, int y, MonsterType monsterType) {
+        this(x, y);
+        if (monsterType != null) {
+            super.setHealth(monsterType.maxHealth);
+            super.setMaxHealth(monsterType.maxHealth);
+            this.visionRatio = monsterType.visionRatio;
+            this.fleeThreshold = monsterType.fleeThreshold;
+            this.safeThreshold = monsterType.safeThreshold;
+            this.alertRadius = monsterType.alertRadius;
+            this.symbol = monsterType.symbol;
+            setAttack(monsterType.attack);
+            this.monsterType = monsterType;
+        }
     }
 
     @Override
     public char getSymbol() {
-        return 'D';
+        return symbol;
     }
 
     public void setState(ActorState state) {
         this.state = state;
     }
 
-    public void setVisionRadius(double visionRadius) {
-        this.visionRadius = visionRadius;
+    public void setVisionRatio(double visionRatio) {
+        this.visionRatio = visionRatio;
+    }
+
+    public void setAlertRadius(double alertRadius) {
+        this.alertRadius = alertRadius;
     }
 
     public double getFleeThreshold() {
@@ -58,7 +84,7 @@ public class Monster extends Actor {
     }
 
     public void reactOnSight(Game game) {
-        if (this.distanceTo(game.getPlayer()) < visionRadius) {
+        if (this.distanceTo(game.getPlayer()) < visionRatio * game.getRadius()) {
             alert(game);
         }
     }
@@ -76,7 +102,9 @@ public class Monster extends Actor {
             pathFinder.computePaths(map, player.getPosition().getX(), player.getPosition().getY());
         }
         DijkstraMap attackMap = pathFinder.dijkstraMap();
-        if (state != ActorState.FLEE) {
+        if (state == ActorState.FLEE) {
+            setDijkstraMap(attackMap.copy().invert());
+        } else {
             setDijkstraMap(attackMap);
         }
         state = ActorState.ATTACK;
@@ -88,7 +116,7 @@ public class Monster extends Actor {
         for (Actor actor : game.getActors()) {
             if (actor.getClass() == this.getClass()) {
                 Monster monster = (Monster) actor;
-                if (this.distanceTo(monster) < ALERT_RANGE && !monster.alerted) {
+                if (this.distanceTo(monster) < alertRadius && !monster.alerted) {
                     monster.alerted = true;
                     monster.state = ActorState.ATTACK;
                     monster.setDijkstraMap(attackMap);
@@ -109,13 +137,13 @@ public class Monster extends Actor {
         if (getDijkstraMap() == null) {
             setDijkstraMap(new DijkstraMap(map[0].length, map.length));
         }
-        if (getHealth() < MAX_HEALTH * fleeThreshold) {
+        if (getHealth() < getMaxHealth() * fleeThreshold) {
             if (state != ActorState.FLEE) {
                 state = ActorState.FLEE;
                 setDijkstraMap(getDijkstraMap().copy().invert());
             }
             alerted = false;
-        } else if (state == ActorState.FLEE) {
+        } else if (state == ActorState.FLEE && getHealth() > getMaxHealth() * safeThreshold) {
             state = ActorState.STAY;
         }
         if (state == ActorState.STAY) {

@@ -11,11 +11,17 @@ import javafx.scene.paint.Color;
 
 public class DijkstraMap {
 
-    private static final double ESCAPE_BIAS = 1.6;
+    private double escapeBias = 1.6;
     private int[][] values;
 
     public DijkstraMap(int[][] distance) {
         this.values = distance;
+        escapeBias = 1.6;
+    }
+
+    public DijkstraMap(int[][] distance, double escapeBias) {
+        this(distance);
+        this.escapeBias = escapeBias;
     }
 
     public DijkstraMap(int w, int h) {
@@ -89,7 +95,6 @@ public class DijkstraMap {
         Collections.sort(directions, (Direction a, Direction b) -> {
             return nodes.get(a).compareTo(nodes.get(b));
         });
-        System.out.println(this.toString());
         return directions;
     }
 
@@ -118,7 +123,7 @@ public class DijkstraMap {
                 if (values[y][x] != Integer.MAX_VALUE) {
                     values[y][x] *= -1;
                     values[y][x] += max;
-                    values[y][x] *= ESCAPE_BIAS;
+                    values[y][x] *= escapeBias;
                 }
             }
         }

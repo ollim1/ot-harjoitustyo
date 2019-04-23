@@ -33,10 +33,9 @@ public class ViewManager {
     public void runGame() throws IllegalArgumentException {
         Game game;
         game = new Game();
-        game.setMinimumMonsters(3);
         game.setMonstersToCreate(5);
         game.initializeMapObjects(mapWidth, mapHeight);
-        GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY);
+        GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, false);
         gameScreen.update();
         window.setScene(gameScreen.getScreen());
     }

@@ -5,12 +5,13 @@ package dungeon.backend;
 
 import dungeon.domain.Actor;
 import dungeon.domain.Bite;
+import dungeon.domain.Difficulty;
 import dungeon.domain.Monster;
+import dungeon.domain.MonsterType;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
 import dungeon.domain.Punch;
-import static java.lang.Math.random;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Random;
@@ -30,21 +31,29 @@ public class Game {
     private ArrayList<Actor> actors;
     private PathFinder pathFinder;
     private int mapSize;
-    private int minimumMonsters;
     private int monstersToCreate;
+    private double monsterDensity;
     private int dieSize;
     private double radius;
     private double visibilityThreshold;
     private boolean gameOver;
+    private Difficulty difficulty;
 
     public Game() {
         gameOver = false;
         this.queue = new PriorityQueue<>();
         this.actors = new ArrayList<>();
         this.pathFinder = new PathFinder();
+        this.monsterDensity = 0.01;
         this.radius = 10.0;
         this.dieSize = 20;
         this.visibilityThreshold = 0.8;
+        this.difficulty = Difficulty.NORMAL;
+    }
+
+    public Game(Difficulty difficulty) {
+        this();
+        this.difficulty = difficulty;
     }
 
     /**
@@ -92,11 +101,15 @@ public class Game {
     }
 
     public Actor createMonster(int x, int y) {
-        Monster monster = new Monster(x, y);
-        monster.setVisionRadius(radius * visibilityThreshold);
+        MonsterType monsterType = difficulty.rollType(rng);
+        return createMonster(x, y, monsterType);
+    }
+
+    public Actor createMonster(int x, int y, MonsterType monsterType) {
+        Monster monster = new Monster(x, y, monsterType);
+        monster.setVisionRatio(radius * visibilityThreshold);
         this.actors.add(monster);
         this.queue.add(monster);
-        monster.setAttack(new Bite());
         return monster;
     }
 
@@ -167,7 +180,7 @@ public class Game {
         }
         queue.add(player);
 
-        respawnMonsters();
+        spawnMonsters();
         while (!queue.isEmpty()) {
             Actor actor = queue.poll();
             if (actor.getHealth() <= 0) {
@@ -184,8 +197,8 @@ public class Game {
         }
     }
 
-    public void respawnMonsters() {
-        if (actors.size() < minimumMonsters + 1) {
+    public void spawnMonsters() {
+        if ((actors.size() - 1) / (double) mapSize < monsterDensity) {
             createMonsters();
         }
     }
@@ -251,10 +264,6 @@ public class Game {
         return plotter;
     }
 
-    public void setMinimumMonsters(int minimumMonsters) {
-        this.minimumMonsters = minimumMonsters;
-    }
-
     public void setMonstersToCreate(int monstersToCreate) {
         this.monstersToCreate = monstersToCreate;
     }
@@ -265,6 +274,10 @@ public class Game {
 
     public int getDieSize() {
         return dieSize;
+    }
+
+    public double getRadius() {
+        return radius;
     }
 
 }

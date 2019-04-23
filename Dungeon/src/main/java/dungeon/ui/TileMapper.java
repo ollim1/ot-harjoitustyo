@@ -3,10 +3,9 @@
  */
 package dungeon.ui;
 
-import javafx.geometry.Rectangle2D;
+import java.util.HashMap;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class TileMapper {
@@ -19,6 +18,17 @@ public class TileMapper {
     private int gridWidth;
     private int gridHeight;
     private static final Color SHADE = Color.rgb(0, 0, 0, 0.5);
+    private static final HashMap<Character, Integer> tileValues = new HashMap<Character, Integer>() {
+        {
+            put('_', 0);
+            put('#', 1);
+            put(' ', 2);
+            put('@', 3);
+            put('o', 4);
+            put('d', 5);
+            put('D', 6);
+        }
+    };
 
     public TileMapper(String filename, int tileSize, GraphicsContext renderer, int resolutionX, int resolutionY) {
         this.tileSize = tileSize;
@@ -37,7 +47,7 @@ public class TileMapper {
 
         drawGrid(offsetX, offsetY, map, losMap);
     }
-    
+
     public void drawDebugFrame(char[][] map, double[][] losMap, Color[][] colors, int centerX, int centerY) {
         drawFrame(map, losMap, centerX, centerY);
         drawColorMap(colors, centerX, centerY);
@@ -49,19 +59,11 @@ public class TileMapper {
                 int tilePositionX = offsetX + x;
                 int tilePositionY = offsetY + y;
                 boolean outOfBounds = true;
-                int tileValue = 2;
+                int tileValue = 0;
 
                 if (tilePositionX >= 0 && tilePositionX < map[0].length
                         && tilePositionY >= 0 && tilePositionY < map.length) {
-                    if (map[tilePositionY][tilePositionX] == '@') {
-                        tileValue = 0;
-                    } else if (map[tilePositionY][tilePositionX] == 'D') {
-                        tileValue = 1;
-                    } else if (map[tilePositionY][tilePositionX] == '#') {
-                        tileValue = 3;
-                    } else if (map[tilePositionY][tilePositionX] == ' ') {
-                        tileValue = 4;
-                    }
+                    tileValue = tileValues.getOrDefault(map[tilePositionY][tilePositionX], 0);
                     outOfBounds = false;
                 }
                 drawTile(tileValue, x, y);

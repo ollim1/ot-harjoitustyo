@@ -27,6 +27,7 @@ public class GameScreen {
     private Group screenRoot;
     private int resolutionX;
     private int resolutionY;
+    private boolean debug;
     private static final HashMap<KeyCode, PlayerAction> legalKeyCodes = new HashMap<KeyCode, PlayerAction>() {
         {
 
@@ -42,7 +43,7 @@ public class GameScreen {
         }
     };
 
-    public GameScreen(Game game, int resolutionX, int resolutionY) {
+    public GameScreen(Game game, int resolutionX, int resolutionY, boolean debug) {
         this.game = game;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
@@ -58,8 +59,9 @@ public class GameScreen {
 
         screenRoot.getChildren().add(healthMeter);
         this.screen = new Scene(screenRoot);
+        this.debug = debug;
         game.createPlayer();
-        game.createMonsters();
+        game.spawnMonsters();
         setInputEvents();
     }
 
@@ -70,7 +72,11 @@ public class GameScreen {
                 if (game.isGameOver()) {
                     gameOver();
                 }
-                update();
+                if (debug) {
+                    updateDebug();
+                } else {
+                    update();
+                }
             }
         });
     }

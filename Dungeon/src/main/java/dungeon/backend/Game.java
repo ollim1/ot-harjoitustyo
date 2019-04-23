@@ -54,6 +54,9 @@ public class Game {
     public Game(Difficulty difficulty) {
         this();
         this.difficulty = difficulty;
+        this.visionRadius = difficulty.visionRadius;
+        this.visibilityThreshold = difficulty.visibilityThreshold;
+        this.monsterDensity = difficulty.monsterDensity;
     }
 
     /**

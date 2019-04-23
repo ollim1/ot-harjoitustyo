@@ -125,9 +125,11 @@ public class GameScreen {
         screen.setOnKeyPressed(event -> {
             return;
         });
+        String gameOver = "you are dead";
         Label gameOverText = new Label("you are dead");
         gameOverText.setTextFill(Color.RED);
         gameOverText.setFont(new Font("Monospace", 40));
+        gameOverText.setStyle(":-fx-stroke: black; -fx-stroke-width: 3px;");
         screenRoot.getChildren().add(gameOverText);
         gameOverText.layout();
         gameOverText.setLayoutX((resolutionX - 214) / 2);

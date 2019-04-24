@@ -33,6 +33,7 @@ public class GameScreen {
     private int resolutionX;
     private int resolutionY;
     private boolean debug;
+    private Label debugStats;
     private static final HashMap<KeyCode, PlayerAction> legalKeyCodes = new HashMap<KeyCode, PlayerAction>() {
         {
 
@@ -61,8 +62,8 @@ public class GameScreen {
                 "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY - LOGBOX_HEIGHT);
         this.screenRoot = new Group();
         this.logBox = new TextArea();
-        this.logBox.setMinSize(resolutionX, LOGBOX_HEIGHT);
-        this.logBox.setMaxSize(resolutionX, LOGBOX_HEIGHT);
+        this.logBox.setMinSize(resolutionX * 2 / 3, LOGBOX_HEIGHT);
+        this.logBox.setMaxSize(resolutionX * 2 / 3, LOGBOX_HEIGHT);
         this.logBox.layout();
         this.logBox.setLayoutY(resolutionY - LOGBOX_HEIGHT);
         this.logBox.setEditable(false);
@@ -70,6 +71,13 @@ public class GameScreen {
         this.logBox.setMouseTransparent(true);
         screenRoot.getChildren().add(canvas);
         screenRoot.getChildren().add(logBox);
+        if (debug) {
+            this.debugStats = new Label();
+            debugStats.layout();
+            this.debugStats.setLayoutY(resolutionY - LOGBOX_HEIGHT);
+            this.debugStats.setLayoutX(resolutionX * 2 / 3);
+            screenRoot.getChildren().add(debugStats);
+        }
 
         screenRoot.getChildren().add(healthMeter);
         this.screen = new Scene(screenRoot);
@@ -135,6 +143,7 @@ public class GameScreen {
         }
         healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
         flushMessages();
+        debugStats.setText("debug\n" + "turn value: " + game.getPlayer().getNextTurn());
     }
 
     private void gameOver() {

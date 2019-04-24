@@ -19,7 +19,7 @@ public class Bite extends Attack {
             return 0;
         }
         double modifier = source.getMaxHealth() / target.getMaxHealth();
-        double damage = modifier * (2 + 0.25 * r);
+        double damage = modifier * (3 + 0.25 * r);
         pushMessage(r, source, target, damage);
         return target.damage(damage);
     }

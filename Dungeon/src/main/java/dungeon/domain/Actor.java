@@ -4,6 +4,7 @@
 package dungeon.domain;
 
 import dungeon.backend.Game;
+import dungeon.backend.MessageBus;
 
 /**
  * An abstract superclass for game actors. Can be sorted by turn order.
@@ -146,16 +147,34 @@ public abstract class Actor implements Comparable<Actor> {
             incrementTurn(direction.cost());
             return true;
         } else {
-            if (isHostile[map[next.getY()][next.getX()]]) {
-                Actor target = game.actorAt(next);
-                if (attack != null && target != null) {
+            if (tryAttacking(map, next, game)) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private boolean tryAttacking(char[][] map, Node next, Game game) {
+        if (isHostile[map[next.getY()][next.getX()]]) {
+            Actor target = game.actorAt(next);
+            if (attack != null) {
+                if (target != null) {
                     attack.apply(game, this, target);
                     incrementTurn(attack.cost());
                     return true;
                 }
+                attackNothingMessage();
             }
-            return false;
         }
+        return false;
+    }
+
+    private void attackNothingMessage() {
+        String sourceString = "You";
+        if (actorType != null) {
+            sourceString = "The " + actorType.toString();
+        }
+        MessageBus.getInstance().push(new Message(sourceString + " hit nothing"));
     }
 
     public void idle() {
@@ -186,13 +205,13 @@ public abstract class Actor implements Comparable<Actor> {
 
     @Override
     public int compareTo(Actor that) {
-        if (that.nextTurn == this.nextTurn) {
-            if (this.getClass() == Player.class) {
-                return -1;
-            } else if (that.getClass() == Player.class) {
-                return 1;
-            }
-        }
+//        if (that.nextTurn == this.nextTurn) {
+//            if (this.getClass() == Player.class) {
+//                return -1;
+//            } else if (that.getClass() == Player.class) {
+//                return 1;
+//            }
+//        }
         return this.nextTurn - that.nextTurn;
     }
 

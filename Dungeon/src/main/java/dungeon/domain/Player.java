@@ -52,9 +52,11 @@ public class Player extends Actor {
     @Override
     public void act(Game game, char[][] map) {
         if (action == PlayerAction.STAY) {
-            super.idle();
+            idle();
         } else {
-            super.move(ACTION_TO_DIRECTION_TRANSLATION.get(action), game, map);
+            if (!super.move(ACTION_TO_DIRECTION_TRANSLATION.get(action), game, map)) {
+                idle();
+            }
         }
         heal();
     }

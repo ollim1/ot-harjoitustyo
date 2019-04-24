@@ -47,7 +47,7 @@ public class DijkstraMap {
         for (int y = 0; y < values.length; y++) {
             for (int x = 0; x < values[0].length; x++) {
                 if (values[y][x] != Integer.MAX_VALUE) {
-                    colorMap[y][x] = Color.hsb((double) values[y][x] * colorRange / max, 1.0, 1.0, alpha);
+                    colorMap[y][x] = Color.hsb((double) values[y][x] * colorRange / max - 60, 1.0, 1.0, alpha);
                 } else {
                     colorMap[y][x] = Color.hsb(0.0, 0.0, 0.0, 0.0);
                 }

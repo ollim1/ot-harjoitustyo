@@ -113,9 +113,9 @@ public class Game {
 
     public Actor createMonster(int x, int y, ActorType monsterType) {
         Monster monster = new Monster(x, y, monsterType);
-        monster.setVisionRatio(visionRadius * visibilityThreshold);
         this.actors.add(monster);
         this.queue.add(monster);
+        monster.setNextTurn(actors.size() - 1);
         return monster;
     }
 
@@ -136,6 +136,7 @@ public class Game {
     public Actor createPlayer(int x, int y) {
         player = new Player(x, y);
         this.actors.add(player);
+        player.setNextTurn(actors.size() - 1);
         player.setAttack(new Punch());
         return player;
     }

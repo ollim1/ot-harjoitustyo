@@ -9,7 +9,7 @@ import dungeon.backend.MessageBus;
 /**
  * An abstract superclass for game actors. Can be sorted by turn order.
  */
-public abstract class Actor implements Comparable<Actor> {
+public abstract class Actor implements Comparable<Actor>, MapObject {
 
     private Node position;
     private double health;

@@ -4,7 +4,7 @@
 package dungeon.backend;
 
 import dungeon.domain.Actor;
-import dungeon.domain.Direction;
+import dungeon.domain.MapObject;
 import dungeon.domain.Node;
 import java.util.ArrayList;
 import squidpony.squidgrid.BevelFOV;
@@ -19,6 +19,8 @@ public class Plotter {
     private Game game;
     private char[][] map;
     private char[][] playerMap;
+    private char[][] playerLevelMap;
+    private MapObject[][] playerObjectMap;
     private double[][] visibility;
     private double[][] resistances;
     private double radius;
@@ -44,15 +46,18 @@ public class Plotter {
         this.map = map;
         if (map != null) {
             this.playerMap = new char[map.length][map[0].length];
-            formatPlayerMap();
+            playerLevelMap = new char[map.length][map[0].length];
+            playerObjectMap = new MapObject[map.length][map[0].length];
+            formatPlayerMaps();
             generateResistances();
         }
     }
 
-    private void formatPlayerMap() {
+    private void formatPlayerMaps() {
         for (int y = 0; y < playerMap.length; y++) {
             for (int x = 0; x < playerMap[0].length; x++) {
                 playerMap[y][x] = '_';
+                playerLevelMap[y][x] = '_';
             }
         }
     }
@@ -75,18 +80,47 @@ public class Plotter {
      * visibility map into a separate variable.
      */
     public void update() {
-        Node position = game.getPlayer().getPosition();
-        int posX = position.getX();
-        int posY = position.getY();
-        visibility = losCalculator.calculateFOV(resistances, posX, posY, radius);
+        updateVisibility();
+        updateLevelMaps();
+        updateObjectMap();
+    }
+
+    private void updateObjectMap() {
+        for (int x = 0; x < map.length; x++) {
+            for (int y = 0; y < map.length; y++) {
+                if (visibility[x][y] > 0.0) {
+                    playerObjectMap[y][x] = null;
+                }
+            }
+        }
+        for (MapObject mapObject : game.getMapObjects()) {
+            Node position = mapObject.getPosition();
+            int x = position.getX();
+            int y = position.getY();
+            if (x >= 0 && x < map[0].length
+                    && y >= 0 && y < map.length && visibility[x][y] > 0.0) {
+                playerObjectMap[y][x] = mapObject;
+            }
+        }
+    }
+
+    private void updateLevelMaps() {
         char[][] fullMap = populateMap(game.getPlayer());
         for (int x = 0; x < fullMap[0].length; x++) {
             for (int y = 0; y < fullMap.length; y++) {
                 if (visibility[x][y] > 0.0) {
                     playerMap[y][x] = fullMap[y][x];
+                    playerLevelMap[y][x] = map[y][x];
                 }
             }
         }
+    }
+
+    private void updateVisibility() {
+        Node position = game.getPlayer().getPosition();
+        int posX = position.getX();
+        int posY = position.getY();
+        visibility = losCalculator.calculateFOV(resistances, posX, posY, radius);
     }
 
     public double[][] getVisibility() {
@@ -97,8 +131,17 @@ public class Plotter {
         return playerMap;
     }
 
+    public MapObject[][] getPlayerObjectMap() {
+        return playerObjectMap;
+    }
+
+    public char[][] getPlayerLevelMap() {
+        return playerLevelMap;
+    }
+
     /**
-     * This method determines whether or not a point is within the visible region.
+     * This method determines whether or not a point is within the visible
+     * region.
      *
      * @param point
      * @return

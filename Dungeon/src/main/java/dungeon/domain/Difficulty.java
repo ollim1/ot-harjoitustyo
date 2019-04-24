@@ -1,5 +1,5 @@
 /*
- * @author olli m
+ * @author londes
  */
 package dungeon.domain;
 
@@ -7,6 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 import squidpony.squidmath.RNG;
 
+/**
+ * The HashMap distribution represents cumulative distribution of probabilities
+ * of appearing for every monster.
+ *
+ * @author londes
+ */
 public enum Difficulty {
 
     EASY(new HashMap<ActorType, Double>() {
@@ -29,14 +35,14 @@ public enum Difficulty {
             put(ActorType.GNOLL, 1.0);
         }
     }, 7.0, 1.0, 0.03, "hard");
-    public final HashMap<ActorType, Double> frequencies;
+    public final HashMap<ActorType, Double> distribution;
     public final double visionRadius;
     public final double visibilityThreshold;
     public final double monsterDensity;
     public final String name;
 
     private Difficulty(HashMap<ActorType, Double> frequencies, double visionRadius, double visibilityThreshold, double monsterDensity, String name) {
-        this.frequencies = frequencies;
+        this.distribution = frequencies;
         this.visionRadius = visionRadius;
         this.visibilityThreshold = visibilityThreshold;
         this.monsterDensity = monsterDensity;
@@ -54,7 +60,7 @@ public enum Difficulty {
         double r = rng.nextDouble();
         ActorType ret = null;
         double smallest = Double.POSITIVE_INFINITY;
-        for (Map.Entry<ActorType, Double> monster : frequencies.entrySet()) {
+        for (Map.Entry<ActorType, Double> monster : distribution.entrySet()) {
             if (monster.getValue() < smallest && monster.getValue() > r) {
                 ret = monster.getKey();
                 smallest = monster.getValue();

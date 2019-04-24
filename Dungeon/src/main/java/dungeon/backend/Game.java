@@ -7,6 +7,7 @@ import dungeon.domain.Actor;
 import dungeon.domain.Difficulty;
 import dungeon.domain.Monster;
 import dungeon.domain.ActorType;
+import dungeon.domain.MapObject;
 import dungeon.domain.Message;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
@@ -29,6 +30,7 @@ public class Game {
     private Player player;
     private PriorityQueue<Actor> queue;
     private ArrayList<Actor> actors;
+    private ArrayList<MapObject> mapObjects;
     private PathFinder pathFinder;
     private int mapSize;
     private int monstersToCreate;
@@ -44,6 +46,7 @@ public class Game {
         gameOver = false;
         this.queue = new PriorityQueue<>();
         this.actors = new ArrayList<>();
+        this.mapObjects = new ArrayList<>();
         this.pathFinder = new PathFinder();
         this.difficulty = Difficulty.NORMAL;
         this.monsterDensity = difficulty.monsterDensity;
@@ -113,10 +116,15 @@ public class Game {
 
     public Actor createMonster(int x, int y, ActorType monsterType) {
         Monster monster = new Monster(x, y, monsterType);
-        this.actors.add(monster);
+        addActor(monster);
         this.queue.add(monster);
         monster.setNextTurn(actors.size() - 1);
         return monster;
+    }
+
+    private void addActor(Actor actor) {
+        this.actors.add(actor);
+        this.mapObjects.add(actor);
     }
 
     /**
@@ -135,7 +143,7 @@ public class Game {
 
     public Actor createPlayer(int x, int y) {
         player = new Player(x, y);
-        this.actors.add(player);
+        addActor(player);
         player.setNextTurn(actors.size() - 1);
         player.setAttack(new Punch());
         return player;
@@ -229,8 +237,13 @@ public class Game {
             endGame();
             return true;
         }
-        actors.remove(actor);
+        deleteActor(actor);
         return false;
+    }
+
+    private void deleteActor(Actor actor) {
+        actors.remove(actor);
+        mapObjects.remove(actor);
     }
 
     public void controlActor(Actor actor) {
@@ -286,6 +299,10 @@ public class Game {
 
     public double getVisionRadius() {
         return visionRadius;
+    }
+
+    public ArrayList<MapObject> getMapObjects() {
+        return mapObjects;
     }
 
 }

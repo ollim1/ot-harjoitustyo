@@ -12,16 +12,12 @@ public class ViewManager {
 
     private int resolutionX;
     private int resolutionY;
-    private int mapWidth;
-    private int mapHeight;
     private TitleScreen titleScreen;
     private Stage window;
 
-    public ViewManager(Stage window, int resolutionX, int resolutionY, int mapWidth, int mapHeight) {
+    public ViewManager(Stage window, int resolutionX, int resolutionY) {
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
         this.window = window;
     }
 
@@ -30,21 +26,16 @@ public class ViewManager {
         this.window.setScene(titleScreen.createView(resolutionX, resolutionY));
     }
 
-    public void runGame() throws IllegalArgumentException {
-        Game game = new Game();
-        game.setMonstersToCreate(5);
-        game.initializeMapObjects(mapWidth, mapHeight);
-        GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, false);
-        gameScreen.update();
-        window.setScene(gameScreen.getScreen());
-    }
-
     public void runGame(Settings settings) throws IllegalArgumentException {
         Game game = new Game(settings);
         game.setMonstersToCreate(5);
         game.initializeMapObjects(settings.getMapSize(), settings.getMapSize());
         GameScreen gameScreen = new GameScreen(game, resolutionX, resolutionY, settings.isDebug());
-        gameScreen.update();
+        if (settings.isDebug()) {
+            gameScreen.updateDebug();
+        } else {
+            gameScreen.update();
+        }
         window.setScene(gameScreen.getScreen());
     }
 

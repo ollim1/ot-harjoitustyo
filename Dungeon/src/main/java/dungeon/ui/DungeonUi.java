@@ -10,13 +10,11 @@ import javafx.stage.Stage;
 public class DungeonUi extends Application {
 
     private static final int RESOLUTION_X = 800;
-    private static final int RESOLUTION_Y = 600;
-    private static final int GAME_WIDTH = 40;
-    private static final int GAME_HEIGHT = 40;
+    private static final int RESOLUTION_Y = 700;
 
     @Override
     public void start(Stage window) {
-        ViewManager viewManager = new ViewManager(window, RESOLUTION_X, RESOLUTION_Y, GAME_WIDTH, GAME_HEIGHT);
+        ViewManager viewManager = new ViewManager(window, RESOLUTION_X, RESOLUTION_Y);
         viewManager.showTitleScreen();
         window.setTitle("dungeon");
         window.show();

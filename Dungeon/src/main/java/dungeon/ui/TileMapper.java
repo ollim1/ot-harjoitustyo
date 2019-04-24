@@ -3,8 +3,10 @@
  */
 package dungeon.ui;
 
+import dungeon.domain.MapObject;
 import java.util.HashMap;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -45,7 +47,17 @@ public class TileMapper {
         int offsetX = centerX - resolutionX / tileSize / 2;
         int offsetY = centerY - resolutionY / tileSize / 2;
 
-        drawGrid(offsetX, offsetY, map, losMap);
+        drawGrid(offsetX, offsetY, map);
+        drawGrid(offsetX, offsetY, losMap);
+    }
+
+    public void drawFrame(char[][] levelMap, MapObject[][] objectMap, double[][] losMap, int centerX, int centerY) {
+        int offsetX = centerX - resolutionX / tileSize / 2;
+        int offsetY = centerY - resolutionY / tileSize / 2;
+
+        drawGrid(offsetX, offsetY, levelMap);
+        drawGrid(offsetX, offsetY, objectMap);
+        drawGrid(offsetX, offsetY, losMap);
     }
 
     public void drawDebugFrame(char[][] map, double[][] losMap, Color[][] colors, int centerX, int centerY) {
@@ -53,28 +65,61 @@ public class TileMapper {
         drawColorMap(colors, centerX, centerY);
     }
 
-    public void drawGrid(int offsetX, int offsetY, char[][] map, double[][] losMap) {
+    public void drawDebugFrame(char[][] levelMap, MapObject[][] objectMap, double[][] losMap, Color[][] colors, int centerX, int centerY) {
+        drawFrame(levelMap, objectMap, losMap, centerX, centerY);
+        drawColorMap(colors, centerX, centerY);
+    }
+
+    private void drawGrid(int offsetX, int offsetY, char[][] map) {
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
                 int tilePositionX = offsetX + x;
                 int tilePositionY = offsetY + y;
-                boolean outOfBounds = true;
                 int tileValue = 0;
 
                 if (tilePositionX >= 0 && tilePositionX < map[0].length
                         && tilePositionY >= 0 && tilePositionY < map.length) {
                     tileValue = tileValues.getOrDefault(map[tilePositionY][tilePositionX], 0);
-                    outOfBounds = false;
                 }
                 drawTile(tileValue, x, y);
-                if (!outOfBounds && !(losMap[tilePositionX][tilePositionY] > 0.0)) {
+            }
+        }
+    }
+
+    private void drawGrid(int offsetX, int offsetY, MapObject[][] objectMap) {
+        for (int x = 0; x < gridWidth; x++) {
+            for (int y = 0; y < gridHeight; y++) {
+                int tilePositionX = offsetX + x;
+                int tilePositionY = offsetY + y;
+                int tileValue = 0;
+
+                if (tilePositionX >= 0 && tilePositionX < objectMap[0].length
+                        && tilePositionY >= 0 && tilePositionY < objectMap.length
+                        && objectMap[tilePositionY][tilePositionX] != null) {
+                    tileValue = tileValues.getOrDefault(objectMap[tilePositionY][tilePositionX].getSymbol(), 0);
+                }
+                if (tileValue > 0) {
+                    drawTile(tileValue, x, y);
+                }
+            }
+        }
+    }
+
+    private void drawGrid(int offsetX, int offsetY, double[][] losMap) {
+        for (int x = 0; x < gridWidth; x++) {
+            for (int y = 0; y < gridHeight; y++) {
+                int tilePositionX = offsetX + x;
+                int tilePositionY = offsetY + y;
+                if (tilePositionX >= 0 && tilePositionX < losMap.length
+                        && tilePositionY >= 0 && tilePositionY < losMap[0].length
+                        && !(losMap[tilePositionX][tilePositionY] > 0.0)) {
                     shade(SHADE, x, y);
                 }
             }
         }
     }
 
-    public void drawColorMap(Color[][] colors, int centerX, int centerY) {
+    private void drawColorMap(Color[][] colors, int centerX, int centerY) {
         int offsetX = centerX - resolutionX / tileSize / 2;
         int offsetY = centerY - resolutionY / tileSize / 2;
         for (int x = 0; x < gridWidth; x++) {

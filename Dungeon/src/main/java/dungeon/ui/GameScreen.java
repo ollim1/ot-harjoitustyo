@@ -5,6 +5,7 @@ package dungeon.ui;
 
 import dungeon.backend.Game;
 import dungeon.backend.MessageBus;
+import dungeon.domain.MapObject;
 import dungeon.domain.Message;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
@@ -22,6 +23,7 @@ import javafx.scene.text.Font;
 public class GameScreen {
 
     private static final int LOGBOX_HEIGHT = 100;
+    private static final int TILESIZE = 32;
     private TileMapper tileMapper;
     private Game game;
     private Scene screen;
@@ -59,11 +61,11 @@ public class GameScreen {
         this.canvas = new Canvas(resolutionX, resolutionY);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
-                "file:resources/tileset.png", 32, graphicsContext, resolutionX, resolutionY - LOGBOX_HEIGHT);
+                "file:resources/tileset.png", TILESIZE, graphicsContext, resolutionX, resolutionY - LOGBOX_HEIGHT);
         this.screenRoot = new Group();
         this.logBox = new TextArea();
-        this.logBox.setMinSize(resolutionX * 2 / 3, LOGBOX_HEIGHT);
-        this.logBox.setMaxSize(resolutionX * 2 / 3, LOGBOX_HEIGHT);
+        this.logBox.setMinSize(resolutionX, LOGBOX_HEIGHT);
+        this.logBox.setMaxSize(resolutionX, LOGBOX_HEIGHT);
         this.logBox.layout();
         this.logBox.setLayoutY(resolutionY - LOGBOX_HEIGHT);
         this.logBox.setEditable(false);
@@ -76,6 +78,8 @@ public class GameScreen {
             debugStats.layout();
             this.debugStats.setLayoutY(resolutionY - LOGBOX_HEIGHT);
             this.debugStats.setLayoutX(resolutionX * 2 / 3);
+            this.logBox.setMinSize(resolutionX * 2 / 3, LOGBOX_HEIGHT);
+            this.logBox.setMaxSize(resolutionX * 2 / 3, LOGBOX_HEIGHT);
             screenRoot.getChildren().add(debugStats);
         }
 
@@ -109,31 +113,32 @@ public class GameScreen {
 
     public void update() {
         game.getPlotter().update();
-        char[][] map = game.getPlotter().getPlayerMap();
         double[][] losMap = game.getPlotter().getVisibility();
+        char[][] levelMap = game.getPlotter().getPlayerLevelMap();
+        MapObject[][] objectMap = game.getPlotter().getPlayerObjectMap();
 
         Player player = game.getPlayer();
-        tileMapper.drawFrame(map, losMap, player.getPosition().getX(), player.getPosition().getY());
-        if (player.getHealth() < player.getMaxHealth() * 0.3) {
-            healthMeter.setTextFill(Color.RED);
-        } else if (player.getHealth() < player.getMaxHealth() * 0.5) {
-            healthMeter.setTextFill(Color.YELLOW);
-        } else {
-            healthMeter.setTextFill(Color.GREEN);
-        }
-        healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
+        tileMapper.drawFrame(levelMap, objectMap, losMap, player.getPosition().getX(), player.getPosition().getY());
+        updateHealthMeter(player);
         flushMessages();
     }
 
     public void updateDebug() {
         game.getPlotter().update();
-        char[][] map = game.getPlotter().getPlayerMap();
         double[][] losMap = game.getPlotter().getVisibility();
+        char[][] levelMap = game.getPlotter().getPlayerLevelMap();
+        MapObject[][] objectMap = game.getPlotter().getPlayerObjectMap();
 
         Player player = game.getPlayer();
         game.getPathFinder().computePaths(game.getMap(), player.getPosition().getX(), player.getPosition().getY());
         Color[][] colorMap = game.getPathFinder().dijkstraMap().getColorMap(600, 0.5);
-        tileMapper.drawDebugFrame(map, losMap, colorMap, player.getPosition().getX(), player.getPosition().getY());
+        tileMapper.drawDebugFrame(levelMap, objectMap, losMap, colorMap, player.getPosition().getX(), player.getPosition().getY());
+        updateHealthMeter(player);
+        flushMessages();
+        debugStats.setText("debug\n" + "turn value: " + game.getPlayer().getNextTurn());
+    }
+
+    private void updateHealthMeter(Player player) {
         if (player.getHealth() < player.getMaxHealth() * 0.3) {
             healthMeter.setTextFill(Color.RED);
         } else if (player.getHealth() < player.getMaxHealth() * 0.5) {
@@ -142,15 +147,12 @@ public class GameScreen {
             healthMeter.setTextFill(Color.GREEN);
         }
         healthMeter.setText(String.format("%3.0f/%3.0f", player.getHealth(), player.getMaxHealth()));
-        flushMessages();
-        debugStats.setText("debug\n" + "turn value: " + game.getPlayer().getNextTurn());
     }
 
     private void gameOver() {
         screen.setOnKeyPressed(event -> {
             return;
         });
-        String gameOver = "you are dead";
         Label gameOverText = new Label("you are dead");
         gameOverText.setTextFill(Color.RED);
         gameOverText.setFont(new Font("Monospace", 40));

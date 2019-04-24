@@ -21,4 +21,4 @@
 | 21.4. | 4     | Javadoc, reitinhaku muutettu käyttämään Dijkstra-karttoja |
 | 22.4. | 2.5   | yksikkötestejä korjailtu, koodia refaktoroitu ja tekoälyn toimintaa muokattu |
 | 23.4. | 6     | hirviöluokat, vaikeusasteet, hyökkäysten vuorohinnat, peliparametrien valinta, viestiloki, yksikkötestejä |
-| yht   | 66    | |
+| yht   | 72    | |

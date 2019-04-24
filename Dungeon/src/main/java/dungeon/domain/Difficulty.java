@@ -14,7 +14,7 @@ public enum Difficulty {
             put(ActorType.ORC, 0.75);
             put(ActorType.GNOLL, 1.0);
         }
-    }, 10, 0.8, 0.01, "normal"),
+    }, 10, 0.8, 0.01, "easy"),
     NORMAL(new HashMap<ActorType, Double>() {
         {
             put(ActorType.DRAGON, 0.1);

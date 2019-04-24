@@ -96,7 +96,7 @@ public class DijkstraMap {
         int vx = candidateNode.getX();
         int vy = candidateNode.getY();
         if (values[vy][vx] != Integer.MAX_VALUE
-                && values[vy][vx] <= values[uy][ux]) {
+                && values[vy][vx] < values[uy][ux]) {
             directions.add(candidate);
             nodes.put(candidate, candidateNode);
         }

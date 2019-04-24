@@ -13,46 +13,45 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 
 public class SettingsScreen {
-    
+
     private static class Tuple<K, V> {
-        
+
         private K key;
         private V value;
-        
+
         public Tuple(K key, V value) {
             this.key = key;
             this.value = value;
         }
-        
+
         @Override
         public String toString() {
             return key.toString();
         }
-        
+
         public K getKey() {
             return key;
         }
-        
+
         public V getValue() {
             return value;
         }
-        
+
     }
     private final Settings settings;
     private final ViewManager viewManager;
-    private final Difficulty[] difficulties;
-    private final Tuple<String, Integer>[] mapSizes;
-    
+    private static final Difficulty[] difficulties = new Difficulty[]{
+        Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD};
+    private static final Tuple<String, Integer>[] mapSizes = new Tuple[]{
+        new Tuple("small map", 50),
+        new Tuple("medium map", 100),
+        new Tuple("large map", 200)};
+
     public SettingsScreen(ViewManager viewManager, Settings settings) {
         this.settings = settings;
-        this.difficulties = Difficulty.values();
         this.viewManager = viewManager;
-        this.mapSizes = new Tuple[]{
-            new Tuple("small map", 50),
-            new Tuple("medium map", 100),
-            new Tuple("large map", 200)};
     }
-    
+
     public Scene createView() {
         GridPane grid = new GridPane();
         for (int i = 0; i < mapSizes.length; i++) {

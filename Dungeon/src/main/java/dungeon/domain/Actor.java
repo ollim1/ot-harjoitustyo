@@ -147,14 +147,14 @@ public abstract class Actor implements Comparable<Actor> {
             incrementTurn(direction.cost());
             return true;
         } else {
-            if (tryAttacking(map, next, game)) {
+            if (tryAttacking(direction, map, next, game)) {
                 return true;
             }
             return false;
         }
     }
 
-    private boolean tryAttacking(char[][] map, Node next, Game game) {
+    private boolean tryAttacking(Direction direction, char[][] map, Node next, Game game) {
         if (isHostile[map[next.getY()][next.getX()]]) {
             Actor target = game.actorAt(next);
             if (attack != null) {
@@ -205,13 +205,13 @@ public abstract class Actor implements Comparable<Actor> {
 
     @Override
     public int compareTo(Actor that) {
-//        if (that.nextTurn == this.nextTurn) {
-//            if (this.getClass() == Player.class) {
-//                return -1;
-//            } else if (that.getClass() == Player.class) {
-//                return 1;
-//            }
-//        }
+        if (that.nextTurn == this.nextTurn) {
+            if (this.getClass() == Player.class) {
+                return -1;
+            } else if (that.getClass() == Player.class) {
+                return 1;
+            }
+        }
         return this.nextTurn - that.nextTurn;
     }
 

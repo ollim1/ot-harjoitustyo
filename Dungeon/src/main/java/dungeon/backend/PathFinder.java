@@ -25,10 +25,6 @@ public class PathFinder {
     /**
      * Populates the Direction array representing the shortest paths from any
      * point in the map to the destination.
-     *
-     * @param map the raw dungeon map (not from populateMap())
-     * @param x
-     * @param y
      */
     public PathFinder() {
         this.oldCenter = new Node(-1, -1);

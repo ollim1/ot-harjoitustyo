@@ -5,6 +5,7 @@ package dungeon.ui;
 
 import dungeon.backend.Game;
 import dungeon.backend.MessageBus;
+import dungeon.backend.Settings;
 import dungeon.domain.MapObject;
 import dungeon.domain.Message;
 import dungeon.domain.Player;
@@ -24,6 +25,10 @@ public class GameScreen {
 
     private static final int LOGBOX_HEIGHT = 100;
     private static final int TILESIZE = 32;
+    private int resolutionX;
+    private int resolutionY;
+    private boolean debug;
+    private ViewManager viewManager;
     private TileMapper tileMapper;
     private Game game;
     private Scene screen;
@@ -32,9 +37,6 @@ public class GameScreen {
     private TextArea logBox;
     private GraphicsContext graphicsContext;
     private Group screenRoot;
-    private int resolutionX;
-    private int resolutionY;
-    private boolean debug;
     private Label debugStats;
     private static final HashMap<KeyCode, PlayerAction> legalKeyCodes = new HashMap<KeyCode, PlayerAction>() {
         {
@@ -51,8 +53,13 @@ public class GameScreen {
         }
     };
 
-    public GameScreen(Game game, int resolutionX, int resolutionY, boolean debug) {
-        this.game = game;
+    public GameScreen(ViewManager viewManager, Settings settings, int resolutionX, int resolutionY) {
+        this.debug = settings.isDebug();
+        this.game = new Game(settings);
+        game.setMonstersToCreate(5);
+        game.initializeMapObjects(settings.getMapSize(), settings.getMapSize());
+        game.createPlayer();
+        game.spawnMonsters();
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
         this.healthMeter = new Label(" 40/ 40");
@@ -85,9 +92,6 @@ public class GameScreen {
 
         screenRoot.getChildren().add(healthMeter);
         this.screen = new Scene(screenRoot);
-        this.debug = debug;
-        game.createPlayer();
-        game.spawnMonsters();
         setInputEvents();
     }
 

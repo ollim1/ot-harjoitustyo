@@ -96,6 +96,8 @@ public class Game {
     /**
      * This method creates a monster at a random location and places in in the
      * queue.
+     *
+     * @return
      */
     public Actor createMonster() {
         char[][] populatedMap = plotter.populateMap(null);

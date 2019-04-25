@@ -22,4 +22,5 @@
 | 22.4. | 2.5   | yksikkötestejä korjailtu, koodia refaktoroitu ja tekoälyn toimintaa muokattu |
 | 23.4. | 6     | hirviöluokat, vaikeusasteet, hyökkäysten vuorohinnat, peliparametrien valinta, viestiloki, yksikkötestejä |
 | 24.4. | 7     | koodikatselmointi, tuki lattialaatoille |
-| yht   | 79    | |
+| 25.4. | 4     | koodikatselmointi, refaktorointia, JavaDoc |
+| yht   | 83    | |

@@ -5,7 +5,7 @@ package dungeon.ui;
 
 import dungeon.backend.Game;
 import dungeon.backend.MessageBus;
-import dungeon.backend.Settings;
+import dungeon.domain.Settings;
 import dungeon.domain.MapObject;
 import dungeon.domain.Message;
 import dungeon.domain.Player;

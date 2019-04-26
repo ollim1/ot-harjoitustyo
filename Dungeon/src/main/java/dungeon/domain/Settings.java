@@ -1,7 +1,7 @@
 /*
  * @author olli m
  */
-package dungeon.backend;
+package dungeon.domain;
 
 import dungeon.domain.Difficulty;
 

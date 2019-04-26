@@ -4,7 +4,7 @@
 package dungeon.ui;
 
 import dungeon.backend.Game;
-import dungeon.backend.Settings;
+import dungeon.domain.Settings;
 import dungeon.domain.Difficulty;
 import javafx.stage.Stage;
 

@@ -3,6 +3,7 @@
  */
 package dungeon.backend;
 
+import dungeon.domain.Settings;
 import dungeon.domain.Actor;
 import dungeon.domain.Difficulty;
 import dungeon.domain.Monster;

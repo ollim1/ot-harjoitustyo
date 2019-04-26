@@ -3,7 +3,7 @@
  */
 package dungeon.ui;
 
-import dungeon.backend.Settings;
+import dungeon.domain.Settings;
 import dungeon.domain.Difficulty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

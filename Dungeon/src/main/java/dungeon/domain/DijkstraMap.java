@@ -70,33 +70,9 @@ public class DijkstraMap {
     }
 
     /**
-     * Returns the lowest-valued neighbor for a specific position. Pathfinding
-     * in a DijkstraMap is based on "rolling downhill" to lower values.
-     *
-     * @param point
-     * @return
-     */
-    public Direction next(Node point) {
-        Direction next = null;
-        if (point.getX() <= 0 || point.getY() <= 0
-                || point.getX() >= values[0].length - 1
-                || point.getY() >= values.length - 1) {
-            return null;
-        }
-        int lowest = values[point.getY()][point.getX()];
-        for (Direction candidate : Direction.values()) {
-            Node temp = point.translateToNew(candidate);
-            int value = values[temp.getY()][temp.getX()];
-            if (value <= lowest) {
-                lowest = value;
-                next = candidate;
-            }
-        }
-        return next;
-    }
-
-    /**
-     * Returns a list of candidate neighbors sorted by distance value.
+     * Returns a sorted list of candidate directions sorted by the distance
+     * value of the corresponding neighbor node. Pathfinding in a DijkstraMap is
+     * based on "rolling downhill" towards lower values.
      *
      * @param point
      * @return

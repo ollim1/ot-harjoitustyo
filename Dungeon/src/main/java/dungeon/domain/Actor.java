@@ -205,13 +205,6 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
 
     @Override
     public int compareTo(Actor that) {
-        if (that.nextTurn == this.nextTurn) {
-            if (this.getClass() == Player.class) {
-                return -1;
-            } else if (that.getClass() == Player.class) {
-                return 1;
-            }
-        }
         return this.nextTurn - that.nextTurn;
     }
 

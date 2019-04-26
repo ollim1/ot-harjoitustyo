@@ -127,7 +127,7 @@ public class Monster extends Actor {
     }
 
     /**
-     * Monster AI: Wait in place until player sighted; flee if HP low; stop
+     * Monster AI: Wait in place until player is seen; flee if HP low; stop
      * running away when HP is above threshold.
      *
      * @param game

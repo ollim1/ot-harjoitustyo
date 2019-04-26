@@ -6,12 +6,15 @@ Pelissä liikutaan nuolinäppäimillä tai H-, J-, K- ja L-näppäimillä. H-nä
 
 ![alku](start.png)
 ![näkökenttä](lineofsight.png)
+
 Pelialueesta näkyy vain pelihahmon näkökenttään kuuluvat alueet. Aiemmin nähdyt alueet sisältöineen näkyvät varjostettuina. Pelaajan terveyspisteet näkyvät ruudun vasemmassa yläkulmassa.
 
 ![vihollinen havaittu](enemyseen.png)
+
 Hirviöt osaavat hakeutua pelaajan lähelle minkä tahansa esteiden ympäri niin kauan kuin reitti pelaajan lähelle on olemassa. Hirviöt ovat kuitenkin tietoisia vain pelaajan viimeisimmästä sijainnista eivätkä näe pelaajaa aivan tämän näkökentän rajalla, joten etene varovaisesti. Hirviöt osaavat nostaa hälytyksen nähdessään pelaajan, jolloin muut hirviöt hälytyksen säteellä alkavat hakeutumaan pelaajan viimeisintä havaittua sijaintia kohti.
 
 ![taistelu](combat.png)
+
 Hyökkääminen tapahtuu painamalla suuntanäppäintä kohteen suuntaan silloin, kun pelaajahahmo on sen vierellä.
 
 Toistaiseksi hirviöitä ei ole ohjelmoitu liikkumaan muulloin kuin niiden hyökätessä tai paetessa, joten paikat, joissa yksikään näkyvä ruutu ei ole minkään uhan reitillä ovat aina turvallisia.

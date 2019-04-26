@@ -9,16 +9,20 @@ import dungeon.backend.Plotter;
 import dungeon.domain.Settings;
 import dungeon.domain.MapObject;
 import dungeon.domain.Message;
+import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
 import java.util.HashMap;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -66,6 +70,11 @@ public class GameScreen {
         this.healthMeter = new Label(" 40/ 40");
         this.healthMeter.setTextFill(Color.GREEN);
         this.healthMeter.setFont(new Font("Monospace", 24));
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(0.0);
+        dropShadow.setOffsetY(0.0);
+        dropShadow.setRadius(5.0);
+        healthMeter.setEffect(dropShadow);
         this.canvas = new Canvas(resolutionX, resolutionY);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
@@ -124,7 +133,8 @@ public class GameScreen {
         MapObject[][] objectMap = plotter.getPlayerObjectMap();
 
         Player player = game.getPlayer();
-        tileMapper.drawFrame(levelMap, objectMap, losMap, player.getPosition().getX(), player.getPosition().getY());
+        Node position = player.getPosition();
+        tileMapper.drawFrame(levelMap, objectMap, losMap, position.getX(), position.getY());
         updateHealthMeter(player);
         flushMessages();
     }
@@ -136,9 +146,10 @@ public class GameScreen {
         MapObject[][] objectMap = game.getPlotter().getPlayerObjectMap();
 
         Player player = game.getPlayer();
-        game.getPathFinder().computePaths(game.getMap(), player.getPosition().getX(), player.getPosition().getY());
+        Node position = player.getPosition();
+        game.getPathFinder().computePaths(game.getMap(), position.getX(), position.getY());
         Color[][] colorMap = game.getPathFinder().getDijkstraMap().getColorMap(600, 0.5);
-        tileMapper.drawDebugFrame(levelMap, objectMap, losMap, colorMap, player.getPosition().getX(), player.getPosition().getY());
+        tileMapper.drawDebugFrame(levelMap, objectMap, losMap, colorMap, position.getX(), position.getY());
         updateHealthMeter(player);
         flushMessages();
         debugStats.setText("debug\n" + "turn value: " + game.getPlayer().getNextTurn());
@@ -159,13 +170,19 @@ public class GameScreen {
         screen.setOnKeyPressed(event -> {
             return;
         });
-        Label gameOverText = new Label("you are dead");
+        Label gameOverText = new Label("YOU DIED");
         gameOverText.setTextFill(Color.RED);
-        gameOverText.setFont(new Font("Monospace", 40));
-        screenRoot.getChildren().add(gameOverText);
-        gameOverText.layout();
-        gameOverText.setLayoutX((resolutionX - 214) / 2);
-        gameOverText.setLayoutY((resolutionY - 40) / 2);
+        gameOverText.setFont(new Font("Monospace", resolutionX / 20 * 1.5));
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(0.0);
+        dropShadow.setOffsetY(0.0);
+        dropShadow.setRadius(5.0);
+        gameOverText.setEffect(dropShadow);
+        VBox gameOverTextBox = new VBox(gameOverText);
+        gameOverTextBox.setMinHeight(resolutionY - LOGBOX_HEIGHT);
+        gameOverTextBox.setMinWidth(resolutionX);
+        screenRoot.getChildren().add(gameOverTextBox);
+        gameOverTextBox.setAlignment(Pos.CENTER);
     }
 
     private void flushMessages() {

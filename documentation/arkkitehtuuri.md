@@ -25,9 +25,27 @@ Jos Actor-olio on kuollut, niin se poistetaan mm. kartan piirtämiseen käytetys
 ![Pakkauskaavio](pakkauskaavio.png)
 
 ## Toimintalogiikka
-Pelaaja syöttää komennon.
+Osia sekvenssikaaviosta on jätetty pois, sillä ne ovat epäolennaisia ohjelman kriittisen toiminnan kannalta ja vievät liikaa tilaa.
+
+### Pelaaja syöttää komennon.
+Kun pelaaja painaa näppäintä, jolle on määritetty toiminto, sovelluksen kontrolli etenee seuraavasti.
 ![insertAction](insertAction.png)
 
-Hirviö huomaa lähellä olevan pelaajan.
+Näppäimille on määritetty vastaavuudet staattisessa HashMap-oliossa legalKeyCodes. Sovellus kutsuu Game-luokan insertAction()-metodia, jolla syötetään pelaajahahmon komento pelisilmukkaan. Tämän jälkeen peli päivittää näkyvyyden ja suorittaa yhden pelikierroksen.
+
+GameScreen tarkistaa, onko peli loppu, hakee päivittää pelikartan ja hakee päivitetyt karttatiedot ja viitteen pelaajahahmoon. Karttatiedot ja pelaajan sijainti välitetään tileMapper-oliolle, joka piirtää karttanäkymän GameScreenin siihen konstruktorissa injektoimalla GraphicsContext-oliolla, joka on luotu stageen sijoitetusta Canvas-oliosta.
+
+Tämän jälkeen GameScreen-olio tyhjentää MessageBus-olion viestijonon ikkunan alalaidassa olevaan TextArea-elementtiin.
+### Hirviö huomaa lähellä olevan pelaajan.
+
 ![controlActor](controlActor.png)
 
+# Rakenteelliset heikkoudet
+### backend-luokat
+Actor-luokan aliluokkien toiminta on liian erillistä. Kannattaisi toteuttaa tekoäly erillisessä luokassa ja tehdä käyttäjän ohjaamasta pelaajahahmosta tekoälyn erityistapaus. Tämä tekisi autoexploren toteuttamisesta Dijkstra-kartoilla suoraviivaista.
+
+### testikattavuus
+Sovelluksen testit voivat jäädä haarakattavuuden kannalta vajaiksi, sillä ohjelmalogiikassa on paljon riippuvuusinjektiota, joka vaikeuttavat kattavaa testaamista. Pelitila on liian monimutkainen.
+
+### koodin laatu
+Käyttöliittymäluokissa on jonkin verran toisteista koodia, ja tarpeettomiksi käyneitä metodia ja muuttujia on jäänyt koodiin paljon.

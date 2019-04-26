@@ -323,7 +323,7 @@ public class Game {
 
     private void endGame() {
         gameOver = true;
-        MessageBus.getInstance().push(new Message("You died"));
+        MessageBus.getInstance().push("You died");
     }
 
     public boolean isGameOver() {

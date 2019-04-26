@@ -18,14 +18,17 @@ Toistaiseksi hirviöitä ei ole ohjelmoitu liikkumaan muulloin kuin niiden hyök
 
 Hirviöitä on toistaiseksi kolmenlaisia:
 
+### Örkki
 ![örkki](orc.png)
-Örkki
+
 Heikoin hirviö. Pakenee parin osuman jälkeen eikä kovin tehokkaasti.
 
+### Ihmishyeena
 ![ihmishyeena](gnoll.png)
-Ihmishyeena
+
 Jonkin verran vahvempi kuin örkki. Taistelee itsetuhoisen aggressiivisesti.
 
+### Lohikäärme
 ![lohikäärme](dragon.png)
-Lohikäärme
+
 Vahvin hirviö. Ei nosta hälytystä eikä reagoi muiden hirviöiden hälytyksiin. Osaa paeta suhteellisen älykkäästi.

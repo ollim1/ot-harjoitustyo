@@ -9,19 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.scene.paint.Color;
 
+/**
+ * The primary means of encoding paths in the pathfinding algorithm. Stores
+ * paths as a map of distances from a specific set of points.
+ *
+ * @author londes
+ */
 public class DijkstraMap {
 
-    private double escapeBias = 1.6;
+    private final static double DEFAULT_BIAS = 1.6;
     private int[][] values;
 
     public DijkstraMap(int[][] distance) {
         this.values = distance;
-        escapeBias = 1.6;
-    }
-
-    public DijkstraMap(int[][] distance, double escapeBias) {
-        this(distance);
-        this.escapeBias = escapeBias;
     }
 
     public DijkstraMap(int w, int h) {
@@ -33,6 +33,11 @@ public class DijkstraMap {
         }
     }
 
+    /**
+     * Creates a copy of a DijkstraMap.
+     *
+     * @return
+     */
     public DijkstraMap copy() {
         int[][] copy = new int[values.length][values[0].length];
         for (int y = 0; y < copy.length; y++) {
@@ -41,6 +46,14 @@ public class DijkstraMap {
         return new DijkstraMap(copy);
     }
 
+    /**
+     * A debugging feature: produces a heat map representing DijkstraMap values
+     * for use in TileMapper.
+     *
+     * @param colorRange
+     * @param alpha
+     * @return
+     */
     public Color[][] getColorMap(double colorRange, double alpha) {
         int max = max();
         Color[][] colorMap = new Color[values.length][values[0].length];
@@ -56,6 +69,13 @@ public class DijkstraMap {
         return colorMap;
     }
 
+    /**
+     * Returns the lowest-valued neighbor for a specific position. Pathfinding
+     * in a DijkstraMap is based on "rolling downhill" to lower values.
+     *
+     * @param point
+     * @return
+     */
     public Direction next(Node point) {
         Direction next = null;
         if (point.getX() <= 0 || point.getY() <= 0
@@ -75,6 +95,12 @@ public class DijkstraMap {
         return next;
     }
 
+    /**
+     * Returns a list of candidate neighbors sorted by distance value.
+     *
+     * @param point
+     * @return
+     */
     public List<Direction> candidates(Node point) {
         List<Direction> directions = new ArrayList<>();
         HashMap<Direction, Node> nodes = new HashMap<>();
@@ -90,7 +116,7 @@ public class DijkstraMap {
         return directions;
     }
 
-    public void processCandidate(Node point, Direction candidate, int uy, int ux, List<Direction> directions, HashMap<Direction, Node> nodes) {
+    private void processCandidate(Node point, Direction candidate, int uy, int ux, List<Direction> directions, HashMap<Direction, Node> nodes) {
         Node candidateNode = point.translateToNew(candidate);
         candidateNode.setDistance(values[candidateNode.getY()][candidateNode.getX()]);
         int vx = candidateNode.getX();
@@ -114,14 +140,37 @@ public class DijkstraMap {
         return max;
     }
 
+    /**
+     * Inverts the distance map.
+     *
+     * @return
+     */
     public DijkstraMap invert() {
+        return invert(DEFAULT_BIAS);
+    }
+
+    /**
+     * Inverts the distance map, multiplies its values by a bias coefficient and
+     * smoothes them iteratively until every neighbor as a difference in
+     * distance value of the respective movement cost. This is used as an escape
+     * map. The place furthest away from the player gets a value of 0. The
+     * escape bias affects what regions are considered safe. Generally a higher
+     * value leads to an actor preferring global safe spots over local ones,
+     * meaning that an actor with a high escape bias may try to slip around the
+     * player in a narrow corridor when faced with a dead end. May add a filter
+     * that increases distance values around walls.
+     *
+     * @param escapeBias
+     * @return
+     */
+    public DijkstraMap invert(double escapeBias) {
         double max = max();
-        invertValues(max);
+        invertValues(max, escapeBias);
         iterate();
         return this;
     }
 
-    private void invertValues(double max) {
+    private void invertValues(double max, double escapeBias) {
         for (int y = 1; y < values.length - 1; y++) {
             for (int x = 1; x < values[0].length - 1; x++) {
                 if (values[y][x] != Integer.MAX_VALUE) {

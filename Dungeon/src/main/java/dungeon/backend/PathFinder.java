@@ -8,14 +8,17 @@ import dungeon.domain.Direction;
 import dungeon.domain.Node;
 import java.util.PriorityQueue;
 
+/**
+ * A pathfinder using Dijkstra's algorithm. The algorithm calculates every
+ * shortest path from a specific point. The resulting set of paths is stored as
+ * a two-dimensional array of distance values called a Dijkstra map. Distances
+ * are stored in the form of distance on a Cartesian plane multiplied by 100.
+ * The class also stores the destination of the last graph created.
+ *
+ * @author londes
+ */
 public class PathFinder {
 
-    /**
-     * Using Dijkstra's algorithm to get every path at once. The resulting set
-     * of paths is stored as a two-dimensional array of Direction objects that
-     * represents a directed acyclic graph flowing towards the destination. The
-     * class also stores the destination of the last graph.
-     */
     private boolean[][] visited;
     private char[][] map;
     private int[][] distance;
@@ -30,6 +33,15 @@ public class PathFinder {
         this.oldCenter = new Node(-1, -1);
     }
 
+    /**
+     * Computes the shortest distances starting from node (x, y). Will add
+     * support for multiple focal nodes later, which should make it possible to
+     * prioritize specific nodes.
+     *
+     * @param map
+     * @param x
+     * @param y
+     */
     public void computePaths(char[][] map, int x, int y) {
         visited = new boolean[map.length][map[0].length];
         distance = new int[map.length][map[0].length];
@@ -38,18 +50,21 @@ public class PathFinder {
 
         formatDistances(x, y);
         PriorityQueue<Node> heap = setUpHeap(x, y);
-        dijkstra(x, y, heap);
+        dijkstra(heap);
     }
 
-    public DijkstraMap dijkstraMap() {
+    /**
+     * Returns a new DijkstraMap with copy of the distance map.
+     *
+     * @return
+     */
+    public DijkstraMap getDijkstraMap() {
         if (distance == null) {
             return null;
         }
         int[][] copy = new int[distance.length][distance[0].length];
         for (int y = 0; y < copy.length; y++) {
-            for (int x = 0; x < copy[0].length; x++) {
-                copy[y][x] = distance[y][x];
-            }
+            System.arraycopy(distance[y], 0, copy[y], 0, copy[0].length);
         }
         return new DijkstraMap(distance);
     }
@@ -62,7 +77,7 @@ public class PathFinder {
         return oldCenter;
     }
 
-    private void dijkstra(int startX, int startY, PriorityQueue<Node> heap) {
+    private void dijkstra(PriorityQueue<Node> heap) {
         while (!heap.isEmpty()) {
             Node next = heap.poll();
             int ux = next.getX();
@@ -83,6 +98,13 @@ public class PathFinder {
         }
     }
 
+    /**
+     * Counts the amount of free nodes in a provided map.
+     *
+     * @param map
+     * @param radius
+     * @return
+     */
     public int mapSize(char[][] map, double radius) {
         visited = new boolean[map.length][map[0].length];
         this.map = map;

@@ -105,7 +105,7 @@ public class MonsterTest {
         }
 
         @Override
-        public DijkstraMap dijkstraMap() {
+        public DijkstraMap getDijkstraMap() {
             int[][] copy = new int[distance.length][distance[0].length];
             for (int y = 0; y < copy.length; y++) {
                 for (int x = 0; x < copy[0].length; x++) {

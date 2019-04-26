@@ -5,6 +5,7 @@ package dungeon.ui;
 
 import dungeon.backend.Game;
 import dungeon.backend.MessageBus;
+import dungeon.backend.Plotter;
 import dungeon.domain.Settings;
 import dungeon.domain.MapObject;
 import dungeon.domain.Message;
@@ -116,10 +117,11 @@ public class GameScreen {
     }
 
     public void update() {
-        game.getPlotter().update();
-        double[][] losMap = game.getPlotter().getVisibility();
-        char[][] levelMap = game.getPlotter().getPlayerLevelMap();
-        MapObject[][] objectMap = game.getPlotter().getPlayerObjectMap();
+        Plotter plotter = game.getPlotter();
+        plotter.update();
+        double[][] losMap = plotter.getVisibility();
+        char[][] levelMap = plotter.getPlayerLevelMap();
+        MapObject[][] objectMap = plotter.getPlayerObjectMap();
 
         Player player = game.getPlayer();
         tileMapper.drawFrame(levelMap, objectMap, losMap, player.getPosition().getX(), player.getPosition().getY());
@@ -135,7 +137,7 @@ public class GameScreen {
 
         Player player = game.getPlayer();
         game.getPathFinder().computePaths(game.getMap(), player.getPosition().getX(), player.getPosition().getY());
-        Color[][] colorMap = game.getPathFinder().dijkstraMap().getColorMap(600, 0.5);
+        Color[][] colorMap = game.getPathFinder().getDijkstraMap().getColorMap(600, 0.5);
         tileMapper.drawDebugFrame(levelMap, objectMap, losMap, colorMap, player.getPosition().getX(), player.getPosition().getY());
         updateHealthMeter(player);
         flushMessages();

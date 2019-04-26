@@ -22,6 +22,8 @@ import squidpony.squidmath.RNG;
 /**
  * This class handles game logic. The has to be initialized with a separate
  * method call. This makes the class easier to test.
+ *
+ * @author londes
  */
 public class Game {
 
@@ -67,8 +69,8 @@ public class Game {
     }
 
     /**
-     * This method creates a MapGenerator object, calls generateMap() and stores
-     * the map into the map variable.
+     * This method creates a MapGenerator object, calls generateMap() and passes
+     * the generated map to initializeMapObjects.
      *
      * @param width
      * @param height
@@ -85,6 +87,14 @@ public class Game {
         initializeMapObjects(proceduralMap);
     }
 
+    /**
+     * Either finishes the procedure above or takes a premade map. Calculates
+     * the space available on the map and creates a plotter that helps render
+     * map objects.
+     *
+     * @param map
+     * @throws IllegalArgumentException
+     */
     public void initializeMapObjects(char[][] map) throws IllegalArgumentException {
         if (map == null) {
             throw new IllegalArgumentException("map is null");
@@ -95,12 +105,15 @@ public class Game {
     }
 
     /**
-     * This method creates a monster at a random location and places in in the
-     * queue.
+     * Finds a random empty spot in which to place a monster, then calls
+     * createMonster for that spot.
      *
-     * @return
+     * @return the Actor created; if it doesn't fit on the map, then return null
      */
     public Actor createMonster() {
+        if (actors.size() + 1 > mapSize) {
+            return null;
+        }
         char[][] populatedMap = plotter.populateMap(null);
         int x;
         int y;
@@ -112,11 +125,28 @@ public class Game {
         return createMonster(x, y);
     }
 
+    /**
+     * Creates a Monster of random type based on the difficulty level at the
+     * specified position.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public Actor createMonster(int x, int y) {
         ActorType monsterType = difficulty.rollType(rng);
         return createMonster(x, y, monsterType);
     }
 
+    /**
+     * Creates a Monster of a specific type at the specified location. Calls
+     * addActor.
+     *
+     * @param x
+     * @param y
+     * @param monsterType
+     * @return
+     */
     public Actor createMonster(int x, int y, ActorType monsterType) {
         Monster monster = new Monster(x, y, monsterType);
         addActor(monster);
@@ -131,9 +161,15 @@ public class Game {
     }
 
     /**
-     * This method creates the player character at a random location.
+     * Finds a random empty spot in which to place a player character, then
+     * calls createPlayer for that spot.
+     *
+     * @return a reference to the actor that has been created
      */
     public Actor createPlayer() {
+        if (actors.size() + 1 > mapSize) {
+            return null;
+        }
         char[][] populatedMap = plotter.populateMap(null);
         int x;
         int y;
@@ -144,6 +180,13 @@ public class Game {
         return createPlayer(x, y);
     }
 
+    /**
+     * Creates a player character at the specified location.
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public Actor createPlayer(int x, int y) {
         player = new Player(x, y);
         addActor(player);
@@ -181,6 +224,7 @@ public class Game {
         }
         player.setAction(action);
         player.act(this, plotter.populateMap(player));
+        plotter.update();
         playRound();
     }
 
@@ -215,12 +259,21 @@ public class Game {
         }
     }
 
+    /**
+     * Spawns more monsters if the density of monsters on the map has gotten
+     * lower than MonsterDensity.
+     */
     public void spawnMonsters() {
         if ((actors.size() - 1) / (double) mapSize < monsterDensity) {
             createMonsters();
         }
     }
 
+    /**
+     * Creates n monsters up to a total that fills the map completely.
+     *
+     * @param n
+     */
     public void createMonsters(int n) {
         n = Math.min(mapSize, actors.size() + n) - actors.size();
         for (int i = 0; i < n; i++) {
@@ -228,11 +281,12 @@ public class Game {
         }
     }
 
+    /**
+     * Creates a default amount of monsters in specified in the variable
+     * monstersToCreate.
+     */
     public void createMonsters() {
-        int n = Math.min(mapSize, actors.size() + monstersToCreate) - actors.size();
-        for (int i = 0; i < n; i++) {
-            createMonster();
-        }
+        createMonsters(monstersToCreate);
     }
 
     private boolean cleanUpActor(Actor actor) {
@@ -249,6 +303,14 @@ public class Game {
         mapObjects.remove(actor);
     }
 
+    /**
+     * Determines non-player Actor actions. If the actor is a monster and within
+     * line of sight and its specific aggression radius, then the monster will
+     * react to the player. The actor's act() method is called and the actor is
+     * placed back in the queue with an updated turn value.
+     *
+     * @param actor
+     */
     public void controlActor(Actor actor) {
         if (actor.getClass() == Monster.class) {
             if (plotter.isVisible(actor.getPosition())) {

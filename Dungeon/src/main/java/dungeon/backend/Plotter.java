@@ -76,8 +76,8 @@ public class Plotter {
     }
 
     /**
-     * Updates the map based on the player's field of view. Also stores the
-     * visibility map into a separate variable.
+     * Updates the visibility map, the populated map, the level map and the
+     * object map based on the player's field of view.
      */
     public void update() {
         updateVisibility();
@@ -151,7 +151,7 @@ public class Plotter {
     }
 
     /**
-     * Draws actors on a given level map.
+     * Returns a copy of the full map of the level with actors overlaid.
      *
      * @param actor
      * @return map with actors overlaid

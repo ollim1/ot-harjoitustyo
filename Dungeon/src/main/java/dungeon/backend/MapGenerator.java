@@ -9,11 +9,13 @@ import squidpony.squidgrid.mapping.IDungeonGenerator;
 import squidpony.squidgrid.mapping.styled.TilesetType;
 import squidpony.squidmath.RNG;
 
+/**
+ * A map generator that uses SquidLib
+ *
+ * @author londes
+ */
 public class MapGenerator {
 
-    /**
-     * A map generator that uses SquidLib
-     */
     private char[][] map;
     private IDungeonGenerator dungeonGenerator;
     private RNG rng;

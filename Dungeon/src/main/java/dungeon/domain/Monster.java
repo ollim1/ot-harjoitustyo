@@ -100,7 +100,7 @@ public class Monster extends Actor {
         if (!pathFinder.getOldCenter().equals(player.getPosition())) {
             pathFinder.computePaths(map, player.getPosition().getX(), player.getPosition().getY());
         }
-        DijkstraMap attackMap = pathFinder.dijkstraMap();
+        DijkstraMap attackMap = pathFinder.getDijkstraMap();
         if (state == ActorState.FLEE) {
             setDijkstraMap(attackMap.copy().invert());
         } else {
@@ -141,7 +141,7 @@ public class Monster extends Actor {
         if (getHealth() < getMaxHealth() * fleeThreshold) {
             if (state != ActorState.FLEE) {
                 state = ActorState.FLEE;
-                setDijkstraMap(getDijkstraMap().copy().invert());
+                setDijkstraMap(getDijkstraMap().copy().invert(getActorType().escapeBias));
             }
             alerted = false;
         } else if (state == ActorState.FLEE && getHealth() > getMaxHealth() * safeThreshold) {

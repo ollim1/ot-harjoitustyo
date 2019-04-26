@@ -23,4 +23,5 @@
 | 23.4. | 6     | hirviöluokat, vaikeusasteet, hyökkäysten vuorohinnat, peliparametrien valinta, viestiloki, yksikkötestejä |
 | 24.4. | 7     | koodikatselmointi, tuki lattialaatoille |
 | 25.4. | 4     | koodikatselmointi, refaktorointia, JavaDoc |
-| yht   | 83    | |
+| 26.4. | 8     | JavaDoc, yksikkötestejä, koodin siistimistä, varjojen lisääminen tekstin alle |
+| yht   | 91    | |

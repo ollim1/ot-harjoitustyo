@@ -24,4 +24,6 @@
 | 24.4. | 7     | koodikatselmointi, tuki lattialaatoille |
 | 25.4. | 4     | koodikatselmointi, refaktorointia, JavaDoc |
 | 26.4. | 8     | JavaDoc, yksikkötestejä, koodin siistimistä, varjojen lisääminen tekstin alle |
-| yht   | 91    | |
+| 1.5.  | 4     | Pistetilastojen toteuttaminen aloitettu |
+| 2.5.  | 10    | Pistetilastojen tietokantatoiminnallisuus toteutettu, tietokannan yksikkötestejä toteutettu |
+| yht   | 105   | |

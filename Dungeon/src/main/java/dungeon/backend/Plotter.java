@@ -140,8 +140,7 @@ public class Plotter {
     }
 
     /**
-     * This method determines whether or not a point is within the visible
-     * region.
+     * This method determines whether or not a point is within sight.
      *
      * @param point
      * @return

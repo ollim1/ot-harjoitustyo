@@ -6,7 +6,6 @@ package dungeon.ui;
 import dungeon.domain.MapObject;
 import java.util.HashMap;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 

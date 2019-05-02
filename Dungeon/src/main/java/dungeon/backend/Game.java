@@ -9,7 +9,6 @@ import dungeon.domain.Difficulty;
 import dungeon.domain.Monster;
 import dungeon.domain.ActorType;
 import dungeon.domain.MapObject;
-import dungeon.domain.Message;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
@@ -28,6 +27,7 @@ import squidpony.squidmath.RNG;
 public class Game {
 
     private RNG rng;
+    private int score;
     private char[][] map;
     private Plotter plotter;
     private Player player;
@@ -56,6 +56,7 @@ public class Game {
         this.visionRadius = difficulty.visionRadius;
         this.visibilityThreshold = difficulty.visibilityThreshold;
         this.dieSize = 20;
+        this.score = 0;
         this.debug = false;
     }
 
@@ -301,6 +302,10 @@ public class Game {
     private void deleteActor(Actor actor) {
         actors.remove(actor);
         mapObjects.remove(actor);
+        ActorType type = actor.getActorType();
+        if (type != null) {
+            score += type.points;
+        }
     }
 
     /**
@@ -364,6 +369,10 @@ public class Game {
 
     public double getVisionRadius() {
         return visionRadius;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     public ArrayList<MapObject> getMapObjects() {

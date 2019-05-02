@@ -3,9 +3,7 @@
  */
 package dungeon.ui;
 
-import dungeon.backend.Game;
 import dungeon.domain.Settings;
-import dungeon.domain.Difficulty;
 import javafx.stage.Stage;
 
 public class ViewManager {
@@ -33,13 +31,18 @@ public class ViewManager {
         } else {
             gameScreen.update();
         }
-        window.setScene(gameScreen.getScreen());
+        window.setScene(gameScreen.createView());
     }
 
     public void showSettingsScreen() {
         Settings settings = new Settings();
         SettingsScreen settingsScreen = new SettingsScreen(this, settings);
         this.window.setScene(settingsScreen.createView());
+    }
+    
+    public void showHighScoresScreen() {
+        HighScoresScreen highScoresScreen = new HighScoresScreen(this);
+        this.window.setScene(highScoresScreen.createListView());
     }
 
     public int getResolutionX() {

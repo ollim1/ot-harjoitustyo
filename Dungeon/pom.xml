@@ -50,6 +50,11 @@
             <artifactId>squidlib-extra</artifactId>
             <version>3.0.0-b9</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.197</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -67,9 +72,6 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>dungeon/domain/CharacterState.java</exclude>
-                        <exclude>dungeon/domain/PlayerAction.java</exclude>
-                        <exclude>dungeon/domain/Direction.java</exclude>
                         <exclude>dungeon/ui/*</exclude>
                     </excludes>
                 </configuration>

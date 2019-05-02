@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 
 public class SettingsScreen {
 
@@ -58,6 +59,9 @@ public class SettingsScreen {
             final int ii = i;
             for (int j = 0; j < difficulties.length; j++) {
                 Button button = new Button(difficulties[j] + ", " + mapSizes[i]);
+                button.setMinHeight(viewManager.getResolutionY() / 3 - 30);
+                button.setMinWidth(viewManager.getResolutionX() / 3);
+                button.setFont(new Font("monospace", 20));
                 final int jj = j;
                 button.setOnMouseClicked(event -> {
                     settings.setDifficulty(difficulties[jj]);

@@ -3,8 +3,6 @@
  */
 package dungeon.domain;
 
-import dungeon.domain.Difficulty;
-
 /**
  * This class stores game settings.
  *

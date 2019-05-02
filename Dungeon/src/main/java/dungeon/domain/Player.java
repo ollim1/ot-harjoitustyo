@@ -6,6 +6,14 @@ package dungeon.domain;
 import dungeon.backend.Game;
 import java.util.HashMap;
 
+/**
+ * This class represents the player character. The abstract methods of the Actor
+ * class are implemented in a way that allows manual control. This class is
+ * relatively small, because most of the necessary functionality is implemented
+ * in the Actor class.
+ *
+ * @author londes
+ */
 public class Player extends Actor {
 
     private static final int MAX_HEALTH = 40;
@@ -32,6 +40,7 @@ public class Player extends Actor {
         for (ActorType monsterType : ActorType.values()) {
             hostileSymbols[monsterType.symbol] = true;
         }
+        super.setActorType(null);
         super.setHostileSymbols(hostileSymbols);
         super.setNextTurn(0);
     }
@@ -49,6 +58,12 @@ public class Player extends Actor {
         return action;
     }
 
+    /**
+     * This method carries out the action that has been set.
+     *
+     * @param game
+     * @param map a populated map
+     */
     @Override
     public void act(Game game, char[][] map) {
         if (action == PlayerAction.STAY) {

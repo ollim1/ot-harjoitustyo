@@ -38,6 +38,7 @@ public class GameScreen {
     private Game game;
     private Scene screen;
     private Label healthMeter;
+    private Label scoreText;
     private Canvas canvas;
     private TextArea logBox;
     private GraphicsContext graphicsContext;
@@ -59,22 +60,25 @@ public class GameScreen {
     };
 
     public GameScreen(ViewManager viewManager, Settings settings, int resolutionX, int resolutionY) {
+        this.resolutionX = resolutionX;
+        this.resolutionY = resolutionY;
+
         this.debug = settings.isDebug();
         this.game = new Game(settings);
         game.setMonstersToCreate(5);
         game.initializeMapObjects(settings.getMapSize(), settings.getMapSize());
         game.createPlayer();
         game.spawnMonsters();
-        this.resolutionX = resolutionX;
-        this.resolutionY = resolutionY;
+
         this.healthMeter = new Label(" 40/ 40");
         this.healthMeter.setTextFill(Color.GREEN);
-        this.healthMeter.setFont(new Font("Monospace", 24));
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setOffsetX(0.0);
-        dropShadow.setOffsetY(0.0);
-        dropShadow.setRadius(5.0);
-        healthMeter.setEffect(dropShadow);
+        this.scoreText = new Label("0");
+        this.scoreText.setTextFill(Color.WHITE);
+        setStatusFonts(healthMeter, scoreText);
+        VBox stats = new VBox(healthMeter, scoreText);
+        stats.setAlignment(Pos.BASELINE_RIGHT);
+        stats.setMinWidth(100);
+
         this.canvas = new Canvas(resolutionX, resolutionY);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
@@ -100,9 +104,20 @@ public class GameScreen {
             screenRoot.getChildren().add(debugStats);
         }
 
-        screenRoot.getChildren().add(healthMeter);
+        screenRoot.getChildren().add(stats);
         this.screen = new Scene(screenRoot);
         setInputEvents();
+    }
+
+    private void setStatusFonts(Label... labelList) {
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(0.0);
+        dropShadow.setOffsetY(0.0);
+        dropShadow.setRadius(5.0);
+        for (Label label : labelList) {
+            label.setEffect(dropShadow);
+            label.setFont(new Font("Monospace", 20));
+        }
     }
 
     private void setInputEvents() {
@@ -121,7 +136,7 @@ public class GameScreen {
         });
     }
 
-    public Scene getScreen() {
+    public Scene createView() {
         return screen;
     }
 
@@ -136,6 +151,7 @@ public class GameScreen {
         Node position = player.getPosition();
         tileMapper.drawFrame(levelMap, objectMap, losMap, position.getX(), position.getY());
         updateHealthMeter(player);
+        scoreText.setText(Integer.toString(game.getScore()));
         flushMessages();
     }
 
@@ -151,6 +167,7 @@ public class GameScreen {
         Color[][] colorMap = game.getPathFinder().getDijkstraMap().getColorMap(600, 0.5);
         tileMapper.drawDebugFrame(levelMap, objectMap, losMap, colorMap, position.getX(), position.getY());
         updateHealthMeter(player);
+        scoreText.setText(Integer.toString(game.getScore()));
         flushMessages();
         debugStats.setText("debug\n" + "turn value: " + game.getPlayer().getNextTurn());
     }
@@ -170,7 +187,7 @@ public class GameScreen {
         screen.setOnKeyPressed(event -> {
             return;
         });
-        Label gameOverText = new Label("YOU DIED");
+        Label gameOverText = new Label("you died");
         gameOverText.setTextFill(Color.RED);
         gameOverText.setFont(new Font("Monospace", resolutionX / 20 * 1.5));
         DropShadow dropShadow = new DropShadow();

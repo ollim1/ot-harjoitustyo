@@ -36,6 +36,9 @@ public class TitleScreen {
         startButton.setOnMouseClicked(event -> {
             viewManager.showSettingsScreen();
         });
+        highScoresButton.setOnMouseClicked(event -> {
+            viewManager.showHighScoresScreen();
+        });
         quitButton.setOnMouseClicked(event -> {
             Platform.exit();
         });

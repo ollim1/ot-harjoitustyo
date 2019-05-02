@@ -40,17 +40,6 @@ public class MapGenerator {
     }
 
     /**
-     * Generates the original test map and stores it in the map variable.
-     */
-    public void generateBetaMap() {
-        fillMap();
-        String[] placeholderMap = setPlaceHolderMap();
-        int offsetX = map[0].length / 2 - placeholderMap[0].length() / 2;
-        int offsetY = map.length / 2 - placeholderMap.length / 2;
-        insertPlaceHolderMap(placeholderMap, offsetX, offsetY);
-    }
-
-    /**
      * Calls Squidlib to generate a map, stores the result into the map
      * variable.
      */
@@ -64,38 +53,6 @@ public class MapGenerator {
                 } else {
                     map[y][x] = '#';
                 }
-            }
-        }
-    }
-
-    private void insertPlaceHolderMap(String[] placeholderMap, int offsetX, int offsetY) {
-        int maximumX = Math.min(map[0].length, offsetX + placeholderMap[0].length());
-        int maximumY = Math.min(map.length, offsetY + placeholderMap.length);
-        for (int x = offsetX; x < maximumX; x++) {
-            for (int y = offsetY; y < maximumY; y++) {
-                int originalX = x - offsetX;
-                int originalY = y - offsetY;
-                map[y][x] = placeholderMap[originalY].charAt(originalX);
-            }
-        }
-    }
-
-    private String[] setPlaceHolderMap() {
-        String[] placeholderMap = new String[]{
-            "######     ",
-            "   ###     ",
-            "   ###     ",
-            "           ",
-            "   ########",
-            "   ########"
-        };
-        return placeholderMap;
-    }
-
-    private void fillMap() {
-        for (int x = 0; x < map.length; x++) {
-            for (int y = 0; y < map.length; y++) {
-                map[y][x] = '#';
             }
         }
     }

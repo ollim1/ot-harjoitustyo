@@ -226,7 +226,7 @@ public class GameScreen {
             int score = game.getScore();
             Difficulty difficulty = game.getDifficulty();
             if (highScores.isHighScore(score, difficulty)) {
-                String name = getPlayerName(highScores.getLIMIT());
+                String name = getPlayerName(highScores.getCHARLIMIT());
                 if (name != null && !name.isEmpty()) {
                     highScores.addHighScore(name, score, difficulty);
                     viewManager.showHighScoresScreen();
@@ -239,7 +239,7 @@ public class GameScreen {
         }
     }
 
-    public String getPlayerName(int limit) {
+    private String getPlayerName(int limit) {
         VBox layout = new VBox();
         layout.setMinWidth(100);
         layout.setPadding(new Insets(20, 20, 20, 20));
@@ -263,7 +263,7 @@ public class GameScreen {
         String name = nameField.getText();
         if (name != null) {
             name = name.trim();
-            if (name.length() > 10) {
+            if (name.length() > limit) {
                 name = name.substring(limit);
             }
         }

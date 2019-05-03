@@ -18,6 +18,7 @@ public class HighScores {
 
     private HashMap<Difficulty, List<Record>> tables;
     private static final int LIMIT = 10;
+    private static final int CHARLIMIT = 10;
     private static final String[] DATABASE_INFORMATION = {"jdbc:h2:./savedData/HighScoresDatabase", "sa", ""};
 
     public HighScores() throws SQLException {
@@ -67,6 +68,10 @@ public class HighScores {
 
     public static int getLIMIT() {
         return LIMIT;
+    }
+
+    public static int getCHARLIMIT() {
+        return CHARLIMIT;
     }
 
 }

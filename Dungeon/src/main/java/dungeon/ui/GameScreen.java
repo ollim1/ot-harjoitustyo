@@ -4,15 +4,19 @@
 package dungeon.ui;
 
 import dungeon.backend.Game;
+import dungeon.backend.HighScores;
 import dungeon.backend.MessageBus;
 import dungeon.backend.Plotter;
+import dungeon.domain.Difficulty;
 import dungeon.domain.Settings;
 import dungeon.domain.MapObject;
 import dungeon.domain.Message;
 import dungeon.domain.Node;
 import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
+import java.sql.SQLException;
 import java.util.HashMap;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -20,11 +24,13 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class GameScreen {
 
@@ -60,6 +66,7 @@ public class GameScreen {
     };
 
     public GameScreen(ViewManager viewManager, Settings settings, int resolutionX, int resolutionY) {
+        this.viewManager = viewManager;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
 
@@ -79,7 +86,7 @@ public class GameScreen {
         stats.setAlignment(Pos.BASELINE_RIGHT);
         stats.setMinWidth(100);
 
-        this.canvas = new Canvas(resolutionX, resolutionY);
+        this.canvas = new Canvas(resolutionX, resolutionY - LOGBOX_HEIGHT);
         this.graphicsContext = canvas.getGraphicsContext2D();
         this.tileMapper = new TileMapper(
                 "file:resources/tileset.png", TILESIZE, graphicsContext, resolutionX, resolutionY - LOGBOX_HEIGHT);
@@ -200,6 +207,67 @@ public class GameScreen {
         gameOverTextBox.setMinWidth(resolutionX);
         screenRoot.getChildren().add(gameOverTextBox);
         gameOverTextBox.setAlignment(Pos.CENTER);
+        flushMessages();
+        if (!debug) {
+            checkHighScore();
+        }
+        screen.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                viewManager.showTitleScreen();
+            }
+        });
+        screen.setOnMouseClicked(event -> viewManager.showTitleScreen());
+    }
+
+    private void checkHighScore() {
+        HighScores highScores;
+        try {
+            highScores = new HighScores();
+            int score = game.getScore();
+            Difficulty difficulty = game.getDifficulty();
+            if (highScores.isHighScore(score, difficulty)) {
+                String name = getPlayerName(highScores.getLIMIT());
+                if (name != null && !name.isEmpty()) {
+                    highScores.addHighScore(name, score, difficulty);
+                    viewManager.showHighScoresScreen();
+                }
+            }
+        } catch (SQLException e) {
+            MessageBus.getInstance().push("Could not contact high scores database");
+            flushMessages();
+            return;
+        }
+    }
+
+    public String getPlayerName(int limit) {
+        VBox layout = new VBox();
+        layout.setMinWidth(100);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.setSpacing(20);
+        Label label = new Label("a new high score\ninsert name here");
+        Label help = new Label("character limit " + limit + ", press return to finish");
+        TextField nameField = new TextField();
+        layout.getChildren().add(label);
+        layout.getChildren().add(nameField);
+        layout.getChildren().add(help);
+        Scene scene = new Scene(layout);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        nameField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                stage.close();
+            }
+        });
+        stage.setTitle("high score");
+        stage.showAndWait();
+        String name = nameField.getText();
+        if (name != null) {
+            name = name.trim();
+            if (name.length() > 10) {
+                name = name.substring(limit);
+            }
+        }
+        return nameField.getText();
     }
 
     private void flushMessages() {

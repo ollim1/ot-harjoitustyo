@@ -56,7 +56,7 @@ public class TitleScreen {
     }
 
     private void setFormat(Label titleText) {
-        titleText.setFont(new Font("Arial", 100));
+        titleText.setFont(new Font("monospace", 100));
         titleText.setContentDisplay(ContentDisplay.CENTER);
         titleText.setTextFill(Color.BLACK);
     }
@@ -71,7 +71,7 @@ public class TitleScreen {
         for (BorderPane button : choiceButtons) {
             button.setPadding(new Insets(16));
             Label label = (Label) button.getCenter();
-            label.setFont(new Font("Arial", 67));
+            label.setFont(new Font("monospace", 67));
             label.setContentDisplay(ContentDisplay.CENTER);
             label.setTextFill(Color.BLACK);
             button.setOnMouseEntered(event -> {

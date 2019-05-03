@@ -64,4 +64,9 @@ public class HighScores {
     public List<Record> getTable(Difficulty difficulty) {
         return tables.get(difficulty);
     }
+
+    public static int getLIMIT() {
+        return LIMIT;
+    }
+
 }

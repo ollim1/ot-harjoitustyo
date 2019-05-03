@@ -69,9 +69,7 @@ public class Player extends Actor {
         if (action == PlayerAction.STAY) {
             idle();
         } else {
-            if (!super.move(ACTION_TO_DIRECTION_TRANSLATION.get(action), game, map)) {
-                idle();
-            }
+            super.move(ACTION_TO_DIRECTION_TRANSLATION.get(action), game, map);
         }
         heal();
     }

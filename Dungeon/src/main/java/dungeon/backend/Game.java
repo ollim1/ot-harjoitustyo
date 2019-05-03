@@ -379,4 +379,8 @@ public class Game {
         return mapObjects;
     }
 
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
 }

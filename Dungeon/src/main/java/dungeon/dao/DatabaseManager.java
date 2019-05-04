@@ -19,8 +19,10 @@ public class DatabaseManager {
     private String path;
     private String username;
     private String password;
+    private int charLimit;
 
     private DatabaseManager() {
+        charLimit = 10;
     }
 
     public static DatabaseManager getInstance() {
@@ -41,6 +43,20 @@ public class DatabaseManager {
         this.path = path;
         this.username = username;
         this.password = password;
+    }
+
+    public void createTablesIfAbsent() throws SQLException {
+        Connection conn = openConnection();
+        conn.prepareStatement("create table if not exists Person(id integer primary key auto_increment,"
+                + " name varchar(" + charLimit + "));").executeUpdate();
+        conn.prepareStatement("create table if not exists Record(id integer primary key auto_increment,"
+                + " personId integer, score integer, difficulty integer,"
+                + " foreign key (personId) references Person(id));").executeUpdate();
+        conn.close();
+    }
+
+    public int getCharLimit() {
+        return charLimit;
     }
 
     /**

@@ -68,11 +68,4 @@ public class MapGeneratorTest {
             fail("fail: character " + offender + " at (" + posX + ", " + posY + ")");
         }
     }
-
-    @Test
-    public void setMapSetsMap() {
-        char[][] map = new char[10][10];
-        mapGenerator.setMap(map);
-        assertSame(map, mapGenerator.getMap());
-    }
 }

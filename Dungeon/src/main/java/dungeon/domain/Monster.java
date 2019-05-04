@@ -115,8 +115,9 @@ public class Monster extends Actor {
         for (Actor actor : game.getActors()) {
             if (actor.getClass() == this.getClass()) {
                 Monster monster = (Monster) actor;
-                if (this.distanceTo(monster) < alertRadius
-                        && monster.getActorType() != ActorType.DRAGON
+                double distance = this.distanceTo(monster);
+                if (distance < alertRadius
+                        && distance < monster.alertRadius
                         && !monster.alerted) {
                     monster.alerted = true;
                     monster.state = ActorState.ATTACK;
@@ -155,6 +156,13 @@ public class Monster extends Actor {
         heal();
     }
 
+    /**
+     * Following the DijkstraMap. If no direction is viable, let's lower the
+     * alert so we can receive another Dijkstra map.
+     *
+     * @param game
+     * @param map
+     */
     private void followDijkstraMap(Game game, char[][] map) {
         boolean success = false;
         for (Direction direction : getDijkstraMap().candidates(getPosition())) {
@@ -164,6 +172,7 @@ public class Monster extends Actor {
             }
         }
         if (!success) {
+            alerted = false;
             idle();
         }
     }

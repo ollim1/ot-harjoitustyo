@@ -133,6 +133,15 @@ public class RecordDao implements Dao<Record> {
     }
 
     @Override
+    public void delete(Integer key) throws SQLException {
+        Connection conn = openConnection();
+        PreparedStatement s = conn.prepareStatement("delete from Record where id = ?;");
+        s.setInt(1, key);
+        s.executeUpdate();
+        conn.close();
+    }
+
+    @Override
     public Record read(Integer key) throws SQLException {
         throw new UnsupportedOperationException("Not supported for this class.");
     }

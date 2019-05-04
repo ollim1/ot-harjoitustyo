@@ -20,6 +20,12 @@ public class Settings {
         debug = false;
     }
 
+    public Settings(Difficulty difficulty, int mapSize, boolean debug) {
+        this.difficulty = difficulty;
+        this.mapSize = mapSize;
+        this.debug = debug;
+    }
+
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
     }

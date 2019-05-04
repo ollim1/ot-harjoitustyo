@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 public class RecordDaoTest {
 
     private DatabaseManager manager;
+    private RecordDao recordDao;
 
     public RecordDaoTest() {
     }
@@ -31,24 +32,24 @@ public class RecordDaoTest {
         manager = DatabaseManager.getInstance();
         manager.setup("jdbc:h2:./savedData/TestDatabase", "sa", "");
         Connection conn = manager.openConnection();
-        conn.prepareStatement("drop table if exists Person;").executeUpdate();
         conn.prepareStatement("drop table if exists Record;").executeUpdate();
-        conn.prepareStatement("create table if not exists Person(id integer primary key auto_increment,"
-                + " name varchar(10));").executeUpdate();
-        conn.prepareStatement("create table if not exists Record(id integer primary key auto_increment,"
-                + " personId integer, score integer, difficulty integer,"
-                + " foreign key (personId) references Person(id));").executeUpdate();
+        conn.prepareStatement("drop table if exists Person;").executeUpdate();
         conn.close();
+        manager.createTablesIfAbsent();
+        recordDao = RecordDao.getInstance();
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws SQLException {
+        Connection conn = manager.openConnection();
+        conn.prepareStatement("drop table if exists Record;").executeUpdate();
+        conn.prepareStatement("drop table if exists Person;").executeUpdate();
+        conn.close();
     }
 
     @Test
     public void testCreation() {
         try {
-            RecordDao recordDao = RecordDao.getInstance();
             recordDao.create(new Record(0, new Person(0, "Matti"), 1000, Difficulty.EASY));
             recordDao.create(new Record(0, new Person(0, "Matti"), 2000, Difficulty.EASY));
             Connection conn = manager.openConnection();
@@ -94,7 +95,6 @@ public class RecordDaoTest {
             conn.prepareStatement("insert into Record (id, personId, score, difficulty)"
                     + " values (default, 1, 3000, 3);").executeUpdate();
             conn.close();
-            RecordDao recordDao = RecordDao.getInstance();
             List<Record> list = recordDao.list();
             if (list == null) {
                 fail("The DAO did not return a List");
@@ -122,6 +122,19 @@ public class RecordDaoTest {
                     fail("A person referenced in the list has the wrong name: expected 'Matti', but got "
                             + record.getPerson().getName());
                 }
+            }
+        } catch (SQLException e) {
+            fail("Got an SQL exception: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void recordsHaveIds() {
+        try {
+            Record record1 = recordDao.create(new Record(0, new Person(0, "Matti"), 1000, Difficulty.HARD));
+            Record record2 = recordDao.create(new Record(0, new Person(0, "Maija"), 2000, Difficulty.HARD));
+            if (record2.getId() != 2) {
+                fail("The second test record did not have the correct id: expected 2, but got " + record2.getId());
             }
         } catch (SQLException e) {
             fail("Got an SQL exception: " + e.getMessage());

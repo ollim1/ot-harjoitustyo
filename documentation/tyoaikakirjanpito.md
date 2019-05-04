@@ -26,4 +26,5 @@
 | 26.4. | 8     | JavaDoc, yksikkötestejä, koodin siistimistä, varjojen lisääminen tekstin alle |
 | 1.5.  | 4     | Pistetilastojen toteuttaminen aloitettu |
 | 2.5.  | 10    | Pistetilastojen tietokantatoiminnallisuus toteutettu, tietokannan yksikkötestejä toteutettu |
-| yht   | 105   | |
+| 3.5.  | 4     | Dokumentaatio, bugikorjauksia |
+| yht   | 109   | |

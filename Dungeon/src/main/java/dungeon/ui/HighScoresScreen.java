@@ -132,10 +132,10 @@ public class HighScoresScreen {
                 hardScores[i].setText(Integer.toString(record.getScore()));
             }
         }
-        scene.setOnMouseClicked(event -> viewManager.showTitleScreen());
+        scene.setOnMouseClicked(event -> viewManager.quit());
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                viewManager.showTitleScreen();
+                viewManager.quit();
             }
         });
         return scene;

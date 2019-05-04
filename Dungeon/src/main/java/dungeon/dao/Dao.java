@@ -13,4 +13,6 @@ public interface Dao<T> {
     public T read(Integer key) throws SQLException;
 
     public List<T> list() throws SQLException;
+
+    public void delete(Integer key) throws SQLException;
 }

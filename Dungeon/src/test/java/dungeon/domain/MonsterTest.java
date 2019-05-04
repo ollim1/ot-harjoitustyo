@@ -9,7 +9,6 @@ import dungeon.backend.PathFinder;
 import dungeon.backend.Plotter;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
@@ -173,12 +172,6 @@ public class MonsterTest {
             "#    #".toCharArray(),
             "######".toCharArray()
         };
-    }
-
-    @Test
-    public void constructorAndSettersWork() {
-        Monster monster = new Monster(1, 1);
-        monster.setState(ActorState.ATTACK);
     }
 
     @Test

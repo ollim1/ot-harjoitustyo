@@ -10,6 +10,14 @@ public class Person {
 
     public Person(Integer id, String name) {
         this.id = id;
+        if (name == null) {
+            name = "";
+        }
+        name = name.trim();
+
+        if (name.length() > 10) {
+            name = name.substring(0, 10);
+        }
         this.name = name;
     }
 

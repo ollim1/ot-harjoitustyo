@@ -69,32 +69,6 @@ public class DijkstraMapTest {
     }
 
     @Test
-    public void toStringWorks() {
-        DijkstraMap emptyMap = new DijkstraMap(10, 10);
-        if (!emptyMap.toString().equals("unformatted array")) {
-            fail("toString is not checking for unformatted arrays");
-        }
-        String mapString = dijkstraMap.toString();
-        if (mapString.charAt(0) != '#') {
-            fail("toString does not print wall tiles (value Integer.MAX_VALUE) as '#'");
-        }
-        if (!mapString.contains(".")) {
-            fail("toString does not mark 0 as '.'");
-        }
-        boolean numberFound = false;
-        for (int i = 0; i < mapString.length(); i++) {
-            char c = mapString.charAt(i);
-            if (c >= '0' && c <= '9') {
-                numberFound = true;
-                break;
-            }
-        }
-        if (!numberFound) {
-            fail("toString does not print numbers");
-        }
-    }
-
-    @Test
     public void getColorMapReturnsColorMap() {
         Color[][] colorMap = dijkstraMap.getColorMap(360, 1.0);
         for (int y = 0; y < colorMap.length; y++) {

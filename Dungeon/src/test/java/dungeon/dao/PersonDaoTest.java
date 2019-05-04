@@ -30,13 +30,18 @@ public class PersonDaoTest {
         manager = DatabaseManager.getInstance();
         manager.setup("jdbc:h2:./savedData/TestDatabase", "sa", "");
         Connection conn = manager.openConnection();
+        conn.prepareStatement("drop table if exists Record;").executeUpdate();
         conn.prepareStatement("drop table if exists Person;").executeUpdate();
-        conn.prepareStatement("create table if not exists Person(id integer primary key auto_increment, name varchar(10));").executeUpdate();
         conn.close();
+        manager.createTablesIfAbsent();
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws SQLException {
+        Connection conn = manager.openConnection();
+        conn.prepareStatement("drop table if exists Record;").executeUpdate();
+        conn.prepareStatement("drop table if exists Person;").executeUpdate();
+        conn.close();
     }
 
     @Test

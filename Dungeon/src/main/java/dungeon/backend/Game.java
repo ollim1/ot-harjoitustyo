@@ -58,6 +58,7 @@ public class Game {
         this.dieSize = 20;
         this.score = 0;
         this.debug = false;
+        this.rng = new RNG((new Random()).nextInt());
     }
 
     public Game(Settings settings) {
@@ -81,7 +82,6 @@ public class Game {
         if (width < 1 || height < 1) {
             throw new IllegalArgumentException("invalid map size");
         }
-        rng = new RNG((new Random()).nextInt());
         MapGenerator mapGenerator = new MapGenerator(rng, width, height);
         mapGenerator.generateMap();
         char[][] proceduralMap = mapGenerator.getMap();
@@ -283,7 +283,7 @@ public class Game {
     }
 
     /**
-     * Creates a default amount of monsters in specified in the variable
+     * Creates a default amount of monsters specified in the variable
      * monstersToCreate.
      */
     public void createMonsters() {

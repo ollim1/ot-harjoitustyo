@@ -16,6 +16,8 @@ import dungeon.domain.Player;
 import dungeon.domain.PlayerAction;
 import java.sql.SQLException;
 import java.util.HashMap;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -50,9 +52,16 @@ public class GameScreen {
     private GraphicsContext graphicsContext;
     private Group screenRoot;
     private Label debugStats;
+    private BooleanProperty upPressed;
+    private BooleanProperty downPressed;
+    private BooleanProperty leftPressed;
+    private BooleanProperty rightPressed;
     private static final HashMap<KeyCode, PlayerAction> legalKeyCodes = new HashMap<KeyCode, PlayerAction>() {
         {
-
+            put(KeyCode.UP, PlayerAction.NORTH);
+            put(KeyCode.LEFT, PlayerAction.WEST);
+            put(KeyCode.DOWN, PlayerAction.SOUTH);
+            put(KeyCode.RIGHT, PlayerAction.EAST);
             put(KeyCode.Y, PlayerAction.NORTHWEST);
             put(KeyCode.U, PlayerAction.NORTHEAST);
             put(KeyCode.H, PlayerAction.WEST);
@@ -128,9 +137,44 @@ public class GameScreen {
     }
 
     private void setInputEvents() {
+        this.upPressed = new SimpleBooleanProperty();
+        this.downPressed = new SimpleBooleanProperty();
+        this.leftPressed = new SimpleBooleanProperty();
+        this.rightPressed = new SimpleBooleanProperty();
         screen.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.UP) {
+                this.upPressed.set(true);
+            }
+            if (event.getCode() == KeyCode.DOWN) {
+                this.downPressed.set(true);
+            }
+            if (event.getCode() == KeyCode.LEFT) {
+                this.leftPressed.set(true);
+            }
+            if (event.getCode() == KeyCode.RIGHT) {
+                this.rightPressed.set(true);
+            }
             if (legalKeyCodes.containsKey(event.getCode())) {
-                game.insertAction(legalKeyCodes.get(event.getCode()));
+                if (event.isShiftDown()) {
+                    boolean up = upPressed.get();
+                    boolean down = downPressed.get();
+                    boolean left = leftPressed.get();
+                    boolean right = rightPressed.get();
+                    if (up && !down && left && !right) {
+                        game.insertAction(PlayerAction.NORTHWEST);
+                    }
+                    if (!up && down && left && !right) {
+                        game.insertAction(PlayerAction.SOUTHWEST);
+                    }
+                    if (!up && down && !left && right) {
+                        game.insertAction(PlayerAction.SOUTHEAST);
+                    }
+                    if (up && !down && !left && right) {
+                        game.insertAction(PlayerAction.NORTHEAST);
+                    }
+                } else {
+                    game.insertAction(legalKeyCodes.get(event.getCode()));
+                }
                 if (game.isGameOver()) {
                     gameOver();
                 }
@@ -139,6 +183,20 @@ public class GameScreen {
                 } else {
                     update();
                 }
+            }
+        });
+        screen.setOnKeyReleased(event -> {
+            if (event.getCode() == KeyCode.UP) {
+                this.upPressed.set(false);
+            }
+            if (event.getCode() == KeyCode.DOWN) {
+                this.downPressed.set(false);
+            }
+            if (event.getCode() == KeyCode.LEFT) {
+                this.leftPressed.set(false);
+            }
+            if (event.getCode() == KeyCode.RIGHT) {
+                this.rightPressed.set(false);
             }
         });
     }
@@ -213,10 +271,10 @@ public class GameScreen {
         }
         screen.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                viewManager.showTitleScreen();
+                viewManager.quit();
             }
         });
-        screen.setOnMouseClicked(event -> viewManager.showTitleScreen());
+        screen.setOnMouseClicked(event -> viewManager.quit());
     }
 
     private void checkHighScore() {
@@ -226,7 +284,7 @@ public class GameScreen {
             int score = game.getScore();
             Difficulty difficulty = game.getDifficulty();
             if (highScores.isHighScore(score, difficulty)) {
-                String name = getPlayerName(highScores.getCHARLIMIT());
+                String name = getPlayerName(highScores.getCharLimit());
                 if (name != null && !name.isEmpty()) {
                     highScores.addHighScore(name, score, difficulty);
                     viewManager.showHighScoresScreen();
@@ -261,12 +319,6 @@ public class GameScreen {
         stage.setTitle("high score");
         stage.showAndWait();
         String name = nameField.getText();
-        if (name != null) {
-            name = name.trim();
-            if (name.length() > limit) {
-                name = name.substring(limit);
-            }
-        }
         return nameField.getText();
     }
 

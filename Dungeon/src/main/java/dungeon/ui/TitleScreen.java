@@ -4,11 +4,11 @@
 package dungeon.ui;
 
 import java.util.ArrayList;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -40,7 +40,7 @@ public class TitleScreen {
             viewManager.showHighScoresScreen();
         });
         quitButton.setOnMouseClicked(event -> {
-            Platform.exit();
+            viewManager.quit();
         });
 
         setFormat(titleText);
@@ -52,6 +52,11 @@ public class TitleScreen {
         BorderPane layout = new BorderPane(choices, titleTextContainer, null, null, null);
 
         Scene titleScreen = new Scene(layout, resolutionX, resolutionY, Color.GHOSTWHITE);
+        titleScreen.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                viewManager.showSettingsScreen();
+            }
+        });
         return titleScreen;
     }
 

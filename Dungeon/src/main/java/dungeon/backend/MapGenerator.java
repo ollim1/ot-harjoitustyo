@@ -4,9 +4,8 @@
 package dungeon.backend;
 
 import java.util.Random;
-import squidpony.squidgrid.mapping.FlowingCaveGenerator;
 import squidpony.squidgrid.mapping.IDungeonGenerator;
-import squidpony.squidgrid.mapping.styled.TilesetType;
+import squidpony.squidgrid.mapping.OrganicMapGenerator;
 import squidpony.squidmath.RNG;
 
 /**
@@ -18,7 +17,6 @@ public class MapGenerator {
 
     private char[][] map;
     private IDungeonGenerator dungeonGenerator;
-    private RNG rng;
 
     /**
      * The constructor for this class takes a random number number generator as
@@ -34,9 +32,7 @@ public class MapGenerator {
 
     public MapGenerator(RNG rng, int width, int height) {
         this.map = new char[width + 2][height + 2];
-        this.rng = rng;
-        this.dungeonGenerator = new FlowingCaveGenerator(width, height,
-                TilesetType.DEFAULT_DUNGEON, rng);
+        this.dungeonGenerator = new OrganicMapGenerator(width, height, rng);
     }
 
     /**

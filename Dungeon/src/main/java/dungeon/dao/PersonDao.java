@@ -103,6 +103,15 @@ public class PersonDao implements Dao<Person> {
         return people;
     }
 
+    @Override
+    public void delete(Integer key) throws SQLException {
+        Connection conn = openConnection();
+        PreparedStatement s = conn.prepareStatement("delete from Person where id = ?;");
+        s.setInt(1, key);
+        s.executeUpdate();
+        conn.close();
+    }
+
     private Connection openConnection() throws SQLException {
         return DatabaseManager.getInstance().openConnection();
     }

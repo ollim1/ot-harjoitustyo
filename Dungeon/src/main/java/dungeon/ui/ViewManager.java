@@ -4,6 +4,7 @@
 package dungeon.ui;
 
 import dungeon.domain.Settings;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 public class ViewManager {
@@ -39,10 +40,18 @@ public class ViewManager {
         SettingsScreen settingsScreen = new SettingsScreen(this, settings);
         this.window.setScene(settingsScreen.createView());
     }
-    
+
     public void showHighScoresScreen() {
         HighScoresScreen highScoresScreen = new HighScoresScreen(this);
         this.window.setScene(highScoresScreen.createListView());
+    }
+
+    /**
+     * Quits the application. Putting the exit method here in case I need to
+     * save something on exit.
+     */
+    public void quit() {
+        Platform.exit();
     }
 
     public int getResolutionX() {

@@ -29,6 +29,7 @@ Osia sekvenssikaaviosta on jätetty pois, sillä ne ovat epäolennaisia ohjelman
 
 ### Pelaaja syöttää komennon.
 Kun pelaaja painaa näppäintä, jolle on määritetty toiminto, sovelluksen kontrolli etenee seuraavasti.
+
 ![insertAction](insertAction.png)
 
 Näppäimille on määritetty vastaavuudet staattisessa HashMap-oliossa legalKeyCodes. Sovellus kutsuu Game-luokan insertAction()-metodia, jolla syötetään pelaajahahmon komento pelisilmukkaan. Tämän jälkeen peli päivittää näkyvyyden ja suorittaa yhden pelikierroksen.
@@ -36,7 +37,15 @@ Näppäimille on määritetty vastaavuudet staattisessa HashMap-oliossa legalKey
 GameScreen tarkistaa, onko peli loppu, hakee päivittää pelikartan ja hakee päivitetyt karttatiedot ja viitteen pelaajahahmoon. Karttatiedot ja pelaajan sijainti välitetään tileMapper-oliolle, joka piirtää karttanäkymän GameScreenin siihen konstruktorissa injektoimalla GraphicsContext-oliolla, joka on luotu stageen sijoitetusta Canvas-oliosta.
 
 Tämän jälkeen GameScreen-olio tyhjentää MessageBus-olion viestijonon ikkunan alalaidassa olevaan TextArea-elementtiin.
-### Hirviö huomaa lähellä olevan pelaajan.
+
+### Hirviö huomaa lähellä olevan pelaajan ja hyökkää.
+Pelaajan syötteen ajamisen jälkeen ajetaan tietokoneen hallitsemia hahmoja ohjaava metodi controlActor. Kaikki hahmot (actor) listassa käydään läpi, ja jos jokin on hirviö, niin tarkistetaan onko se pelaajan näkökentässä. reactOnSight-metodissa tarkistetaan, onko pelaaja hirviön näön kantaman sisällä.
+
+Jos hirviö näkee pelaajan, niin se nostaa hälytyksen. alert-metodissa lasketaan PathFinder-olion avulla hyökkäysreittin päättelyyn tarvittava Dijkstra-kartta. Jos hirviö on pakotilassa, niin Dijkstra-kartta käännetään tämän hirviön kohdalle. Hirviö varoittaa lähistöllä olevia ja asettaa näiden Dijkstra-kartan aiemmin lasketuksi hyökkäyskartaksi ja tilan hyökkäystilaksi.
+
+Tämän jälkeen hirviö toimii tilansa mukaisesti ja seuraa Dijkstra-karttaa. Tässä tapauksessa pelaaja on kartan mukaan parhaan naapuriruudun kohdalla, joten perityn Actor-luokan move-metodissa kutsutaan hyökkäyksen Attack apply-metodia, joka välittää vahingon kohteeseen Actor-luokan damage-metodilla.
+
+Tämän jälkeen hirviön vuoroarvoa kasvatetaan ja liikkeestä palautetaan totuusarvo true, joka merkitsee, että liike on onnistunut. Tämä pysäyttää suuntavaihtoehtojen läpikäynnin.
 
 ![controlActor](controlActor.png)
 

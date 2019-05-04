@@ -182,6 +182,6 @@ public class Plotter {
     }
 
     private boolean outOfBounds(int x, int y) {
-        return x < 1 || x >= map[0].length - 1 || y < 1 || y >= map.length;
+        return x < 1 || x >= map[0].length - 1 || y < 1 || y >= map.length - 1;
     }
 }

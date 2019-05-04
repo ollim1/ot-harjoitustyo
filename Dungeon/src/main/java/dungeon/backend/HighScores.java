@@ -8,7 +8,6 @@ import dungeon.dao.RecordDao;
 import dungeon.dao.domain.Person;
 import dungeon.dao.domain.Record;
 import dungeon.domain.Difficulty;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,19 +17,14 @@ public class HighScores {
 
     private HashMap<Difficulty, List<Record>> tables;
     private static final int LIMIT = 10;
-    private static final int CHARLIMIT = 10;
+    private int charLimit = 10;
     private static final String[] DATABASE_INFORMATION = {"jdbc:h2:./savedData/HighScoresDatabase", "sa", ""};
 
     public HighScores() throws SQLException {
         DatabaseManager databaseManager = DatabaseManager.getInstance();
         databaseManager.setup(DATABASE_INFORMATION[0], DATABASE_INFORMATION[1], DATABASE_INFORMATION[2]);
-        Connection conn = databaseManager.openConnection();
-        conn.prepareStatement("create table if not exists Person(id integer primary key auto_increment,"
-                + " name varchar(10));").executeUpdate();
-        conn.prepareStatement("create table if not exists Record(id integer primary key auto_increment,"
-                + " personId integer, score integer, difficulty integer,"
-                + " foreign key (personId) references Person(id));").executeUpdate();
-        conn.close();
+        databaseManager.createTablesIfAbsent();
+        charLimit = databaseManager.getCharLimit();
         tables = listsByDifficulty();
     }
 
@@ -49,15 +43,24 @@ public class HighScores {
     }
 
     public boolean isHighScore(int score, Difficulty difficulty) {
-        if (tables.get(difficulty).size() < LIMIT) {
+        List<Record> table = tables.get(difficulty);
+        if (table.size() < LIMIT) {
             return true;
         }
-        return score > tables.get(difficulty).get(LIMIT - 1).getScore();
+        return score > table.get(table.size() - 1).getScore();
     }
 
     public void addHighScore(String name, int score, Difficulty difficulty) throws SQLException {
         if (isHighScore(score, difficulty)) {
-            RecordDao.getInstance().create(new Record(0, new Person(0, name), score, difficulty));
+            RecordDao recordDao = RecordDao.getInstance();
+            if (tables.get(difficulty).size() >= LIMIT) {
+                List<Record> table = tables.get(difficulty);
+                int length = table.size();
+                for (int i = LIMIT - 1; i < length; i++) {
+                    recordDao.delete(table.get(i).getId());
+                }
+            }
+            recordDao.create(new Record(0, new Person(0, name), score, difficulty));
             tables = listsByDifficulty();
         }
     }
@@ -70,8 +73,8 @@ public class HighScores {
         return LIMIT;
     }
 
-    public static int getCHARLIMIT() {
-        return CHARLIMIT;
+    public int getCharLimit() {
+        return charLimit;
     }
 
 }

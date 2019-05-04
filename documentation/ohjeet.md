@@ -3,6 +3,8 @@ Pelin alussa on mahdollista valita vaikeusaste ja karttakoko. Vaikeusaste vaikut
 
 Pelissä liikutaan nuolinäppäimillä tai H-, J-, K- ja L-näppäimillä. H-näppäin siirtää pelihahmoa länteen, J-näppäin etelään, K-näppäin pohjoiseen ja L-näppäin itään. Pelihahmoa voi myös liikkua luoteeseen Y-näppäimellä, koilliseen U-näppäimellä, lounaaseen N-näppäimellä ja kaakkoon M-näppäimellä. Myös hirviöt voivat liikkua väli-ilmansuuntiin, joten on suositeltavaa opetella käyttämään HJKL-näppäimiä. .-näppäin pitää pelaajaa paikallaan. Tämä on hyödyllistä turvapaikoissa pysyttäessä.
 
+Shift-näppäimen painaminen mahdollistaa kahden ilmansuunnan syöttämisen kerralla nuolinäppäimillä. Näin myös nuolinäppäimillä voi liikkua väli-ilmansuuntiin.
+
 
 ![alku](start.png)
 ![näkökenttä](lineofsight.png)

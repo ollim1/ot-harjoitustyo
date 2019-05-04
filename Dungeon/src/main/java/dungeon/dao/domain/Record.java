@@ -53,7 +53,7 @@ public class Record {
 
     @Override
     public String toString() {
-        return Integer.toString(score);
+        return person + ": " + Integer.toString(score) + " (" + difficulty + ")";
     }
 
 }

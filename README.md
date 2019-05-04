@@ -5,13 +5,15 @@
 Luolapeli, joka on toteutettu JavaFX:ällä.
 
 ### Dokumentaatio
-[Vaatimusmäärittely](/documentation/vaatimusmaarittely.md)
+[Käyttöohje](/documentation/ohjeet.md)
 
-[Tyoaikakirjanpito](/documentation/tyoaikakirjanpito.md)
+[Vaatimusmäärittely](/documentation/vaatimusmaarittely.md)
 
 [Arkkitehtuuri](/documentation/arkkitehtuuri.md)
 
-[Ohjeet](/documentation/ohjeet.md)
+[Testausdokumentti](/documentation/testausdokumentti.md)
+
+[Tyoaikakirjanpito](/documentation/tyoaikakirjanpito.md)
 
 ### Releaset
 [Viikko 5](https://github.com/ollim1/ot-harjoitustyo/releases/tag/viikko5)

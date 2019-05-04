@@ -303,7 +303,7 @@ public class GameScreen {
         layout.setPadding(new Insets(20, 20, 20, 20));
         layout.setSpacing(20);
         Label label = new Label("a new high score\ninsert name here");
-        Label help = new Label("character limit " + limit + ", press return to finish");
+        Label help = new Label("length 1-" + limit + " characters, press return to finish");
         TextField nameField = new TextField();
         layout.getChildren().add(label);
         layout.getChildren().add(nameField);
@@ -318,7 +318,6 @@ public class GameScreen {
         });
         stage.setTitle("high score");
         stage.showAndWait();
-        String name = nameField.getText();
         return nameField.getText();
     }
 

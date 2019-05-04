@@ -3,6 +3,8 @@
  */
 package dungeon.dao.domain;
 
+import dungeon.dao.DatabaseManager;
+
 public class Person {
 
     private Integer id;
@@ -15,8 +17,9 @@ public class Person {
         }
         name = name.trim();
 
-        if (name.length() > 10) {
-            name = name.substring(0, 10);
+        int limit = DatabaseManager.getInstance().getCharLimit();
+        if (name.length() > limit) {
+            name = name.substring(0, limit);
         }
         this.name = name;
     }

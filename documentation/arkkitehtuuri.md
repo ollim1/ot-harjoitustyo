@@ -51,10 +51,12 @@ Tämän jälkeen hirviön vuoroarvoa kasvatetaan ja liikkeestä palautetaan totu
 
 # Rakenteelliset heikkoudet
 ### backend-luokat
-Actor-luokan aliluokkien toiminta on liian erillistä. Kannattaisi toteuttaa tekoäly erillisessä luokassa ja tehdä käyttäjän ohjaamasta pelaajahahmosta tekoälyn erityistapaus. Tämä tekisi autoexploren toteuttamisesta Dijkstra-kartoilla suoraviivaista.
+Actor-luokan aliluokkien toiminta on liian erillistä. Kannattaisi eriyttää tekoäly Actor-luokasta ja tehdä käyttäjän ohjaamasta pelaajahahmosta tekoälyn erityistapaus. Tämä tekisi mm. autoexploren toteuttamisesta Dijkstra-kartoilla suoraviivaista.
+
+Hirviöiden tekoälyssä on aukkoja.
 
 ### testikattavuus
-Sovelluksen testit voivat jäädä haarakattavuuden kannalta vajaiksi, sillä ohjelmalogiikassa on paljon riippuvuusinjektiota, joka vaikeuttavat kattavaa testaamista. Pelitila on liian monimutkainen.
+Sovelluksen testit voivat jäädä haarakattavuuden kannalta vajaiksi. Pelitila on monimutkainen.
 
 ### koodin laatu
 Käyttöliittymäluokissa on jonkin verran toisteista koodia, ja tarpeettomiksi käyneitä metodia ja muuttujia on jäänyt koodiin paljon.

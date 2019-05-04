@@ -35,14 +35,12 @@ public class Player extends Actor {
         super.setHealth(MAX_HEALTH);
         super.setMaxHealth(MAX_HEALTH);
         super.setPosition(new Node(x, y));
-        super.setIntervalModifier(1.0);
         boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
         for (ActorType monsterType : ActorType.values()) {
             hostileSymbols[monsterType.symbol] = true;
         }
         super.setActorType(null);
         super.setHostileSymbols(hostileSymbols);
-        super.setNextTurn(0);
     }
 
     @Override
@@ -71,7 +69,6 @@ public class Player extends Actor {
         } else {
             super.move(ACTION_TO_DIRECTION_TRANSLATION.get(action), game, map);
         }
-        heal();
     }
 
 }

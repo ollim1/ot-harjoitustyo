@@ -69,18 +69,22 @@ public class HighScoresScreen {
         VBox normalTable = new VBox();
         VBox hardTable = new VBox();
         setup(easyTable, normalTable, hardTable);
+
         GridPane easyPane = new GridPane();
-        GridPane normalPane = new GridPane();
-        GridPane hardPane = new GridPane();
         easyTable.getChildren().add(easyLabel);
-        normalTable.getChildren().add(normalLabel);
-        hardTable.getChildren().add(hardLabel);
         easyTable.getChildren().add(easyPane);
-        normalTable.getChildren().add(normalPane);
-        hardTable.getChildren().add(hardPane);
         scoreTable.getChildren().add(easyTable);
+
+        GridPane normalPane = new GridPane();
+        normalTable.getChildren().add(normalLabel);
+        normalTable.getChildren().add(normalPane);
         scoreTable.getChildren().add(normalTable);
+
+        GridPane hardPane = new GridPane();
+        hardTable.getChildren().add(hardLabel);
+        hardTable.getChildren().add(hardPane);
         scoreTable.getChildren().add(hardTable);
+
         VBox layout = new VBox();
         layout.setBackground(Background.EMPTY);
         layout.setMinWidth(viewManager.getResolutionX());
@@ -101,29 +105,31 @@ public class HighScoresScreen {
             for (int i = 0; i < easyScores.length; i++) {
                 easyPane.add(easyScores[i], 1, i + 1);
             }
-            for (int i = 0; i < normalNames.length; i++) {
-                normalPane.add(normalNames[i], 0, i + 1);
-            }
-            for (int i = 0; i < normalScores.length; i++) {
-                normalPane.add(normalScores[i], 1, i + 1);
-            }
-            for (int i = 0; i < hardNames.length; i++) {
-                hardPane.add(hardNames[i], 0, i + 1);
-            }
-            for (int i = 0; i < hardScores.length; i++) {
-                hardPane.add(hardScores[i], 1, i + 1);
-            }
             List<Record> easyList = highScores.getTable(Difficulty.EASY);
             for (int i = 0; i < easyList.size(); i++) {
                 Record record = easyList.get(i);
                 easyNames[i].setText(record.getPerson().toString());
                 easyScores[i].setText(Integer.toString(record.getScore()));
             }
+
+            for (int i = 0; i < normalNames.length; i++) {
+                normalPane.add(normalNames[i], 0, i + 1);
+            }
+            for (int i = 0; i < normalScores.length; i++) {
+                normalPane.add(normalScores[i], 1, i + 1);
+            }
             List<Record> normalList = highScores.getTable(Difficulty.NORMAL);
             for (int i = 0; i < normalList.size(); i++) {
                 Record record = normalList.get(i);
                 normalNames[i].setText(record.getPerson().toString());
                 normalScores[i].setText(Integer.toString(record.getScore()));
+            }
+
+            for (int i = 0; i < hardNames.length; i++) {
+                hardPane.add(hardNames[i], 0, i + 1);
+            }
+            for (int i = 0; i < hardScores.length; i++) {
+                hardPane.add(hardScores[i], 1, i + 1);
             }
             List<Record> hardList = highScores.getTable(Difficulty.HARD);
             for (int i = 0; i < hardList.size(); i++) {
@@ -162,7 +168,6 @@ public class HighScoresScreen {
         for (Label label : labelList) {
             label.setFont(font);
             label.setAlignment(Pos.CENTER);
-//            label.setMinWidth(233);
             GridPane.setHalignment(label, HPos.CENTER);
         }
     }

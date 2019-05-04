@@ -21,6 +21,11 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
     private boolean[] isHostile;
     private Attack attack;
 
+    public Actor() {
+        intervalModifier = 1.0;
+        nextTurn = 0;
+    }
+
     /**
      * This method commits character actions as determined by AI or player input
      * and game or character state.
@@ -49,50 +54,20 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
         }
     }
 
-    public ActorType getActorType() {
-        return actorType;
-    }
-
-    public void setActorType(ActorType actorType) {
-        this.actorType = actorType;
-    }
-
-    public void setDijkstraMap(DijkstraMap dijkstraMap) {
-        this.dijkstraMap = dijkstraMap;
-    }
-
-    public DijkstraMap getDijkstraMap() {
-        return dijkstraMap;
-    }
-
-    public void setIntervalModifier(double intervalModifier) {
-        this.intervalModifier = intervalModifier;
-    }
-
-    public double getIntervalModifier() {
-        return intervalModifier;
-    }
-
-    public void setAttack(Attack attack) {
-        this.attack = attack;
-    }
-
-    public Attack getAttack() {
-        return attack;
-    }
-
-    public void setNextTurn(int nextTurn) {
-        this.nextTurn = nextTurn;
-    }
-
     /**
      * Increments the actor's turn value by the specified interval. The interval
-     * can be scaled based on actor status.
+     * can be scaled based on actor status. Every Actor is healed 0.01 points
+     * per 100 time units.
      *
      * @param interval
      */
     public void incrementTurn(int interval) {
         this.nextTurn += interval * intervalModifier;
+        heal(interval);
+    }
+
+    private void heal(int interval) {
+        setHealth(Math.min(getHealth() + getMaxHealth() * interval / 100 * 0.01, getMaxHealth()));
     }
 
     public int getNextTurn() {
@@ -169,6 +144,9 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
         return false;
     }
 
+    /**
+     * Pushes "x hit nothing" into the message queue.
+     */
     private void attackNothingMessage() {
         String sourceString = "You";
         if (actorType != null) {
@@ -177,12 +155,11 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
         MessageBus.getInstance().push(new Message(sourceString + " hit nothing"));
     }
 
+    /**
+     * This method handles the Actor doing nothing for one turn.
+     */
     public void idle() {
         incrementTurn(100);
-    }
-
-    public void heal() {
-        setHealth(Math.min(getHealth() + getMaxHealth() * 0.01, getMaxHealth()));
     }
 
     private boolean isFree(char[][] map, int x, int y) {
@@ -206,6 +183,34 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
     @Override
     public int compareTo(Actor that) {
         return this.nextTurn - that.nextTurn;
+    }
+
+    public ActorType getActorType() {
+        return actorType;
+    }
+
+    public void setActorType(ActorType actorType) {
+        this.actorType = actorType;
+    }
+
+    public void setDijkstraMap(DijkstraMap dijkstraMap) {
+        this.dijkstraMap = dijkstraMap;
+    }
+
+    public DijkstraMap getDijkstraMap() {
+        return dijkstraMap;
+    }
+
+    public void setAttack(Attack attack) {
+        this.attack = attack;
+    }
+
+    public Attack getAttack() {
+        return attack;
+    }
+
+    public void setNextTurn(int nextTurn) {
+        this.nextTurn = nextTurn;
     }
 
 }

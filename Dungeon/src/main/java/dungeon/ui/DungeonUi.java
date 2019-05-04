@@ -6,6 +6,11 @@ package dungeon.ui;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * A skeleton class that creates a ViewManager.
+ *
+ * @author londes
+ */
 public class DungeonUi extends Application {
 
     private static final int RESOLUTION_X = 800;

@@ -4,7 +4,7 @@
 package dungeon.domain;
 
 /**
- * This class stores game settings.
+ * A class for passing game settings between classes.
  *
  * @author londes
  */

@@ -5,6 +5,11 @@ package dungeon.dao.domain;
 
 import dungeon.domain.Difficulty;
 
+/**
+ * Represents game scores.
+ *
+ * @author londes
+ */
 public class Record {
 
     private Integer id;

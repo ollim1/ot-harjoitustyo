@@ -13,6 +13,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A backend class for handling scores.
+ *
+ * @author londes
+ */
 public class HighScores {
 
     private HashMap<Difficulty, List<Record>> tables;
@@ -28,6 +33,13 @@ public class HighScores {
         tables = listsByDifficulty();
     }
 
+    /**
+     * Produces a HashMap mapping difficulty levels to corresponding sets of
+     * records. RecordDao handles sorting.
+     *
+     * @return a Difficulty->List map
+     * @throws SQLException
+     */
     private HashMap<Difficulty, List<Record>> listsByDifficulty() throws SQLException {
         RecordDao recordDao = RecordDao.getInstance();
         List fullList = recordDao.list();
@@ -42,6 +54,14 @@ public class HighScores {
         return map;
     }
 
+    /**
+     * Checks if the score is a high score in a specific difficulty class. All
+     * scores are high scores until the size of the table hits 10.
+     *
+     * @param score the score
+     * @param difficulty the difficulty class
+     * @return
+     */
     public boolean isHighScore(int score, Difficulty difficulty) {
         List<Record> table = tables.get(difficulty);
         if (table.size() < LIMIT) {
@@ -50,6 +70,17 @@ public class HighScores {
         return score > table.get(table.size() - 1).getScore();
     }
 
+    /**
+     * Adds a new high score. Does an isHighScore check just in case and shaves
+     * off all scores after the ninth one in the table. The high score is first
+     * inserted into the database, then fetched back into memory along with all
+     * the other records.
+     *
+     * @param name
+     * @param score
+     * @param difficulty
+     * @throws SQLException
+     */
     public void addHighScore(String name, int score, Difficulty difficulty) throws SQLException {
         if (isHighScore(score, difficulty)) {
             RecordDao recordDao = RecordDao.getInstance();

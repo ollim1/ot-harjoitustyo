@@ -34,6 +34,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/**
+ * A class that creates and handles the game screen.
+ *
+ * @author londes
+ */
 public class GameScreen {
 
     private static final int LOGBOX_HEIGHT = 100;

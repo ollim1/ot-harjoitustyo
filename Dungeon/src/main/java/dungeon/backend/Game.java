@@ -152,7 +152,11 @@ public class Game {
         Monster monster = new Monster(x, y, monsterType);
         addActor(monster);
         this.queue.add(monster);
-        monster.setNextTurn(actors.size() - 1);
+        if (queue.size() > 0) {
+            monster.setNextTurn(queue.peek().getNextTurn());
+        } else {
+            monster.setNextTurn(0);
+        }
         return monster;
     }
 

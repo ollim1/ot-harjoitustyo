@@ -5,6 +5,11 @@ package dungeon.dao.domain;
 
 import dungeon.dao.DatabaseManager;
 
+/**
+ * Holds the names of record holders.
+ *
+ * @author londes
+ */
 public class Person {
 
     private Integer id;

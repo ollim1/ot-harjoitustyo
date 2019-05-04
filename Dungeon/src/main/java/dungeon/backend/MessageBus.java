@@ -40,7 +40,7 @@ public class MessageBus {
     }
 
     /**
-     * Pushes a message at the end of the queue.
+     * Pushes a message to the end of the queue.
      *
      * @param message
      */
@@ -49,7 +49,8 @@ public class MessageBus {
     }
 
     /**
-     * Creates a new Message from a string and pushes at the end of the queue.
+     * Creates a new Message from a string and pushes it to the end of the
+     * queue.
      *
      * @param string
      */

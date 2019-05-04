@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 /**
  * A singleton class for handling database settings. Trying to avoid pulling
- * Spring dependencies due to complexity.
+ * Spring dependencies due to possible time lost handling technical issues.
  *
  * @author londes
  */
@@ -45,6 +45,11 @@ public class DatabaseManager {
         this.password = password;
     }
 
+    /**
+     * Sets up the high score database.
+     *
+     * @throws SQLException
+     */
     public void createTablesIfAbsent() throws SQLException {
         Connection conn = openConnection();
         conn.prepareStatement("create table if not exists Person(id integer primary key auto_increment,"

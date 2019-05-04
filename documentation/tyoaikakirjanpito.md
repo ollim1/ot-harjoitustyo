@@ -27,5 +27,5 @@
 | 1.5.  | 4     | Pistetilastojen toteuttaminen aloitettu |
 | 2.5.  | 10    | Pistetilastojen tietokantatoiminnallisuus toteutettu, tietokannan yksikkötestejä toteutettu |
 | 3.5.  | 4     | Dokumentaatio, bugikorjauksia |
-| 4.5.  | 7     | Dokumentaatio, bugikorjauksia |
-| yht   | 116   | |
+| 4.5.  | 8     | Dokumentaatio, bugikorjauksia |
+| yht   | 117   | |

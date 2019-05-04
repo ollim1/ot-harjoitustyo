@@ -3,7 +3,7 @@
 ## Ohjelman suorittaminen
 **Sijoita sovelluksen jar-tiedosto Dungeon-hakemiston juureen ennen ajamista.** Sovellus olettaa, että tiedosto tileset.png on suoritushakemistossa polun resources/tileset.png päässä.
 
-Sovellus käynnistetään komennolla
+Sovellus käynnistetään sovelluksen juurihakemistossa komennolla
 
 ```
 java -jar Dungeon.jar
@@ -11,6 +11,9 @@ java -jar Dungeon.jar
 , missä Dungeon.jar -tiedostonimeä voidaan joutua täydentämään sovelluksen versionumerolla.
 
 ## Peliohjeet 
+Ennen pelin aloittamista valitaan sen asetukset. Debug-tilassa pisteytys ei toimi.
+
+![asetukset](settings.png)
 
 Pelin alussa on mahdollista valita vaikeusaste ja karttakoko. Vaikeusaste vaikuttaa hirviöiden yleiseen esiintymistiheyteen kartalla ja eri hirviötyyppien esiintymisen todennäköisyyksiin. Karttakokoa valittaessa on hyvä huomioida, että suurella kartalla on kaikkiaan enemmän hirviöitä, joita voi kertyä pakomatkan varrella.
 
@@ -20,6 +23,7 @@ Shift-näppäimen painaminen mahdollistaa kahden ilmansuunnan syöttämisen kerr
 
 
 ![alku](start.png)
+
 ![näkökenttä](lineofsight.png)
 
 Pelialueesta näkyy vain pelihahmon näkökenttään kuuluvat alueet. Aiemmin nähdyt alueet sisältöineen näkyvät varjostettuina. Pelaajan terveyspisteet näkyvät ruudun vasemmassa yläkulmassa.

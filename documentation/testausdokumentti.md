@@ -15,7 +15,7 @@ Domain-luokat riippuvat osin logiikkaluokista, joten perustoiminnallisuuden valm
 ### Testauskattavuus
 Sovelluksessa testattujen pakkausten testien rivikattavuus on 89% ja haarautumakattavuus 77%. Kaikelle ei ehditty kirjoittaa testejä.
 
-[jacoco](testikattavuus.png)
+![jacoco](testikattavuus.png)
 
 ## Järjestelmätestaus
 Sovelluksesta on suoritettu manuaalinen järjestelmätestaus.

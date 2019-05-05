@@ -3,6 +3,8 @@
 ## Ohjelman suorittaminen
 **Sijoita sovelluksen jar-tiedosto Dungeon-hakemiston juureen ennen ajamista.** Sovellus olettaa, että tiedosto tileset.png on suoritushakemistossa polun resources/tileset.png päässä. Tiedosto on julkaisun lähdekoodissa.
 
+Ennen sovelluksen suorittamista pura sen lähdekoodi ja sijoita jar-tiedosto Dungeon-hakemistoon.
+
 Sovellus käynnistetään sovelluksen juurihakemistossa komennolla
 
 ```

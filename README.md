@@ -20,6 +20,8 @@ Luolapeli, joka on toteutettu JavaFX:ällä.
 
 [Viikko 6](https://github.com/ollim1/ot-harjoitustyo/releases/tag/viikko6)
 
+[Loppupalautus](https://github.com/ollim1/ot-harjoitustyo/releases/tag/Loppupalautus)
+
 ### Komentorivitoiminnot
 #### Testaus
 Testit suoritetaan komennolla

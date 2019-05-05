@@ -61,18 +61,6 @@ public class Monster extends Actor {
         this.state = state;
     }
 
-    public void setVisionRatio(double visionRatio) {
-        this.visionRatio = visionRatio;
-    }
-
-    public void setAlertRadius(double alertRadius) {
-        this.alertRadius = alertRadius;
-    }
-
-    public double getFleeThreshold() {
-        return fleeThreshold;
-    }
-
     public void setFleeThreshold(double fleeThreshold) {
         this.fleeThreshold = fleeThreshold;
     }

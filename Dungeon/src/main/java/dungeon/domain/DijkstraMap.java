@@ -200,39 +200,4 @@ public class DijkstraMap {
         }
         return changed;
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (checkUnformatted()) {
-            return "unformatted array";
-        }
-        for (int y = 0; y < values.length; y++) {
-            for (int x = 0; x < values[0].length; x++) {
-                appendCharacter(y, x, sb);
-            }
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    private void appendCharacter(int y, int x, StringBuilder sb) {
-        if (values[y][x] != Integer.MAX_VALUE) {
-            if (values[y][x] == 0) {
-                sb.append(".");
-            } else {
-                sb.append((values[y][x] / 100) % 10);
-            }
-        } else {
-            sb.append("#");
-        }
-    }
-
-    private boolean checkUnformatted() {
-        int max = max();
-        if (max == 0) {
-            return true;
-        }
-        return false;
-    }
 }

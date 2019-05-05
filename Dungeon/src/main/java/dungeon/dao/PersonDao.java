@@ -62,7 +62,6 @@ public class PersonDao implements Dao<Person> {
         person.setId(id);
     }
 
-    @Override
     public Person read(Integer key) throws SQLException {
         Connection conn = openConnection();
         PreparedStatement s = conn.prepareStatement("select * from Person where id = ?;");

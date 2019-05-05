@@ -48,7 +48,7 @@ public class ViewManager {
 
     /**
      * Quits the application. Putting the exit method here in case I need to
-     * save something on exit.
+     * save something on exit in the future.
      */
     public void quit() {
         Platform.exit();

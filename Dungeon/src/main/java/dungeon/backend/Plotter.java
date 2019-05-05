@@ -127,10 +127,6 @@ public class Plotter {
         return visibility;
     }
 
-    public char[][] getPlayerMap() {
-        return playerMap;
-    }
-
     public MapObject[][] getPlayerObjectMap() {
         return playerObjectMap;
     }

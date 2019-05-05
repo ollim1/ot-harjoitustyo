@@ -53,10 +53,6 @@ public class MapGenerator {
         }
     }
 
-    public void setMap(char[][] map) {
-        this.map = map;
-    }
-
     public char[][] getMap() {
         return map;
     }

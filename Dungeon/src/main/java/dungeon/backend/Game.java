@@ -157,7 +157,7 @@ public class Game {
 
     private void addActor(Actor actor) {
         if (queue.size() > 0) {
-            actor.setNextTurn(queue.peek().getNextTurn() + 100);
+            actor.setNextTurn(queue.peek().getNextTurn());
         } else {
             actor.setNextTurn(0);
         }

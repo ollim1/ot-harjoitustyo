@@ -42,14 +42,6 @@ public class TileMapper {
         this.tileSet = new Image(filename);
     }
 
-    public void drawFrame(char[][] map, double[][] losMap, int centerX, int centerY) {
-        int offsetX = centerX - resolutionX / tileSize / 2;
-        int offsetY = centerY - resolutionY / tileSize / 2;
-
-        drawGrid(offsetX, offsetY, map);
-        drawGrid(offsetX, offsetY, losMap);
-    }
-
     public void drawFrame(char[][] levelMap, MapObject[][] objectMap, double[][] losMap, int centerX, int centerY) {
         int offsetX = centerX - resolutionX / tileSize / 2;
         int offsetY = centerY - resolutionY / tileSize / 2;
@@ -58,12 +50,6 @@ public class TileMapper {
         drawGrid(offsetX, offsetY, objectMap);
         drawGrid(offsetX, offsetY, losMap);
     }
-
-    public void drawDebugFrame(char[][] map, double[][] losMap, Color[][] colors, int centerX, int centerY) {
-        drawFrame(map, losMap, centerX, centerY);
-        drawColorMap(colors, centerX, centerY);
-    }
-
     public void drawDebugFrame(char[][] levelMap, MapObject[][] objectMap, double[][] losMap, Color[][] colors, int centerX, int centerY) {
         drawFrame(levelMap, objectMap, losMap, centerX, centerY);
         drawColorMap(colors, centerX, centerY);

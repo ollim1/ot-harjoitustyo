@@ -77,10 +77,6 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
         return nextTurn;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
     public void setMaxHealth(double maxHealth) {
         this.maxHealth = maxHealth;
     }
@@ -91,10 +87,6 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
 
     public Node getPosition() {
         return position;
-    }
-
-    public void setPosition(Node position) {
-        this.position = position;
     }
 
     public double getHealth() {

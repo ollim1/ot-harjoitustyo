@@ -43,18 +43,8 @@ public class Node implements Comparable<Node> {
         return this;
     }
 
-    public Node translate(Direction direction, int distance) {
-        this.x += direction.getDifferenceX();
-        this.y += direction.getDifferenceY();
-        return this;
-    }
-
     public Node translateToNew(Direction direction) {
         return new Node(this.x + direction.getDifferenceX(), this.y + direction.getDifferenceY());
-    }
-
-    public Node translateToNew(Direction direction, int distance) {
-        return new Node(this.x + direction.getDifferenceX(), this.y + direction.getDifferenceY(), distance);
     }
 
     public double differenceTo(Node that) {
@@ -71,11 +61,23 @@ public class Node implements Comparable<Node> {
         return this.distance - that.distance;
     }
 
+    /**
+     * For HashMaps. I'm not going to take risks by removing this.
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         return y * 10000 + y;
     }
 
+    /**
+     * Can't remember if I've used a List of Nodes or a Map of Nodes anywhere in
+     * code or in testing. This may be needed.
+     *
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || o.getClass() != this.getClass()) {
@@ -85,10 +87,4 @@ public class Node implements Comparable<Node> {
         Node that = (Node) o;
         return this.x == that.x && this.y == that.y;
     }
-
-    @Override
-    public String toString() {
-        return "(" + x + ", " + y + ")";
-    }
-
 }

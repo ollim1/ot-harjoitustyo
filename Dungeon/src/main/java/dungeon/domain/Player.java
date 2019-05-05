@@ -49,10 +49,6 @@ public class Player extends Actor {
         this.action = action;
     }
 
-    public PlayerAction getAction() {
-        return action;
-    }
-
     /**
      * This method carries out the action that has been set.
      *

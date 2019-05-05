@@ -24,10 +24,6 @@ public class Message {
         return text;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
     @Override
     public String toString() {
         return text;

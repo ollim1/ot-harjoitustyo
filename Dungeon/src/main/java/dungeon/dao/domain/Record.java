@@ -44,21 +44,8 @@ public class Record {
         this.id = id;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
-    }
-
     public void setPerson(Person person) {
         this.person = person;
-    }
-
-    @Override
-    public String toString() {
-        return person + ": " + Integer.toString(score) + " (" + difficulty + ")";
     }
 
 }

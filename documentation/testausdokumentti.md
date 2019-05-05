@@ -13,7 +13,7 @@ Valtaosa DAO-luokkien testeistä kirjoitettiin silloin, kun DAO-osuus oli erilli
 Domain-luokat riippuvat osin logiikkaluokista, joten perustoiminnallisuuden valmistuttua alustavien yksikkötestien avulla testit on muutettu integraatiotesteiksi aitojen luokkien kanssa.
 
 ### Testauskattavuus
-Sovelluksessa testattujen pakkausten testien rivikattavuus on 89% ja haarautumakattavuus 77%. Kaikelle ei ehditty kirjoittaa testejä.
+Sovelluksessa testattujen pakkausten testien rivikattavuus on 90% ja haarautumakattavuus 74%. Kaikelle ei ehditty kirjoittaa testejä.
 
 ![jacoco](testikattavuus.png)
 

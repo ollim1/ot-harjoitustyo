@@ -140,9 +140,4 @@ public class RecordDao implements Dao<Record> {
         s.executeUpdate();
         conn.close();
     }
-
-    @Override
-    public Record read(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported for this class.");
-    }
 }

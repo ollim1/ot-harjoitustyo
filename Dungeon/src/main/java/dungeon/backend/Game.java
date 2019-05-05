@@ -152,15 +152,15 @@ public class Game {
         Monster monster = new Monster(x, y, monsterType);
         addActor(monster);
         this.queue.add(monster);
-        if (queue.size() > 0) {
-            monster.setNextTurn(queue.peek().getNextTurn());
-        } else {
-            monster.setNextTurn(0);
-        }
         return monster;
     }
 
     private void addActor(Actor actor) {
+        if (queue.size() > 0) {
+            actor.setNextTurn(queue.peek().getNextTurn() + 100);
+        } else {
+            actor.setNextTurn(0);
+        }
         this.actors.add(actor);
         this.mapObjects.add(actor);
     }

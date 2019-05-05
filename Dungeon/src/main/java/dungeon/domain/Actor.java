@@ -21,7 +21,10 @@ public abstract class Actor implements Comparable<Actor>, MapObject {
     private boolean[] isHostile;
     private Attack attack;
 
-    public Actor() {
+    public Actor(Node position, double maxHealth, ActorType actorType) {
+        this.position = position;
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
         intervalModifier = 1.0;
         nextTurn = 0;
     }

@@ -23,9 +23,7 @@ public class Monster extends Actor {
     private boolean alerted;
 
     public Monster(int x, int y) {
-        super.setPosition(new Node(x, y));
-        super.setHealth(MAX_HEALTH);
-        super.setMaxHealth(MAX_HEALTH);
+        super(new Node(x, y), MAX_HEALTH, null);
         boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
         hostileSymbols['@'] = true;
         super.setHostileSymbols(hostileSymbols);

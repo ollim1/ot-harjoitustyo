@@ -32,14 +32,11 @@ public class Player extends Actor {
     };
 
     public Player(int x, int y) {
-        super.setHealth(MAX_HEALTH);
-        super.setMaxHealth(MAX_HEALTH);
-        super.setPosition(new Node(x, y));
+        super(new Node(x, y), MAX_HEALTH, null);
         boolean[] hostileSymbols = new boolean[Character.MAX_VALUE];
         for (ActorType monsterType : ActorType.values()) {
             hostileSymbols[monsterType.symbol] = true;
         }
-        super.setActorType(null);
         super.setHostileSymbols(hostileSymbols);
     }
 

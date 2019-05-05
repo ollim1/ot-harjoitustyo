@@ -34,7 +34,15 @@ Testikattavuusraportti luodaan komennolla
 mvn jacoco:report
 ```
 
-Kattavuusraportti tallentuu tiedostoon _Dungeon/target/site/jacoco/index.html_
+Kattavuusraportti tallentuu tiedostoon _target/site/jacoco/index.html_
+
+#### JavaDoc
+JavaDoc generoidaan komennolla
+
+```
+mvn javadoc:javadoc
+```
+JavaDocia voi tarkastella avaamalla selaimella tiedosto _target/site/apidocs/index.html_
 
 #### Jarin generointi
 
@@ -50,4 +58,4 @@ Tiedostossa [checkstyle.xml](/Dungeon/checkstyle.xml) määritellyt tarkistukset
 ```
 mvn jxr:jxr checkstyle:checkstyle
 ```
-Tulokset tallentuvat tiedostoon _Dungeon/target/site/checkstyle.html_
+Tulokset tallentuvat tiedostoon _target/site/checkstyle.html_

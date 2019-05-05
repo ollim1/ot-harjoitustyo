@@ -89,7 +89,7 @@ public class PathFinder {
                     int vy = uy + neighbour.getDifferenceY();
                     if (map[vy][vx] == ' ') {
                         int newDistance = distance[uy][ux] + neighbour.cost();
-                        if (distance[vy][vx] == Integer.MAX_VALUE || distance[vy][vx] > newDistance) {
+                        if (distance[vy][vx] > newDistance) {
                             newPathFound(vy, vx, newDistance, heap);
                         }
                     }

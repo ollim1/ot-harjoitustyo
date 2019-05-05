@@ -55,6 +55,8 @@ Actor-luokan aliluokkien toimintaa voisi yhdistää. Kannattaisi eriyttää teko
 
 Hirviöiden tekoälyssä on aukkoja.
 
+Hahmojen sijoittaminen kartalle pitäisi muuttaa käyttämään sekoitettua listaa mahdollisista paikoista, mikä vähentäisi pelin aloittamisen viivettä.
+
 ### testikattavuus
 Sovelluksen testit voivat jäädä haarakattavuuden kannalta vajaiksi. Pelitila on monimutkainen.
 
